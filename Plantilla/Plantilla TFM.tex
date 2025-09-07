@@ -1,0 +1,277 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Plantilla desarrollada por Jorge Carrillo de Albornoz
+%%% para los trabajos de Fin de Master del Máster en
+%%% Lenguajes y Sistemas Informáticos de la UNED
+%%% Cualquier duda o comentario: jcalbornoz@lsi.uned.es
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper,11pt,twoside,openright,spanish]{book}
+
+\usepackage{latexsym}
+\usepackage[latin1]{inputenc}
+\usepackage[activeacute,spanish]{babel}
+\frenchspacing
+\usepackage{eucal}
+\usepackage{multirow}
+\usepackage{fancyhdr}
+\usepackage[final,pdftex]{graphicx}
+\usepackage{subfigure}
+\usepackage{amsmath}
+\usepackage{fullname_esp}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage{pdfpages}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{setspace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% SCRIPT DE TODO'S O TAREAS PENDIENTES CON BOCADILLOS.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\makeatletter \newcommand \listoftodos{\section*{Todo list} \@starttoc{tdo}}
+\newcommand\l@todo[2]
+    {\par\noindent \textit{#2}, \parbox{10cm}{#1}\par} \makeatother
+
+\definecolor{orange}{rgb}{1,0.5,0}
+\tikzstyle{notestyle} += [text width=\marginparwidth]
+\tikzstyle{notestyleleft} += [text width=0.9\marginparwidth]
+\tikzstyle{notestyle} = [draw=black, fill=orange, text width = 3cm]
+\tikzstyle{notestyleleft} = [notestyle]
+\tikzstyle{connectstyle} = [draw = orange, thick]
+% Command for inserting a todo item
+\newcommand{\todo}[1]{%
+% Add to todo list
+\addcontentsline{tdo}{todo}{\protect{#1}}%
+%
+\begin{tikzpicture}[remember picture, baseline=-0.75ex]%
+    \node [coordinate] (inText) {};
+\end{tikzpicture}%
+%
+% Make the margin par
+\marginpar[%
+{% Draw note in left margin
+    \tikz[remember picture] \draw node[notestyleleft] (inNote) {#1};%
+    \begin{tikzpicture}[remember picture, overlay]%
+        \draw[connectstyle]
+            ([yshift=-0.2cm] inText)
+                -| ([xshift=0.2cm] inNote.east)
+                -| (inNote.east);
+    \end{tikzpicture}%
+}%
+]{% Draw note in right margin
+    \tikz[remember picture] \draw node[notestyle] (inNote) {#1};%
+    \begin{tikzpicture}[remember picture, overlay]%
+        \draw[connectstyle]
+            ([yshift=-0.2cm] inText)
+                -| ([xshift=-0.2cm] inNote.west)
+                -| (inNote.west);
+    \end{tikzpicture}%
+}%
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\floatname{algorithm}{Algoritmo}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{\textsc{Capítulo} \thechapter. #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\rightmark}
+\fancyhead[RE]{\leftmark}
+
+%% Dejar espacio para la regla
+\renewcommand{\headrulewidth}{0.02cm} %Son 0.5pt
+
+% Redefinición de 'plain' para la primera página del capítulo
+\fancypagestyle{plain}{
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+}
+
+% Limpiar las cabeceras de las páginas que quedan completamente blancas
+\makeatletter
+  \def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+  \vspace*{\fill}
+    \thispagestyle{empty}
+    \newpage
+    \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+
+\setlength\headheight{20pt}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% COMIENZA EL DOCUMENTO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagenumbering{roman}
+\makeindex
+\begin{document}
+
+\newlength{\centeroffset}
+\setlength{\centeroffset}{-0.5\oddsidemargin}
+\addtolength{\centeroffset}{0.5\evensidemargin}
+\thispagestyle{empty}
+\vspace*{\stretch{1}}
+\setstretch{1.2}
+
+\noindent
+\hspace*{\centeroffset}
+
+\renewcommand\contentsname{Índice general}
+\renewcommand\listfigurename{Índice de Figuras}
+\renewcommand\listtablename{Índice de Tablas}
+\renewcommand\bibname{Referencias}
+\renewcommand\figurename{Figura}
+\renewcommand\tablename{Tabla} 
+\renewcommand\chaptername{Capítulo}
+\renewcommand\appendixname{Apéndice}
+\renewcommand\abstractname{Resumen}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% PORTADA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\thispagestyle{empty}
+\vspace*{1cm}
+\hrule
+\mbox{ }
+
+\begin{center}
+\begin{LARGE}
+Trabajo Fin de Máster: Título del Trabajo \\ [0.3em]
+\end{LARGE}
+\end{center}
+
+\hrule
+\vspace*{1cm}
+\begin{center}
+ \includegraphics[width=0.3\textwidth]{imagenes/Logo_UNED.jpg} %[width=4cm,,keepaspectratio]
+\end{center}
+
+\vfill
+\begin{center}
+  {\Large {\bf Trabajo Fin de Máster}}
+\end{center}
+
+\vfill
+\begin{center}
+  \textbf{Nombre del Alumn@} \\ [0.2em]
+  Trabajo de investigación para el \\ \vspace{10pt}
+  Máster en Lenguajes y Sistemas Informáticos\\ \vspace{10pt}
+  Universidad Nacional de Educación a Distancia\\ \vspace{10pt}
+  \vspace{2cm}
+  Dirigido por el \\ \vspace{10pt}
+  \textbf{Prof. Dr. D. Nombre Direct@r} \\ [0.5em]
+  Marzo 2015\\
+\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% AGRADECIMIENTOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Agradecimientos}
+\label{sec:Agradecimientos}
+
+\noindent Agradecimientos si procede.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% RESUMEN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Resumen}
+\label{sec:Resumen}
+\noindent Breve resumen del trabajo realizado y de los objetivos conseguidos.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ABSTRACT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Abstract}
+\label{sec:Abstract}
+\noindent Breve resumen del trabajo realizado y de los objetivos conseguidos en inglés.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INDICES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+\listoffigures
+\listoftables
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ENTRADAS A LOS FICHEROS CON LOS CAPITULOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{capitulos/Introduccion}
+\input{capitulos/EstadoArte}
+\input{capitulos/Sistema_Metodo_Caso_de_Estudio}
+\input{capitulos/Evaluacion}
+\input{capitulos/Discusion}
+\input{capitulos/ConclusionesYTrabajoFuturo}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% BIBLIOGRAFÍA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{fullname_esp}
+\cleardoublepage
+\addcontentsline{toc}{chapter}{Bibliografía}
+\chapter*{Bibliografía}
+\fancyhead[RE]{BIBLIOGRAFÍA}
+\fancyhead[LO]{BIBLIOGRAFÍA}
+\bibliography{Bibliografia}
+
+
+\newpage
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% APENDICES SI PROCEDE (COMENTAR)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\chapter{Publicaciones}
+\label{ch:publicaciones}
+\fancyhead[RE]{\textsc{APÉNDICE} \thechapter. Publicaciones}
+\fancyhead[LO]{\textsc{APÉNDICE} \thechapter. Publicaciones}
+
+Publicaciones derivadas del trabajo realizado.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% lISTA DE TAREAS PENDIENTES.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\newpage
+%Eliminar si no hay todo's
+\listoftodos
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% SCRIPT FINAL DE TODO'S O TAREAS PENDIENTES.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Make the margin par
+\marginpar{%
+    \begin{tikzpicture}[remember picture]%
+        \draw node[notestyle] (inNote)
+                 {#1};%
+    \end{tikzpicture}%
+}%
+%
+\begin{tikzpicture}[remember picture, overlay]%
+    \draw[connectstyle]
+        ([yshift=-0.2cm] inText)
+            -| ([xshift=-0.2cm] inNote.west)
+            -| (inNote.west);
+\end{tikzpicture}%
+
+}% 
