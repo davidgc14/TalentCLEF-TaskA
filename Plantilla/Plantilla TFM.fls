@@ -340,11 +340,11 @@ INPUT ./capitulos/EstadoArte.tex
 INPUT capitulos/EstadoArte.tex
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT ./capitulos/Sistema_Metodo_Caso_de_Estudio.tex
-INPUT ./capitulos/Sistema_Metodo_Caso_de_Estudio.tex
-INPUT ./capitulos/Sistema_Metodo_Caso_de_Estudio.tex
-INPUT ./capitulos/Sistema_Metodo_Caso_de_Estudio.tex
-INPUT capitulos/Sistema_Metodo_Caso_de_Estudio.tex
+INPUT ./capitulos/Estudio.tex
+INPUT ./capitulos/Estudio.tex
+INPUT ./capitulos/Estudio.tex
+INPUT ./capitulos/Estudio.tex
+INPUT capitulos/Estudio.tex
 INPUT ./capitulos/Evaluacion.tex
 INPUT ./capitulos/Evaluacion.tex
 INPUT ./capitulos/Evaluacion.tex
@@ -355,11 +355,11 @@ INPUT ./capitulos/Discusion.tex
 INPUT ./capitulos/Discusion.tex
 INPUT ./capitulos/Discusion.tex
 INPUT capitulos/Discusion.tex
-INPUT ./capitulos/ConclusionesYTrabajoFuturo.tex
-INPUT ./capitulos/ConclusionesYTrabajoFuturo.tex
-INPUT ./capitulos/ConclusionesYTrabajoFuturo.tex
-INPUT ./capitulos/ConclusionesYTrabajoFuturo.tex
-INPUT capitulos/ConclusionesYTrabajoFuturo.tex
+INPUT ./capitulos/Conclusiones.tex
+INPUT ./capitulos/Conclusiones.tex
+INPUT ./capitulos/Conclusiones.tex
+INPUT ./capitulos/Conclusiones.tex
+INPUT capitulos/Conclusiones.tex
 INPUT ./Plantilla TFM.bbl
 INPUT ./Plantilla TFM.bbl
 INPUT Plantilla TFM.bbl
