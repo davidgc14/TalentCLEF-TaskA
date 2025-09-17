@@ -1,17 +1,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Plantilla desarrollada por Jorge Carrillo de Albornoz
-%%% para los trabajos de Fin de Master del Máster en
-%%% Lenguajes y Sistemas Informáticos de la UNED
+%%% para los trabajos de Fin de MÃ¡ster del MÃ¡ster en
+%%% Lenguajes y Sistemas InformÃ¡ticos de la UNED
 %%% Cualquier duda o comentario: jcalbornoz@lsi.uned.es
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[a4paper,11pt,twoside,openright,spanish]{book}
 
 \usepackage{latexsym}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage[activeacute,spanish]{babel}
 \frenchspacing
 \usepackage{eucal}
+\usepackage{textcomp}
 \usepackage{multirow}
 \usepackage{fancyhdr}
 \usepackage[final,pdftex]{graphicx}
@@ -75,7 +76,7 @@
 
 \floatname{algorithm}{Algoritmo}
 \pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{\textsc{Capítulo} \thechapter. #1}{}}
+\renewcommand{\chaptermark}[1]{\markboth{\textsc{CapÃ­tulo} \thechapter. #1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
 
 \fancyhf{}
@@ -86,14 +87,14 @@
 %% Dejar espacio para la regla
 \renewcommand{\headrulewidth}{0.02cm} %Son 0.5pt
 
-% Redefinición de 'plain' para la primera página del capítulo
+% RedefiniciÃ³n de 'plain' para la primera pÃ¡gina del capÃ­tulo
 \fancypagestyle{plain}{
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 }
 
-% Limpiar las cabeceras de las páginas que quedan completamente blancas
+% Limpiar las cabeceras de las pÃ¡ginas que quedan completamente blancas
 \makeatletter
   \def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
   \vspace*{\fill}
@@ -124,14 +125,14 @@
 \noindent
 \hspace*{\centeroffset}
 
-\renewcommand\contentsname{Índice general}
-\renewcommand\listfigurename{Índice de Figuras}
-\renewcommand\listtablename{Índice de Tablas}
+\renewcommand\contentsname{Ãndice general}
+\renewcommand\listfigurename{Ãndice de Figuras}
+\renewcommand\listtablename{Ãndice de Tablas}
 \renewcommand\bibname{Referencias}
 \renewcommand\figurename{Figura}
-\renewcommand\tablename{Tabla} 
-\renewcommand\chaptername{Capítulo}
-\renewcommand\appendixname{Apéndice}
+\renewcommand\tablename{Tabla}
+\renewcommand\chaptername{CapÃ­tulo}
+\renewcommand\appendixname{ApÃ©ndice}
 \renewcommand\abstractname{Resumen}
 
 
@@ -146,32 +147,32 @@
 \mbox{ }
 
 \begin{center}
-\begin{LARGE}
-Trabajo Fin de Máster: Título del Trabajo \\ [0.3em]
-\end{LARGE}
+    \begin{LARGE}
+        Trabajo Fin de MÃ¡ster: TÃ­tulo del Trabajo \\ [0.3em]
+    \end{LARGE}
 \end{center}
 
 \hrule
 \vspace*{1cm}
 \begin{center}
- \includegraphics[width=0.3\textwidth]{imagenes/Logo_UNED.jpg} %[width=4cm,,keepaspectratio]
+    \includegraphics[width=0.3\textwidth]{imagenes/Logo_UNED.jpg} %[width=4cm,,keepaspectratio]
 \end{center}
 
 \vfill
 \begin{center}
-  {\Large {\bf Trabajo Fin de Máster}}
+    {\Large {\bf Trabajo Fin de MÃ¡ster}}
 \end{center}
 
 \vfill
 \begin{center}
-  \textbf{Nombre del Alumn@} \\ [0.2em]
-  Trabajo de investigación para el \\ \vspace{10pt}
-  Máster en Lenguajes y Sistemas Informáticos\\ \vspace{10pt}
-  Universidad Nacional de Educación a Distancia\\ \vspace{10pt}
-  \vspace{2cm}
-  Dirigido por el \\ \vspace{10pt}
-  \textbf{Prof. Dr. D. Nombre Direct@r} \\ [0.5em]
-  Marzo 2015\\
+    \textbf{Nombre del Alumn@} \\ [0.2em]
+    Trabajo de investigaciÃ³n para el \\ \vspace{10pt}
+    MÃ¡ster en Lenguajes y Sistemas InformÃ¡ticos\\ \vspace{10pt}
+    Universidad Nacional de EducaciÃ³n a Distancia\\ \vspace{10pt}
+    \vspace{2cm}
+    Dirigido por el \\ \vspace{10pt}
+    \textbf{Prof. Dr. D. Nombre Direct@r} \\ [0.5em]
+    Marzo 2015\\
 \end{center}
 
 
@@ -197,7 +198,7 @@ Trabajo Fin de Máster: Título del Trabajo \\ [0.3em]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Abstract}
 \label{sec:Abstract}
-\noindent Breve resumen del trabajo realizado y de los objetivos conseguidos en inglés.
+\noindent Breve resumen del trabajo realizado y de los objetivos conseguidos en inglÃ©s.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -209,7 +210,7 @@ Trabajo Fin de Máster: Título del Trabajo \\ [0.3em]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% ENTRADAS A LOS FICHEROS CON LOS CAPITULOS
+%%% ENTRADAS A LOS FICHEROS CON LOS CAPÃTULOS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{capitulos/Introduccion}
 \input{capitulos/EstadoArte}
@@ -219,14 +220,14 @@ Trabajo Fin de Máster: Título del Trabajo \\ [0.3em]
 \input{capitulos/ConclusionesYTrabajoFuturo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% BIBLIOGRAFÍA
+%%% BIBLIOGRAFÃA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{fullname_esp}
 \cleardoublepage
-\addcontentsline{toc}{chapter}{Bibliografía}
-\chapter*{Bibliografía}
-\fancyhead[RE]{BIBLIOGRAFÍA}
-\fancyhead[LO]{BIBLIOGRAFÍA}
+\addcontentsline{toc}{chapter}{BibliografÃ­a}
+\chapter*{BibliografÃ­a}
+\fancyhead[RE]{BIBLIOGRAFÃA}
+\fancyhead[LO]{BIBLIOGRAFÃA}
 \bibliography{Bibliografia}
 
 
@@ -234,19 +235,19 @@ Trabajo Fin de Máster: Título del Trabajo \\ [0.3em]
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% APENDICES SI PROCEDE (COMENTAR)
+%%% APÃ‰NDICES SI PROCEDE (COMENTAR)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 \chapter{Publicaciones}
 \label{ch:publicaciones}
-\fancyhead[RE]{\textsc{APÉNDICE} \thechapter. Publicaciones}
-\fancyhead[LO]{\textsc{APÉNDICE} \thechapter. Publicaciones}
+\fancyhead[RE]{\textsc{APÃ‰NDICE} \thechapter. Publicaciones}
+\fancyhead[LO]{\textsc{APÃ‰NDICE} \thechapter. Publicaciones}
 
 Publicaciones derivadas del trabajo realizado.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% lISTA DE TAREAS PENDIENTES.
+%%% LISTA DE TAREAS PENDIENTES.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \newpage
@@ -263,15 +264,15 @@ Publicaciones derivadas del trabajo realizado.
 \marginpar{%
     \begin{tikzpicture}[remember picture]%
         \draw node[notestyle] (inNote)
-                 {#1};%
+        {#1};%
     \end{tikzpicture}%
 }%
 %
 \begin{tikzpicture}[remember picture, overlay]%
     \draw[connectstyle]
-        ([yshift=-0.2cm] inText)
-            -| ([xshift=-0.2cm] inNote.west)
-            -| (inNote.west);
+    ([yshift=-0.2cm] inText)
+    -| ([xshift=-0.2cm] inNote.west)
+    -| (inNote.west);
 \end{tikzpicture}%
 
-}% 
+}%
