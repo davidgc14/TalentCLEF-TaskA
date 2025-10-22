@@ -18,6 +18,8 @@ qrels: relaciones entre las queries y cada uno de los elementos del corpus. Solo
 
 Los datos de las queries pueden o no pertenecer al corpus conocido (la idea es que no necesariamente, y se construya pensando que no va a haber una solicitud en nuestro corpus). He encontrado algunos casos en los que si aparece en ambos. Ejemplo: lawyer
 
+Resulta que los datos se han obtenido de applications a trabajos que ha hecho la gente, donde las queries son las ofertas, y los titulos del corpus elements son los titulos de la gente que ha aplicado al puesto en cuestion. El training set se ha obtenido del ESCO directamente.
+
 ## Primera aproximación: Embeddings preentrenados
 
 Para la primera aproximación he optado por la forma más sencilla de abordarlo: no entrenar ningún modelo, sino usar un modelo ya entrenado en otros corpus de texto. Para ello me he servido del modelo _sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2_ que está preparado para ser multilingüe. Con este modelo obtenemos las representaciones vectoriales en el espacio de embedding preentrenado de 384 dimensiones. (Para monolingüe inglés también está disponible _sentence-transformers/all-MiniLM-L6-v2_).
