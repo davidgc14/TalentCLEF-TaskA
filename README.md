@@ -32,4 +32,7 @@ Para descubrir estas conexiones, he usado grafos. Tras generar el grafo resultan
 
 Una vez obtenido el threshold que maximiza la F1, he aplicado el modelo mencionado anteriormente para generar un embedding y con él una similitud coseno entre los pares de titlejobs que se encuentran en el conjunto de validación. Tras ello, he obtenido una matriz de tamaño query x corpus_element con las predicciones del modelo base, colapsando a 0 o 1 según si superaba el umbral encontrado. Tras ello se ha aplicado el classification report.
 
-Necesito encontrar en las bases de la competición la forma exacta de evaluación, para saber qué métrica debo aplicar y así tener una métrica que poder optimizar.
+TODO:
+
+- Necesito encontrar en las bases de la competición la forma exacta de evaluación, para saber qué métrica debo aplicar y así tener una métrica que poder optimizar.
+- Tengo que volver a comprobar si puedo separar por grupos, en lugar por componentes conexas, usando el family_id. Al parecer es el ID del ESCO, por lo que puede diferir de las componentes conexas, habiendo varias componentes conexas que puedan pertenecer al mismo family_id, o al revés.
