@@ -43,3 +43,9 @@ Una vez obtenido el threshold que maximiza la F1, he aplicado el modelo menciona
 ## Evaluación
 
 Para la evaluación me he servido del tutorial proporcionado por la organización (que lo he adaptado a mi caso en el archivo `evaluation_path.ipynb`). Este flujo de evaluación se sirve del archivo `talentclef_evaluate.py`, el cual contiene todas las métricas de evaluación para una correcta valoración del modelo. Ahora mismo se encuentra preparado con el modelo monolingüe y los datos de validación para inglés, aunque supuestamente sería necesario generar lo mismo para los cuatro idiomas.
+
+**TO-DO**:
+
+- Construir un archivo que procese la evaluación monolingue, a la cual se le pase como parámetro el lenguaje que se quiere evaluar, y trabajar a partir de ahí con rutas a los archivos de evaluación.
+- COnstruir un archivo para el procesamiento multilingue, al que se le pasen como parametros los dos idiomas que se deben cruzar.
+- Construir un archivo main.py que ejecute la evaluación para cada uno de los idiomas, asi como los casos cross-lingual.
