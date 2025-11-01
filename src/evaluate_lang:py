@@ -1,0 +1,9 @@
+import pandas as pd
+import numpy as np
+from sentence_transformers import SentenceTransformer, util
+import subprocess
+
+
+"""
+Función que el flujo de evaluación para un idioma específico.
+"""
