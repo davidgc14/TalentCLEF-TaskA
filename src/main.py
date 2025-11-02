@@ -122,7 +122,7 @@ def all_lang_evaluation(model_name="all-MiniLM-L6-v2", nickname="default", devic
         f.write(f"Model alias: {nickname}\n\n")
         for lang in results:
             f.write(f"=== Results for language: {lang} ===\n")
-            f.write(results[lang])
+            f.write("\n".join(results[lang].splitlines()[-7:]))
             f.write("\n\n")
 
 
