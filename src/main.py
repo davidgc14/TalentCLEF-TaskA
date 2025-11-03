@@ -149,40 +149,51 @@ def multilingual_evaluation(lang, main_lang, model, device, source):
 # SAVING RESULTS
 # ========================
 
-def save_monolingual_results(monolingual_results, model_name, nickname):
+def save_monolingual_results(monolingual_results, model_name, nickname, source):
+    """Save monolingual evaluation results to a structured JSON file."""
     print("Monolingual evaluations completed. Saving results...")
-    txt_path = output_dir / "results.txt"
-    json_path = output_dir / "results.json"
 
-    with open(txt_path, "w", encoding="utf-8") as f:
-        f.write("=== Evaluation Results for monolingual ===\n")
-        f.write(f"Model name: {model_name}\nModel alias: {nickname}\n\n")
-        for lang, res in monolingual_results.items():
-            f.write(f"=== Language: {lang} ===\n")
-            for metric, score in res.items():
-                f.write(f"{metric}: {score:.4f}\n")
-            f.write("\n")
+    json_path = output_dir / "results_monolingual.json"
+
+    results_data = {
+        "metadata": {
+            "type": "monolingual",
+            "model_name": model_name,
+            "nickname": nickname,
+            "source": source,
+            "timestamp": today
+        },
+        "results": monolingual_results
+    }
 
     with open(json_path, "w", encoding="utf-8") as jf:
-        json.dump(monolingual_results, jf, indent=2, ensure_ascii=False)
+        json.dump(results_data, jf, indent=2, ensure_ascii=False)
+
+    print(f"Saved monolingual results to {json_path}")
 
 
-def save_multilingual_results(multilingual_results, model_name, nickname):
+def save_multilingual_results(multilingual_results, model_name, nickname, source):
+    """Save multilingual evaluation results to a structured JSON file."""
     print("Multilingual evaluations completed. Saving results...")
-    txt_path = output_dir / "results_multilingual.txt"
+
     json_path = output_dir / "results_multilingual.json"
 
-    with open(txt_path, "w", encoding="utf-8") as f:
-        f.write("=== Evaluation Results for multilingual ===\n")
-        f.write(f"Model name: {model_name}\nModel alias: {nickname}\n\n")
-        for lang_pair, res in multilingual_results.items():
-            f.write(f"=== Language Pair: {lang_pair} ===\n")
-            for metric, score in res.items():
-                f.write(f"{metric}: {score:.4f}\n")
-            f.write("\n")
+    results_data = {
+        "metadata": {
+            "type": "multilingual",
+            "model_name": model_name,
+            "nickname": nickname,
+            "source": source,
+            "timestamp": today
+        },
+        "results": multilingual_results
+    }
 
     with open(json_path, "w", encoding="utf-8") as jf:
-        json.dump(multilingual_results, jf, indent=2, ensure_ascii=False)
+        json.dump(results_data, jf, indent=2, ensure_ascii=False)
+
+    print(f"Saved multilingual results to {json_path}")
+
 
 
 # ========================
@@ -197,13 +208,13 @@ def all_lang_evaluation(model_name, nickname, main_lang, device, source):
         lang: monolingual_evaluation(lang, model, device, source)
         for lang in lang_dict.keys()
     }
-    save_monolingual_results(monolingual_results, model_name, nickname)
+    save_monolingual_results(monolingual_results, model_name, nickname, source)
 
     multilingual_results = {
         f"{main_lang}-{lang}": multilingual_evaluation(lang, main_lang, model, device, source)
         for lang in lang_dict.keys() if lang != main_lang
     }
-    save_multilingual_results(multilingual_results, model_name, nickname)
+    save_multilingual_results(multilingual_results, model_name, nickname, source)
 
 
 def run_monolingual_only(model_name, nickname, device, source):
@@ -212,7 +223,7 @@ def run_monolingual_only(model_name, nickname, device, source):
         lang: monolingual_evaluation(lang, model, device, source)
         for lang in lang_dict.keys()
     }
-    save_monolingual_results(monolingual_results, model_name, nickname)
+    save_monolingual_results(monolingual_results, model_name, nickname, source)
 
 
 def run_multilingual_only(model_name, nickname, main_lang, device, source):
@@ -221,7 +232,7 @@ def run_multilingual_only(model_name, nickname, main_lang, device, source):
         f"{main_lang}-{lang}": multilingual_evaluation(lang, main_lang, model, device, source)
         for lang in lang_dict.keys() if lang != main_lang
     }
-    save_multilingual_results(multilingual_results, model_name, nickname)
+    save_multilingual_results(multilingual_results, model_name, nickname, source)
 
 
 # ========================
