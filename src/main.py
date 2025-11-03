@@ -20,8 +20,7 @@ project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 date_dir = os.path.join(project_dir, 'src', 'output', today)
 os.makedirs(date_dir, exist_ok=True)
 
-# comprobar si la ultima ejecucion esta vacia
-
+# comprobar si la ultima ejecución esta vacia
 exec_dirs = sorted([d for d in os.listdir(date_dir) if d.isdigit() and len(d) == 3])
 
 if exec_dirs and not os.listdir(os.path.join(date_dir, exec_dirs[-1])):
@@ -32,156 +31,135 @@ else:
     os.makedirs(output_dir, exist_ok=True)
 
 
-
-def monolingual_evaluation(lang, model, device):
-
-
-    data_dir = os.path.join(project_dir, 'data', source, lang_dict[lang])
-
-
+def load_data(data_dir):
+    """Load queries and corpus elements from a data directory."""
     queries_path = os.path.join(data_dir, "queries")
     corpus_elements_path = os.path.join(data_dir, "corpus_elements")
-    qrels_path = os.path.join(data_dir, "qrels.tsv")
-
-
-    print('Loading data for language:', lang)
-
+    
     queries = pd.read_csv(queries_path, sep="\t")
     corpus_elements = pd.read_csv(corpus_elements_path, sep="\t")
-
+    
     queries_ids = queries.q_id.to_list()
     queries_texts = queries.jobtitle.to_list()
-
-
     corpus_ids = corpus_elements.c_id.to_list()
     corpus_texts = corpus_elements.jobtitle.to_list()
+    
+    return queries_ids, queries_texts, corpus_ids, corpus_texts
 
 
-    model_name = model[0].auto_model.config._name_or_path 
-    model_name = model_name.split("/")[-1]
+def encode_data(model, queries_texts, corpus_texts, model_name, device):
+    """Encode queries and corpus using the model."""
     print('Encoding data:', model_name, 'on device:', device)
-
+    
     query_embeddings = model.encode(queries_texts, convert_to_tensor=True, show_progress_bar=True)
     corpus_embeddings = model.encode(corpus_texts, convert_to_tensor=True, show_progress_bar=True)
-
-
-    print('Calculating similarities and preparing results...')
-
-    similarities = util.cos_sim(query_embeddings, corpus_embeddings).cpu().numpy()
-
-    results = []
     
+    return query_embeddings, corpus_embeddings
+
+
+def calculate_similarities_and_format_results(query_embeddings, corpus_embeddings, queries_ids, corpus_ids, model_name):
+    """Calculate cosine similarities and format results in TREC format."""
+    print('Calculating similarities and preparing results...')
+    
+    similarities = util.cos_sim(query_embeddings, corpus_embeddings).cpu().numpy()
+    
+    results = []
     for q_idx, q_id in enumerate(queries_ids):
         sorted_indices = np.argsort(-similarities[q_idx])  # Decrease order
         for rank, c_idx in enumerate(sorted_indices):  
             doc_id = corpus_ids[c_idx]
             score = similarities[q_idx, c_idx]
             results.append(f"{str(q_id)} Q0 {str(doc_id)} {rank+1} {score:.4f} {model_name}")
+    
+    return results
 
 
-    run_file = os.path.join(output_dir, f"run_{lang}-{lang}_{model_name}.trec")
-
+def write_run_file(results, run_file):
+    """Write results to TREC format file."""
     print('Writing results to:', os.path.basename(run_file))
-
+    
     with open(run_file, "w", encoding="utf-8") as f:
         f.write("\n".join(results))
 
 
+def run_evaluation(qrels_path, run_file):
+    """Run the evaluation script and return results."""
     print('Evaluating with evaluation_file.py...')
-
+    
     command = ["python", os.path.join(project_dir, "src", "evaluation_file.py"), "--qrels", qrels_path, "--run", run_file]
-
     result = subprocess.run(command, capture_output=True, text=True)
-
+    
     if result.stderr:
         print("Error:", result.stderr)
     print(result.stdout)
-
-
-
-    print('Evaluation completed for language:', lang)
+    
     return result.stdout
 
 
-
-def multilingual_evaluation(lang, main_lang, model, device):
-
-    data_dir_main = os.path.join(project_dir, 'data', source, lang_dict[main_lang])
-    data_dir_target = os.path.join(project_dir, 'data', source, lang_dict[lang])
-
-
-    queries_path = os.path.join(data_dir_main, "queries")
-    corpus_elements_path = os.path.join(data_dir_target, "corpus_elements")
-    # qrels_path = os.path.join(data_dir_main, "qrels.tsv")
-
-
-    print('Loading data for multilingual evaluation:', main_lang, '->', lang)
-
-    queries = pd.read_csv(queries_path, sep="\t")
-    corpus_elements = pd.read_csv(corpus_elements_path, sep="\t")
-
-    queries_ids = queries.q_id.to_list()
-    queries_texts = queries.jobtitle.to_list()
-
-
-    corpus_ids = corpus_elements.c_id.to_list()
-    corpus_texts = corpus_elements.jobtitle.to_list()
-
-
+def get_model_name(model):
+    """Extract model name from the model object."""
     model_name = model[0].auto_model.config._name_or_path 
     model_name = model_name.split("/")[-1]
-    print('Encoding data:', model_name, 'on device:', device)
-
-    query_embeddings = model.encode(queries_texts, convert_to_tensor=True, show_progress_bar=True)
-    corpus_embeddings = model.encode(corpus_texts, convert_to_tensor=True, show_progress_bar=True)
+    return model_name
 
 
-    print('Calculating similarities and preparing results...')
-
-    similarities = util.cos_sim(query_embeddings, corpus_embeddings).cpu().numpy()
-
-    results = []
+def monolingual_evaluation(lang, model, device):
+    """Evaluate model performance on monolingual data."""
+    data_dir = os.path.join(project_dir, 'data', source, lang_dict[lang])
+    qrels_path = os.path.join(data_dir, "qrels.tsv")
     
-    for q_idx, q_id in enumerate(queries_ids):
-        sorted_indices = np.argsort(-similarities[q_idx])  # Decrease order
-        for rank, c_idx in enumerate(sorted_indices):  
-            doc_id = corpus_ids[c_idx]
-            score = similarities[q_idx, c_idx]
-            results.append(f"{str(q_id)} Q0 {str(doc_id)} {rank+1} {score:.4f} {model_name}")
+    print('Loading data for language:', lang)
+    
+    queries_ids, queries_texts, corpus_ids, corpus_texts = load_data(data_dir)
+    model_name = get_model_name(model)
+    
+    query_embeddings, corpus_embeddings = encode_data(model, queries_texts, corpus_texts, model_name, device)
+    results = calculate_similarities_and_format_results(query_embeddings, corpus_embeddings, queries_ids, corpus_ids, model_name)
+    
+    run_file = os.path.join(output_dir, f"run_{lang}-{lang}_{model_name}.trec")
+    write_run_file(results, run_file)
+    
+    evaluation_results = run_evaluation(qrels_path, run_file)
+    
+    print('Evaluation completed for language:', lang)
+    return evaluation_results
 
 
+def multilingual_evaluation(lang, main_lang, model, device):
+    """Evaluate model performance on cross-lingual data."""
+    data_dir_main = os.path.join(project_dir, 'data', source, lang_dict[main_lang])
+    data_dir_target = os.path.join(project_dir, 'data', source, lang_dict[lang])
+    
+    print('Loading data for multilingual evaluation:', main_lang, '->', lang)
+    
+    # Load queries from main language
+    queries_path = os.path.join(data_dir_main, "queries")
+    queries = pd.read_csv(queries_path, sep="\t")
+    queries_ids = queries.q_id.to_list()
+    queries_texts = queries.jobtitle.to_list()
+    
+    # Load corpus from target language
+    corpus_elements_path = os.path.join(data_dir_target, "corpus_elements")
+    corpus_elements = pd.read_csv(corpus_elements_path, sep="\t")
+    corpus_ids = corpus_elements.c_id.to_list()
+    corpus_texts = corpus_elements.jobtitle.to_list()
+    
+    model_name = get_model_name(model)
+    
+    query_embeddings, corpus_embeddings = encode_data(model, queries_texts, corpus_texts, model_name, device)
+    results = calculate_similarities_and_format_results(query_embeddings, corpus_embeddings, queries_ids, corpus_ids, model_name)
+    
     run_file = os.path.join(output_dir, f"run_{main_lang}-{lang}_{model_name}.trec")
-
-    print('Writing results to:', os.path.basename(run_file))
-
-    with open(run_file, "w", encoding="utf-8") as f:
-        f.write("\n".join(results))
-
-
+    write_run_file(results, run_file)
+    
     print('Still not able to evaluate multilingual runs. Skipping evaluation step.')
     return "Multilingual evaluation not implemented yet."
 
 
-
-
-
-
-
-
-
-
-
-def all_lang_evaluation(model_name="paraphrase-multilingual-MiniLM-L12-v2", nickname="default", main_lang='en', device='cpu'):
-
-    model = SentenceTransformer(model_name, device=device)
-
-    monolingual_results = {}
-    for lang in lang_dict.keys():
-        print(f"Starting evaluation for language: {lang}")
-        monolingual_results[lang] = monolingual_evaluation(lang=lang, model=model, device=device)
-
+def save_monolingual_results(monolingual_results, model_name, nickname):
+    """Save monolingual evaluation results to file."""
     print("Monolingual evaluations completed. Saving results...")
-
+    
     with open(os.path.join(output_dir, f"results.txt"), "w", encoding="utf-8") as f:
         f.write("=== Evaluation Results for monolingual ===\n")
         f.write(f"Model name: {model_name}\n")
@@ -191,15 +169,11 @@ def all_lang_evaluation(model_name="paraphrase-multilingual-MiniLM-L12-v2", nick
             f.write("\n".join(monolingual_results[lang].splitlines()[-6:]))
             f.write("\n\n\n")
 
-    multilingual_results = {}
-    for lang in lang_dict.keys():
-        if lang == main_lang:
-            continue
-        print(f"Starting multilingual evaluation for language pair: {main_lang} -> {lang}")
-        multilingual_results[f"{main_lang}-{lang}"] = multilingual_evaluation(lang=lang, main_lang=main_lang, model=model, device=device)
 
+def save_multilingual_results(multilingual_results, model_name, nickname):
+    """Save multilingual evaluation results to file."""
     print("Multilingual evaluations completed. Saving results...")
-
+    
     with open(os.path.join(output_dir, f"results.txt"), "a", encoding="utf-8") as f:
         f.write("=== Evaluation Results for multilingual ===\n")
         f.write(f"Model name: {model_name}\n")
@@ -210,12 +184,92 @@ def all_lang_evaluation(model_name="paraphrase-multilingual-MiniLM-L12-v2", nick
             f.write("\n\n\n")
 
 
+def all_lang_evaluation(model_name="paraphrase-multilingual-MiniLM-L12-v2", nickname="default", main_lang='en', device='cpu'):
+    """Run complete evaluation pipeline for all languages."""
+    model = SentenceTransformer(model_name, device=device)
+    
+    # Monolingual evaluations
+    monolingual_results = {}
+    for lang in lang_dict.keys():
+        print(f"Starting evaluation for language: {lang}")
+        monolingual_results[lang] = monolingual_evaluation(lang=lang, model=model, device=device)
+    
+    save_monolingual_results(monolingual_results, model_name, nickname)
+    
+    # Multilingual evaluations
+    multilingual_results = {}
+    for lang in lang_dict.keys():
+        if lang == main_lang:
+            continue
+        print(f"Starting multilingual evaluation for language pair: {main_lang} -> {lang}")
+        multilingual_results[f"{main_lang}-{lang}"] = multilingual_evaluation(lang=lang, main_lang=main_lang, model=model, device=device)
+    
+    save_multilingual_results(multilingual_results, model_name, nickname)
+
 
 def main():
-    all_lang_evaluation()
+    """Main entry point with argument parsing."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Evaluate sentence transformer models on multilingual job title matching')
+    parser.add_argument('--model', type=str, default='paraphrase-multilingual-MiniLM-L12-v2',
+                        help='Model name from HuggingFace or local path (e.g., ./models/my-model)')
+    parser.add_argument('--nickname', type=str, default='default',
+                        help='Alias for the model in results')
+    parser.add_argument('--main-lang', type=str, default='en', choices=['en', 'es', 'de', 'zh'],
+                        help='Main language for multilingual evaluation')
+    parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda', 'mps'],
+                        help='Device to run the model on')
+    parser.add_argument('--mono-only', action='store_true',
+                        help='Run only monolingual evaluations')
+    parser.add_argument('--multi-only', action='store_true',
+                        help='Run only multilingual evaluations')
+    
+    args = parser.parse_args()
+    
+    # Validate model path/name
+    if os.path.exists(args.model):
+        print(f"Loading local model from: {args.model}")
+    else:
+        print(f"Loading model from HuggingFace: {args.model}")
+    
+    # Validate arguments
+    if args.mono_only and args.multi_only:
+        parser.error("Cannot use --mono-only and --multi-only together")
+    
+    # Run evaluation based on flags
+    if args.mono_only:
+        run_monolingual_only(args.model, args.nickname, args.device)
+    elif args.multi_only:
+        run_multilingual_only(args.model, args.nickname, args.main_lang, args.device)
+    else:
+        all_lang_evaluation(args.model, args.nickname, args.main_lang, args.device)
 
 
+def run_monolingual_only(model_name, nickname, device):
+    """Run only monolingual evaluations."""
+    model = SentenceTransformer(model_name, device=device)
+    
+    monolingual_results = {}
+    for lang in lang_dict.keys():
+        print(f"Starting evaluation for language: {lang}")
+        monolingual_results[lang] = monolingual_evaluation(lang=lang, model=model, device=device)
+    
+    save_monolingual_results(monolingual_results, model_name, nickname)
 
+
+def run_multilingual_only(model_name, nickname, main_lang, device):
+    """Run only multilingual evaluations."""
+    model = SentenceTransformer(model_name, device=device)
+    
+    multilingual_results = {}
+    for lang in lang_dict.keys():
+        if lang == main_lang:
+            continue
+        print(f"Starting multilingual evaluation for language pair: {main_lang} -> {lang}")
+        multilingual_results[f"{main_lang}-{lang}"] = multilingual_evaluation(lang=lang, main_lang=main_lang, model=model, device=device)
+    
+    save_multilingual_results(multilingual_results, model_name, nickname)
 
 
 if __name__ == "__main__":
