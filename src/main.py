@@ -5,6 +5,7 @@ import subprocess
 import time
 import os
 
+source = "validation"
 
 lang_dict = {
     'en': 'english',
@@ -32,7 +33,7 @@ else:
 
 
 
-def monolingual_evaluation(lang, model, source='validation', nickname="default", device='cpu'):
+def monolingual_evaluation(lang, model, device):
 
 
     data_dir = os.path.join(project_dir, 'data', source, lang_dict[lang])
@@ -103,34 +104,115 @@ def monolingual_evaluation(lang, model, source='validation', nickname="default",
 
 
 
+def multilingual_evaluation(lang, main_lang, model, device):
+
+    data_dir_main = os.path.join(project_dir, 'data', source, lang_dict[main_lang])
+    data_dir_target = os.path.join(project_dir, 'data', source, lang_dict[lang])
 
 
-def all_lang_evaluation(model_name="all-MiniLM-L6-v2", nickname="default", device='cpu'):
+    queries_path = os.path.join(data_dir_main, "queries")
+    corpus_elements_path = os.path.join(data_dir_target, "corpus_elements")
+    # qrels_path = os.path.join(data_dir_main, "qrels.tsv")
+
+
+    print('Loading data for multilingual evaluation:', main_lang, '->', lang)
+
+    queries = pd.read_csv(queries_path, sep="\t")
+    corpus_elements = pd.read_csv(corpus_elements_path, sep="\t")
+
+    queries_ids = queries.q_id.to_list()
+    queries_texts = queries.jobtitle.to_list()
+
+
+    corpus_ids = corpus_elements.c_id.to_list()
+    corpus_texts = corpus_elements.jobtitle.to_list()
+
+
+    model_name = model[0].auto_model.config._name_or_path 
+    model_name = model_name.split("/")[-1]
+    print('Encoding data:', model_name, 'on device:', device)
+
+    query_embeddings = model.encode(queries_texts, convert_to_tensor=True, show_progress_bar=True)
+    corpus_embeddings = model.encode(corpus_texts, convert_to_tensor=True, show_progress_bar=True)
+
+
+    print('Calculating similarities and preparing results...')
+
+    similarities = util.cos_sim(query_embeddings, corpus_embeddings).cpu().numpy()
+
+    results = []
+    
+    for q_idx, q_id in enumerate(queries_ids):
+        sorted_indices = np.argsort(-similarities[q_idx])  # Decrease order
+        for rank, c_idx in enumerate(sorted_indices):  
+            doc_id = corpus_ids[c_idx]
+            score = similarities[q_idx, c_idx]
+            results.append(f"{str(q_id)} Q0 {str(doc_id)} {rank+1} {score:.4f} {model_name}")
+
+
+    run_file = os.path.join(output_dir, f"run_{main_lang}-{lang}_{model_name}.trec")
+
+    print('Writing results to:', os.path.basename(run_file))
+
+    with open(run_file, "w", encoding="utf-8") as f:
+        f.write("\n".join(results))
+
+
+    print('Still not able to evaluate multilingual runs. Skipping evaluation step.')
+    return "Multilingual evaluation not implemented yet."
+
+
+
+
+
+
+
+
+
+
+
+def all_lang_evaluation(model_name="paraphrase-multilingual-MiniLM-L12-v2", nickname="default", main_lang='en', device='cpu'):
 
     model = SentenceTransformer(model_name, device=device)
 
-    results = {}
+    monolingual_results = {}
     for lang in lang_dict.keys():
         print(f"Starting evaluation for language: {lang}")
-        results[lang] = monolingual_evaluation(lang=lang, model=model, nickname=nickname, device=device)
+        monolingual_results[lang] = monolingual_evaluation(lang=lang, model=model, device=device)
 
-    print("All evaluations completed. Saving all evaluation results...")
+    print("Monolingual evaluations completed. Saving results...")
 
     with open(os.path.join(output_dir, f"results.txt"), "w", encoding="utf-8") as f:
-        f.write("=== Evaluation Results for multilingual ===\n")
-        f.write(f"Model name: {model_name}\n\n")
+        f.write("=== Evaluation Results for monolingual ===\n")
+        f.write(f"Model name: {model_name}\n")
         f.write(f"Model alias: {nickname}\n\n")
-        for lang in results:
-            f.write(f"=== Results for language: {lang} ===\n")
-            f.write("\n".join(results[lang].splitlines()[-7:]))
-            f.write("\n\n")
+        for lang in monolingual_results:
+            f.write(f"=== Language: {lang} ===\n")
+            f.write("\n".join(monolingual_results[lang].splitlines()[-6:]))
+            f.write("\n\n\n")
 
+    multilingual_results = {}
+    for lang in lang_dict.keys():
+        if lang == main_lang:
+            continue
+        print(f"Starting multilingual evaluation for language pair: {main_lang} -> {lang}")
+        multilingual_results[f"{main_lang}-{lang}"] = multilingual_evaluation(lang=lang, main_lang=main_lang, model=model, device=device)
+
+    print("Multilingual evaluations completed. Saving results...")
+
+    with open(os.path.join(output_dir, f"results.txt"), "a", encoding="utf-8") as f:
+        f.write("=== Evaluation Results for multilingual ===\n")
+        f.write(f"Model name: {model_name}\n")
+        f.write(f"Model alias: {nickname}\n\n")
+        for lang_pair in multilingual_results:
+            f.write(f"=== Language Pair: {lang_pair} ===\n")
+            f.write(multilingual_results[lang_pair])
+            f.write("\n\n\n")
 
 
 
 def main():
-    # Example usage
-    all_lang_evaluation(model_name="all-MiniLM-L6-v2", nickname="MiniLM_v2", device='cpu')
+    all_lang_evaluation()
 
 
 
