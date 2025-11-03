@@ -44,9 +44,4 @@ Una vez obtenido el threshold que maximiza la F1, he aplicado el modelo menciona
 
 Para la evaluación me he servido del tutorial proporcionado por la organización (que lo he adaptado a mi caso en el archivo `evaluation_path.ipynb`, y posteriormente en `main.py`). Este flujo de evaluación se sirve del archivo `talentclef_evaluate.py` (refactorizado a `evaluation_file`), el cual contiene todas las métricas de evaluación para una correcta valoración del modelo.
 
-Actualmente, al ejecutar el archivo `main.py`, se genera una carpeta por ejecución en el directorio **output**, donde se guardan los archivos con los rankings y los resultados de las evaluaciones de cada uno de los rankings. Este archivo ejecuta uno por uno el ranking monolingue para cada uno de los cuatro idiomas.
-
-**TO-DO**
-
-- generar una función dentro de main.py que también genere la comparativa multilingue.
-- separar en varios archivos si es necesario para una arquitectura más limpia.
+Actualmente, al ejecutar el archivo `main.py`, se genera una carpeta por ejecución en el directorio **output**, donde se guardan los archivos con los rankings y los resultados de las evaluaciones de cada uno de los rankings. Este archivo ejecuta uno por uno el ranking monolingue para cada uno de los cuatro idiomas, y posteriormente los tres casos multilingue. Los resultados se guardan en dos archivos .json por separado.
