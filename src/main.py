@@ -7,7 +7,6 @@ import time
 import json
 
 
-# Diccionario de idiomas
 lang_dict = {
     'en': 'english',
     'es': 'spanish',
@@ -17,7 +16,6 @@ lang_dict = {
 
 today = time.strftime("%Y-%m-%d")
 
-# Directorio base del proyecto
 project_dir = Path(__file__).resolve().parents[1]
 date_dir = project_dir / 'src' / 'output' / today
 date_dir.mkdir(parents=True, exist_ok=True)
@@ -33,7 +31,7 @@ else:
 
 
 # ========================
-# FUNCIONES PRINCIPALES
+# DATA LOADING AND ENCODING
 # ========================
 
 def load_data(data_dir):
@@ -96,7 +94,7 @@ def get_model_name(model):
 
 
 # ========================
-# EVALUACIONES
+# EVALUATION FUNCTIONS
 # ========================
 
 def monolingual_evaluation(lang, model, device, source):
@@ -148,7 +146,7 @@ def multilingual_evaluation(lang, main_lang, model, device, source):
 
 
 # ========================
-# GUARDADO DE RESULTADOS
+# SAVING RESULTS
 # ========================
 
 def save_monolingual_results(monolingual_results, model_name, nickname):
@@ -188,7 +186,7 @@ def save_multilingual_results(multilingual_results, model_name, nickname):
 
 
 # ========================
-# PIPELINES DE EVALUACIÓN
+# EVALUATION PIPELINES
 # ========================
 
 def all_lang_evaluation(model_name, nickname, main_lang, device, source):
@@ -227,7 +225,7 @@ def run_multilingual_only(model_name, nickname, main_lang, device, source):
 
 
 # ========================
-# MAIN CLI
+# MAIN
 # ========================
 
 def main():
