@@ -1,9 +1,12 @@
 import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer, util
-import subprocess
+from pathlib import Path
+import evaluation_file
 import time
 import os
+import json
+
 
 source = "validation"
 
@@ -16,19 +19,19 @@ lang_dict = {
 
 today = time.strftime("%Y-%m-%d")
 
-project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-date_dir = os.path.join(project_dir, 'src', 'output', today)
-os.makedirs(date_dir, exist_ok=True)
+project_dir = Path(__file__).resolve().parents[1]
+date_dir = project_dir / 'src' / 'output' / today
+date_dir.mkdir(parents=True, exist_ok=True)
 
-# comprobar si la ultima ejecución esta vacia
-exec_dirs = sorted([d for d in os.listdir(date_dir) if d.isdigit() and len(d) == 3])
+# Comprobar si la última ejecución está vacía
+exec_dirs = sorted([d for d in date_dir.iterdir() if d.is_dir() and d.name.isdigit() and len(d.name) == 3])
 
-if exec_dirs and not os.listdir(os.path.join(date_dir, exec_dirs[-1])):
-    output_dir = os.path.join(date_dir, exec_dirs[-1])
+if exec_dirs and not any(exec_dirs[-1].iterdir()):
+    output_dir = exec_dirs[-1]
 else:
-    next_id = int(exec_dirs[-1]) + 1 if exec_dirs else 1
-    output_dir = os.path.join(date_dir, f"{next_id:03d}")
-    os.makedirs(output_dir, exist_ok=True)
+    next_id = int(exec_dirs[-1].name) + 1 if exec_dirs else 1
+    output_dir = date_dir / f"{next_id:03d}"
+    output_dir.mkdir(exist_ok=True)
 
 
 def load_data(data_dir):
@@ -82,18 +85,16 @@ def write_run_file(results, run_file):
         f.write("\n".join(results))
 
 
+
 def run_evaluation(qrels_path, run_file):
-    """Run the evaluation script and return results."""
+    """Run the evaluation script and return results as dict."""
     print('Evaluating with evaluation_file.py...')
-    
-    command = ["python", os.path.join(project_dir, "src", "evaluation_file.py"), "--qrels", qrels_path, "--run", run_file]
-    result = subprocess.run(command, capture_output=True, text=True)
-    
-    if result.stderr:
-        print("Error:", result.stderr)
-    print(result.stdout)
-    
-    return result.stdout
+    results = evaluation_file.evaluate_run(qrels_path, run_file)
+    # print("\n=== Evaluation Results ===")
+    # for metric, score in results.items():
+    #     print(f"{metric}: {score:.4f}")
+    return results
+
 
 
 def get_model_name(model):
@@ -153,35 +154,59 @@ def multilingual_evaluation(lang, main_lang, model, device):
     write_run_file(results, run_file)
     
     print('Still not able to evaluate multilingual runs. Skipping evaluation step.')
-    return "Multilingual evaluation not implemented yet."
+    metrics = {
+        "map": 0.0,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "precision@5": 0.0,
+        "precision@10": 0.0,
+        "precision@100": 0.0
+    }
+    return metrics
+
 
 
 def save_monolingual_results(monolingual_results, model_name, nickname):
-    """Save monolingual evaluation results to file."""
     print("Monolingual evaluations completed. Saving results...")
-    
-    with open(os.path.join(output_dir, f"results.txt"), "w", encoding="utf-8") as f:
+    txt_path = os.path.join(output_dir, "results.txt")
+    json_path = os.path.join(output_dir, "results.json")
+
+    # Escribir resultados de texto
+    with open(txt_path, "w", encoding="utf-8") as f:
         f.write("=== Evaluation Results for monolingual ===\n")
         f.write(f"Model name: {model_name}\n")
         f.write(f"Model alias: {nickname}\n\n")
-        for lang in monolingual_results:
+        for lang, res in monolingual_results.items():
             f.write(f"=== Language: {lang} ===\n")
-            f.write("\n".join(monolingual_results[lang].splitlines()[-6:]))
-            f.write("\n\n\n")
+            for metric, score in res.items():
+                f.write(f"{metric}: {score:.4f}\n")
+            f.write("\n")
+
+    # Guardar también en JSON
+    with open(json_path, "w", encoding="utf-8") as jf:
+        json.dump(monolingual_results, jf, indent=2, ensure_ascii=False)
+
 
 
 def save_multilingual_results(multilingual_results, model_name, nickname):
-    """Save multilingual evaluation results to file."""
     print("Multilingual evaluations completed. Saving results...")
-    
-    with open(os.path.join(output_dir, f"results.txt"), "a", encoding="utf-8") as f:
+    txt_path = os.path.join(output_dir, "results_multilingual.txt")
+    json_path = os.path.join(output_dir, "results_multilingual.json")
+
+    # Escribir resultados de texto
+    with open(txt_path, "w", encoding="utf-8") as f:
         f.write("=== Evaluation Results for multilingual ===\n")
         f.write(f"Model name: {model_name}\n")
         f.write(f"Model alias: {nickname}\n\n")
-        for lang_pair in multilingual_results:
+        for lang_pair, res in multilingual_results.items():
             f.write(f"=== Language Pair: {lang_pair} ===\n")
-            f.write(multilingual_results[lang_pair])
-            f.write("\n\n\n")
+            for metric, score in res.items():
+                f.write(f"{metric}: {score:.4f}\n")
+            f.write("\n")
+
+    # Guardar también en JSON
+    with open(json_path, "w", encoding="utf-8") as jf:
+        json.dump(multilingual_results, jf, indent=2, ensure_ascii=False)
 
 
 def all_lang_evaluation(model_name="paraphrase-multilingual-MiniLM-L12-v2", nickname="default", main_lang='en', device='cpu'):
@@ -213,12 +238,14 @@ def main():
     
     parser = argparse.ArgumentParser(description='Evaluate sentence transformer models on multilingual job title matching')
     parser.add_argument('--model', type=str, default='paraphrase-multilingual-MiniLM-L12-v2',
-                        help='Model name from HuggingFace or local path (e.g., ./models/my-model)')
+                        help='Model name from HuggingFace or local path (e.g., ./models/default-model)')
+    parser.add_argument('--source', type=str, default='validation', choices=['validation', 'test'],
+                        help='Dataset source to use for evaluation')
     parser.add_argument('--nickname', type=str, default='default',
                         help='Alias for the model in results')
     parser.add_argument('--main-lang', type=str, default='en', choices=['en', 'es', 'de', 'zh'],
                         help='Main language for multilingual evaluation')
-    parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda', 'mps'],
+    parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'],
                         help='Device to run the model on')
     parser.add_argument('--mono-only', action='store_true',
                         help='Run only monolingual evaluations')
