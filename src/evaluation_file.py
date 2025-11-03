@@ -61,5 +61,14 @@ def main():
     for metric, score in results.items():
         print(f"{metric}: {score:.4f}")
 
+def evaluate_run(qrels_path, run_path):
+    """Evalúa un run y devuelve los resultados como dict."""
+    qrels = load_qrels(qrels_path)
+    run = load_run(run_path)
+    metrics = ["map", "mrr", "ndcg", "precision@5", "precision@10", "precision@100"]
+    return evaluate(qrels, run, metrics)
+
+
+
 if __name__ == "__main__":
     main()
