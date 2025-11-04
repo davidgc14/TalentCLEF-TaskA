@@ -196,6 +196,78 @@ def save_multilingual_results(multilingual_results, model_name, nickname, source
 
 
 
+
+
+
+# ========================
+# RANKING
+# ========================
+
+def update_ranking(monolingual_results, multilingual_results, model_name, nickname, source):
+    """Update ranking CSV file with current execution results."""
+    print("Updating ranking file...")
+    
+    ranking_file = project_dir / 'src' / 'output' / f"ranking_{source}.csv"
+    execution_id = output_dir.name
+    
+    new_record = {
+        'timestamp': today,
+        'execution_id': execution_id,
+        'model_name': model_name,
+        'model_alias': nickname,
+    }
+    
+    # MAP
+    for lang in ['en', 'es', 'de', 'zh']:
+        if lang in monolingual_results:
+            new_record[f'map_{lang}_{lang}'] = monolingual_results[lang].get('map', 0.0)
+        else:
+            new_record[f'map_{lang}_{lang}'] = 0.0
+
+    for key in multilingual_results:
+        lang_pair = key.replace('-', '_')
+        new_record[f'map_{lang_pair}'] = multilingual_results[key].get('map', 0.0)
+    
+    # avg_map
+    map_values = [v for k, v in new_record.items() if k.startswith('map_')]
+    new_record['avg_map'] = sum(map_values) / len(map_values) if map_values else 0.0
+    
+
+    if ranking_file.exists():
+        df = pd.read_csv(ranking_file)
+    else:
+        df = pd.DataFrame(columns=[
+            'timestamp', 'execution_id', 'model_name', 'model_alias', 'avg_map',
+            'map_en_en', 'map_es_es', 'map_de_de', 'map_zh_zh',
+            'map_en_es', 'map_en_de', 'map_en_zh'
+        ])
+    
+    # Double check for existing identical record
+    comparison_cols = ['model_name', 'model_alias', 'avg_map',
+                       'map_en_en', 'map_es_es', 'map_de_de', 'map_zh_zh',
+                       'map_en_es', 'map_en_de', 'map_en_zh']
+    
+    if not df.empty:
+        new_record_comparison = {k: new_record[k] for k in comparison_cols}
+        existing_records = df[comparison_cols].to_dict('records')
+        
+        for existing in existing_records:
+            if all(abs(existing.get(k, 0) - new_record_comparison.get(k, 0)) < 1e-6 
+                   if isinstance(new_record_comparison.get(k), float) 
+                   else existing.get(k) == new_record_comparison.get(k) 
+                   for k in comparison_cols):
+                print("Ya existe un registro idéntico en el ranking. No se agregará el nuevo registro.")
+                return
+    
+
+    df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
+    df = df.sort_values('avg_map', ascending=False).reset_index(drop=True)
+    df.to_csv(ranking_file, index=False)
+    
+    print(f"Ranking actualizado en {ranking_file}")
+    
+
+
 # ========================
 # EVALUATION PIPELINES
 # ========================
@@ -216,6 +288,9 @@ def all_lang_evaluation(model_name, nickname, main_lang, device, source):
     }
     save_multilingual_results(multilingual_results, model_name, nickname, source)
 
+    update_ranking(monolingual_results, multilingual_results, model_name, nickname, source)
+
+
 
 def run_monolingual_only(model_name, nickname, device, source):
     model = SentenceTransformer(model_name, device=device)
@@ -224,6 +299,10 @@ def run_monolingual_only(model_name, nickname, device, source):
         for lang in lang_dict.keys()
     }
     save_monolingual_results(monolingual_results, model_name, nickname, source)
+    
+    multilingual_results = {}
+    update_ranking(monolingual_results, multilingual_results, model_name, nickname, source)
+
 
 
 def run_multilingual_only(model_name, nickname, main_lang, device, source):
@@ -233,6 +312,10 @@ def run_multilingual_only(model_name, nickname, main_lang, device, source):
         for lang in lang_dict.keys() if lang != main_lang
     }
     save_multilingual_results(multilingual_results, model_name, nickname, source)
+
+    monolingual_results = {}
+    update_ranking(monolingual_results, multilingual_results, model_name, nickname, source)
+
 
 
 # ========================
