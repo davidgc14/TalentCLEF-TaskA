@@ -50,3 +50,8 @@ Actualmente, al ejecutar el archivo `main.py`, se genera una carpeta por ejecuci
 
 - Tengo que ver como evaluar los casos multilingue, pues no dispongo de los archivos qrels ni siquiera en validación.
 - Estaría bien automatizar un proceso que construya un ranking con los resultados que vaya ejecutando y los guarde en un csv, ordenado por la media de los resultados. Si detecta registros identicos (ejecuciones con el mismo modelo y los mismos datos) debe ignorar el nuevo registro y no añadir nada. Estaría bien tambien guardar la fecha de la ejecución, para poder acceder a los run files.
+
+Updating ranking file...
+/home/david/Documents/Master/TFM/src/main.py:263: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
+Ranking actualizado en /home/david/Documents/Master/TFM/src/output/ranking_validation.csv
