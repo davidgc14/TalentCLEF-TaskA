@@ -1,3 +1,14 @@
 .venv/
-output/
 __pycache__/
+
+
+
+src/output/*
+!src/output/ranking*
+
+
+workspace/Plantilla\ TFM.*
+workspace/fullname_esp.*
+workspace/indent.log
+!workspace/Plantilla\ TFM.pdf
+!workspace/Plantilla\ TFM.tex
