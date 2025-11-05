@@ -1,52 +1,153 @@
-<h1 style="font-size: 3em;">TalentCLEF TaskA: Evaluación de similitudes</h1>
+# TalentCLEF Task A 2025 - Multilingual Job Title Matching
 
-# Análisis previo
+Sistema de evaluación para modelos en tareas de matching de títulos de trabajo multilingües y cross-lingües.
 
-## Descripción del corpus
+## Descripción
 
-https://talentclef.github.io/talentclef/docs/talentclef-2025/data/description_corpus/
+Este proyecto implementa un framework de evaluación para la **TalentCLEF Task A 2025**, que consiste en la búsqueda y emparejamiento de títulos de trabajo en múltiples idiomas utilizando modelos de embeddings semánticos.
 
-## Analisis de datos
+El sistema evalúa:
 
-En la evaluación, tenemos tres archivos:
+- **Evaluación Monolingüe**: Queries y corpus en el mismo idioma (en-en, es-es, de-de, zh-zh)
+- **Evaluación Cross-lingüe**: Queries en un idioma y corpus en otro (en-es, en-de, en-zh)
 
-corpus_elements: Conjunto nuevo de trabajos sobre el cual debemos encontrar la similitud frente a uno dado
+## Estructura del Proyecto
 
-queries: solicitudes que pretenden encontrar, contrastando con todos los de corpus_elements, si existe similitud (1) o no (0). Para eso habrá que definir un threshold a futuro para ver cuales colapsan a 1 y cuales a 0. (Updated: Creo que no es necesario, pues el propio archivo de evaluación construye el ranking y evalua cómo de buena es la similitud)
+```
+.
+├── data/                    # Conjunto de datos de entrenamiento, testeo y validación
+├── src/
+│   ├── main.py              # Pipeline principal de evaluación
+│   ├── evaluation_file.py   # Script de evaluación con ranx
+│   └── output/              # Resultados de las ejecuciones
+│       ├── YYYY-MM-DD/
+│       │   └── XXX/         # Índice de la ejecución
+│       └── ranking_validation.csv
+├── doc/                     # Documentación y papers de referencia
+├── models/                  # Listado de modelos preentrenados
+└── workspace/               # Documentación LaTeX del TFM
+```
 
-qrels: relaciones entre las queries y cada uno de los elementos del corpus. Solo se muestran los que si presentan relación (cuarta columna, indicando con un 1).
+## Requisitos
 
-Los datos de las queries pueden o no pertenecer al corpus conocido (la idea es que no necesariamente, y se construya pensando que no va a haber una solicitud en nuestro corpus). He encontrado algunos casos en los que si aparece en ambos. Ejemplo: lawyer
+Versión python 3.12.3
 
-Resulta que los datos DE VALIDACIÓN se han obtenido de applications a trabajos que ha hecho la gente, donde las queries son las ofertas, y los titulos del corpus elements son los títulos de la gente que ha aplicado al puesto en cuestión. El training set se ha obtenido del ESCO directamente.
+```bash
+pandas
+numpy
+sentence-transformers
+ranx
+```
 
-# Primera aproximación: Embeddings preentrenados
+Instalar dependencias:
 
-Para la primera aproximación he optado por la forma más sencilla de abordarlo: no entrenar ningún modelo, sino usar un modelo ya entrenado en otros corpus de texto. Para ello me he servido del modelo _sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2_ que está preparado para ser multilingüe. Con este modelo obtenemos las representaciones vectoriales en el espacio de embedding preentrenado de 384 dimensiones. (Para monolingüe inglés también está disponible _sentence-transformers/all-MiniLM-L6-v2_).
+```bash
+pip install -r requirements.txt
+```
 
-Para medir su similitud se usa la similitud coseno, obteniendo una métrica definida en el intervalo [0,1].
+## Uso
 
-## Búsqueda del threshold (deprecated?)
+```bash
+python src/main.py \
+  --model "paraphrase-multilingual-MiniLM-L12-v2" \
+  --source validation \
+  --nickname "mini-lm" \
+  --main-lang en \
+  --device cuda
+```
 
-_Nota: Esta sección se desarrolló sin conocer el archivo de evaluación. Se mantiene por si resulta útil en el futuro, pero a priori esta sección es completamente prescindible._
+## Parámetros
 
-Para decidir el threshold, he abordado su búsqueda gracias a los datos de entrenamiento. Usando los pares que me proporciona el entrenamiento, tengo seguro cuáles sí puedo considerar como parejas válidas. A partir de ellas puedo generar parejas que no tengan relación aparente (o por lo menos que no haya una conexión directa en los datos de entrenamiento) para conseguir un conjunto de datos que NO son parejas deseables (inferiores al threshold). Con ello consigo los dos conjuntos para poder aplicar clasificación binaria basada en un valor límite (threshold).
+| Parámetro      | Descripción                                   | Valores                | Por defecto                             |
+| -------------- | --------------------------------------------- | ---------------------- | --------------------------------------- |
+| `--model`      | Nombre del modelo en HuggingFace o ruta local | string                 | `paraphrase-multilingual-MiniLM-L12-v2` |
+| `--source`     | Dataset a utilizar                            | `validation`, `test`   | `validation`                            |
+| `--nickname`   | Alias del modelo en resultados                | string                 | `default`                               |
+| `--main-lang`  | Idioma principal para evaluación cross-lingüe | `en`, `es`, `de`, `zh` | `en`                                    |
+| `--device`     | Dispositivo de ejecución                      | `cpu`, `cuda`          | `cpu`                                   |
+| `--mono-only`  | Solo evaluación monolingüe                    | flag                   | -                                       |
+| `--multi-only` | Solo evaluación cross-lingüe                  | flag                   | -                                       |
 
-Para descubrir estas conexiones, he usado grafos. Tras generar el grafo resultante de los pares de conexiones (parejas) que hay en el entrenamiento, he obtenido las distintas componentes conexas, mediante las cuales he podido generar las parejas de términos que no están relacionados a priori.
+## Formato de Datos
 
-Una vez obtenido el threshold que maximiza la F1, he aplicado el modelo mencionado anteriormente para generar un embedding y con él una similitud coseno entre los pares de titlejobs que se encuentran en el conjunto de validación. Tras ello, he obtenido una matriz de tamaño query x corpus_element con las predicciones del modelo base, colapsando a 0 o 1 según si superaba el umbral encontrado. Tras ello se ha aplicado el classification report.
+### Queries
 
-**TO-DO**:
+```
+q_id	jobtitle
+1	    nanny
+2	    food technologist
+3	    broadcast engineer
+4	    automation engineer
+...
+```
 
-- Tengo que volver a comprobar si puedo separar por grupos, en lugar por componentes conexas, usando el family_id. Al parecer es el ID del ESCO, por lo que puede diferir de las componentes conexas, habiendo varias componentes conexas que puedan pertenecer al mismo family_id, o al revés.
+### Corpus Elements
 
-## Evaluación
+```
+c_id	jobtitle
+1	    recording engineer
+2	    director of taxation
+3	    technical support representative
+4	    hr manager
+...
+```
 
-Para la evaluación me he servido del tutorial proporcionado por la organización (que lo he adaptado a mi caso en el archivo `evaluation_path.ipynb`, y posteriormente en `main.py`). Este flujo de evaluación se sirve del archivo `talentclef_evaluate.py` (refactorizado a `evaluation_file`), el cual contiene todas las métricas de evaluación para una correcta valoración del modelo.
+### QRels (Ground Truth)
 
-Actualmente, al ejecutar el archivo `main.py`, se genera una carpeta por ejecución en el directorio **output**, donde se guardan los archivos con los rankings y los resultados de las evaluaciones de cada uno de los rankings. Este archivo ejecuta uno por uno el ranking monolingue para cada uno de los cuatro idiomas.
+```
+q_id    iter    doc_id    rel
+1       0       100       1
+1       0       105       1
+```
 
-**TO-DO**
+## Métricas de Evaluación
 
-- generar una función dentro de main.py que también genere la comparativa multilingue.
-- separar en varios archivos si es necesario para una arquitectura más limpia.
+El sistema calcula las siguientes métricas usando la librería **ranx**:
+
+- **MAP** (Mean Average Precision): Precisión promedio sobre todas las queries
+- **MRR** (Mean Reciprocal Rank): Reciprocidad del primer resultado relevante
+- **NDCG** (Normalized Discounted Cumulative Gain): Ganancia acumulativa normalizada
+- **Precision@5**: Precisión en los primeros 5 resultados
+- **Precision@10**: Precisión en los primeros 10 resultados
+- **Precision@100**: Precisión en los primeros 100 resultados
+
+Notar que las evaluaciones cross-lingües **no tienen qrels disponibles**, sólo se evalúan en Codabench, por lo que retornan `NaN` por defecto.
+
+## Resultados
+
+### Archivos Generados
+
+Cada ejecución crea una carpeta incremental en `src/output/YYYY-MM-DD/XXX/` con:
+
+1. **Archivos TREC**: Resultados de ranking en formato TREC
+
+   - `run_{lang1}-{lang2}_{model_name}.trec`
+
+2. **results_multilingual.json**: Resumen de métricas de evaluación monolingüe
+
+3. **results_crosslingual.json**: Resumen de métricas de evaluación cross-lingüe
+
+### Ranking Global
+
+El archivo `ranking_validation.csv` mantiene un ranking histórico de todos los modelos evaluados, evitando la repetición de registros y ordenando los resultados de mayor a menor MAP medio.
+
+- Los valores cross-lingües aparecen como `NaN` cuando no hay qrels disponibles para evaluación
+- El `avg_map` se calcula **solo con los casos monolingües en, es, de** (excluyendo zh)
+- Si alguno de los tres valores (en-en, es-es, de-de) es NaN, entonces avg_map será NaN
+
+## Pipeline de Ejecución
+
+1. **Carga de datos**: Lee queries y corpus elements de los directorios correspondientes
+2. **Encoding**: Genera embeddings usando el modelo de sentence transformers
+3. **Cálculo de similitudes**: Calcula similitud coseno entre queries y corpus
+4. **Formato TREC**: Genera archivos de resultados en formato TREC estándar
+5. **Evaluación**: Calcula métricas usando qrels (solo para validation)
+6. **Almacenamiento**: Guarda resultados en JSON y actualiza ranking CSV
+
+## Documentación
+
+- Documentación oficial en `doc/lab-overview.pdf`
+- Tutoriales en `doc/tutorials/`
+- Papers de resultados de la competición en `doc/aproximations/`
+
+---
