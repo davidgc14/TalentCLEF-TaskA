@@ -142,7 +142,7 @@ def crosslingual_evaluation(lang, main_lang, model, device, source):
     write_run_file(results, run_file)
     
     print('Still not able to evaluate crosslingual runs. Skipping evaluation step.')
-    return {m: 0.0 for m in ["map", "mrr", "ndcg", "precision@5", "precision@10", "precision@100"]}
+    return {m: np.nan for m in ["map", "mrr", "ndcg", "precision@5", "precision@10", "precision@100"]}
 
 
 # ========================
@@ -220,17 +220,24 @@ def update_ranking(multilingual_results, crosslingual_results, model_name, nickn
     # MAP
     for lang in ['en', 'es', 'de', 'zh']:
         if lang in multilingual_results:
-            new_record[f'map_{lang}_{lang}'] = multilingual_results[lang].get('map', 0.0)
+            new_record[f'map_{lang}_{lang}'] = multilingual_results[lang].get('map', np.nan)
         else:
-            new_record[f'map_{lang}_{lang}'] = 0.0
+            new_record[f'map_{lang}_{lang}'] = np.nan
 
     for key in crosslingual_results:
         lang_pair = key.replace('-', '_')
-        new_record[f'map_{lang_pair}'] = crosslingual_results[key].get('map', 0.0)
+        new_record[f'map_{lang_pair}'] = crosslingual_results[key].get('map', np.nan)
     
-    # avg_map
-    map_values = [v for k, v in new_record.items() if k.startswith('map_')]
-    new_record['avg_map'] = sum(map_values) / len(map_values) if map_values else 0.0
+    # avg_map - solo casos monolingües en, es, de (todos deben estar presentes)
+    map_values = [
+        new_record.get('map_en_en', np.nan),
+        new_record.get('map_es_es', np.nan),
+        new_record.get('map_de_de', np.nan)
+    ]
+    if any(np.isnan(v) for v in map_values):
+        new_record['avg_map'] = np.nan
+    else:
+        new_record['avg_map'] = sum(map_values) / len(map_values)
     
 
     if ranking_file.exists():
