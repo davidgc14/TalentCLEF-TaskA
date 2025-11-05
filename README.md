@@ -45,13 +45,3 @@ Una vez obtenido el threshold que maximiza la F1, he aplicado el modelo menciona
 Para la evaluación me he servido del tutorial proporcionado por la organización (que lo he adaptado a mi caso en el archivo `evaluation_path.ipynb`, y posteriormente en `main.py`). Este flujo de evaluación se sirve del archivo `talentclef_evaluate.py` (refactorizado a `evaluation_file`), el cual contiene todas las métricas de evaluación para una correcta valoración del modelo.
 
 Actualmente, al ejecutar el archivo `main.py`, se genera una carpeta por ejecución en el directorio **output**, donde se guardan los archivos con los rankings y los resultados de las evaluaciones de cada uno de los rankings. Este archivo ejecuta uno por uno el ranking monolingue para cada uno de los cuatro idiomas, y posteriormente los tres casos multilingue. Los resultados se guardan en dos archivos .json por separado.
-
-**TO-DO**:
-
-- Tengo que ver como evaluar los casos multilingue, pues no dispongo de los archivos qrels ni siquiera en validación.
-- Estaría bien automatizar un proceso que construya un ranking con los resultados que vaya ejecutando y los guarde en un csv, ordenado por la media de los resultados. Si detecta registros identicos (ejecuciones con el mismo modelo y los mismos datos) debe ignorar el nuevo registro y no añadir nada. Estaría bien tambien guardar la fecha de la ejecución, para poder acceder a los run files.
-
-Updating ranking file...
-/home/david/Documents/Master/TFM/src/main.py:263: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
-df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
-Ranking actualizado en /home/david/Documents/Master/TFM/src/output/ranking_validation.csv
