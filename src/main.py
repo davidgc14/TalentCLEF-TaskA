@@ -97,8 +97,8 @@ def get_model_name(model):
 # EVALUATION FUNCTIONS
 # ========================
 
-def monolingual_evaluation(lang, model, device, source):
-    """Evaluate model performance on monolingual data."""
+def multilingual_evaluation(lang, model, device, source):
+    """Evaluate model performance on multilingual data."""
     data_dir = project_dir / 'data' / source / lang_dict[lang]
     qrels_path = data_dir / "qrels.tsv"
     
@@ -117,12 +117,12 @@ def monolingual_evaluation(lang, model, device, source):
     return evaluation_results
 
 
-def multilingual_evaluation(lang, main_lang, model, device, source):
+def crosslingual_evaluation(lang, main_lang, model, device, source):
     """Evaluate model performance on cross-lingual data."""
     data_dir_main = project_dir / 'data' / source / lang_dict[main_lang]
     data_dir_target = project_dir / 'data' / source / lang_dict[lang]
     
-    print('Loading data for multilingual evaluation:', main_lang, '->', lang)
+    print('Loading data for crosslingual evaluation:', main_lang, '->', lang)
     
     # Load queries from main language
     queries = pd.read_csv(data_dir_main / "queries", sep="\t")
@@ -141,7 +141,7 @@ def multilingual_evaluation(lang, main_lang, model, device, source):
     run_file = output_dir / f"run_{main_lang}-{lang}_{model_name}.trec"
     write_run_file(results, run_file)
     
-    print('Still not able to evaluate multilingual runs. Skipping evaluation step.')
+    print('Still not able to evaluate crosslingual runs. Skipping evaluation step.')
     return {m: 0.0 for m in ["map", "mrr", "ndcg", "precision@5", "precision@10", "precision@100"]}
 
 
@@ -149,32 +149,9 @@ def multilingual_evaluation(lang, main_lang, model, device, source):
 # SAVING RESULTS
 # ========================
 
-def save_monolingual_results(monolingual_results, model_name, nickname, source):
-    """Save monolingual evaluation results to a structured JSON file."""
-    print("Monolingual evaluations completed. Saving results...")
-
-    json_path = output_dir / "results_monolingual.json"
-
-    results_data = {
-        "metadata": {
-            "type": "monolingual",
-            "model_name": model_name,
-            "nickname": nickname,
-            "source": source,
-            "timestamp": today
-        },
-        "results": monolingual_results
-    }
-
-    with open(json_path, "w", encoding="utf-8") as jf:
-        json.dump(results_data, jf, indent=2, ensure_ascii=False)
-
-    print(f"Saved monolingual results to {json_path}")
-
-
 def save_multilingual_results(multilingual_results, model_name, nickname, source):
     """Save multilingual evaluation results to a structured JSON file."""
-    print("Multilingual evaluations completed. Saving results...")
+    print("multilingual evaluations completed. Saving results...")
 
     json_path = output_dir / "results_multilingual.json"
 
@@ -195,6 +172,29 @@ def save_multilingual_results(multilingual_results, model_name, nickname, source
     print(f"Saved multilingual results to {json_path}")
 
 
+def save_crosslingual_results(crosslingual_results, model_name, nickname, source):
+    """Save crosslingual evaluation results to a structured JSON file."""
+    print("crosslingual evaluations completed. Saving results...")
+
+    json_path = output_dir / "results_crosslingual.json"
+
+    results_data = {
+        "metadata": {
+            "type": "crosslingual",
+            "model_name": model_name,
+            "nickname": nickname,
+            "source": source,
+            "timestamp": today
+        },
+        "results": crosslingual_results
+    }
+
+    with open(json_path, "w", encoding="utf-8") as jf:
+        json.dump(results_data, jf, indent=2, ensure_ascii=False)
+
+    print(f"Saved crosslingual results to {json_path}")
+
+
 
 
 
@@ -203,7 +203,7 @@ def save_multilingual_results(multilingual_results, model_name, nickname, source
 # RANKING
 # ========================
 
-def update_ranking(monolingual_results, multilingual_results, model_name, nickname, source):
+def update_ranking(multilingual_results, crosslingual_results, model_name, nickname, source):
     """Update ranking CSV file with current execution results."""
     print("Updating ranking file...")
     
@@ -219,14 +219,14 @@ def update_ranking(monolingual_results, multilingual_results, model_name, nickna
     
     # MAP
     for lang in ['en', 'es', 'de', 'zh']:
-        if lang in monolingual_results:
-            new_record[f'map_{lang}_{lang}'] = monolingual_results[lang].get('map', 0.0)
+        if lang in multilingual_results:
+            new_record[f'map_{lang}_{lang}'] = multilingual_results[lang].get('map', 0.0)
         else:
             new_record[f'map_{lang}_{lang}'] = 0.0
 
-    for key in multilingual_results:
+    for key in crosslingual_results:
         lang_pair = key.replace('-', '_')
-        new_record[f'map_{lang_pair}'] = multilingual_results[key].get('map', 0.0)
+        new_record[f'map_{lang_pair}'] = crosslingual_results[key].get('map', 0.0)
     
     # avg_map
     map_values = [v for k, v in new_record.items() if k.startswith('map_')]
@@ -276,45 +276,45 @@ def all_lang_evaluation(model_name, nickname, main_lang, device, source):
     """Run complete evaluation pipeline for all languages."""
     model = SentenceTransformer(model_name, device=device)
 
-    monolingual_results = {
-        lang: monolingual_evaluation(lang, model, device, source)
-        for lang in lang_dict.keys()
-    }
-    save_monolingual_results(monolingual_results, model_name, nickname, source)
-
     multilingual_results = {
-        f"{main_lang}-{lang}": multilingual_evaluation(lang, main_lang, model, device, source)
-        for lang in lang_dict.keys() if lang != main_lang
+        lang: multilingual_evaluation(lang, model, device, source)
+        for lang in lang_dict.keys()
     }
     save_multilingual_results(multilingual_results, model_name, nickname, source)
 
-    update_ranking(monolingual_results, multilingual_results, model_name, nickname, source)
+    crosslingual_results = {
+        f"{main_lang}-{lang}": crosslingual_evaluation(lang, main_lang, model, device, source)
+        for lang in lang_dict.keys() if lang != main_lang
+    }
+    save_crosslingual_results(crosslingual_results, model_name, nickname, source)
+
+    update_ranking(multilingual_results, crosslingual_results, model_name, nickname, source)
 
 
 
-def run_monolingual_only(model_name, nickname, device, source):
+def run_multilingual_only(model_name, nickname, device, source):
     model = SentenceTransformer(model_name, device=device)
-    monolingual_results = {
-        lang: monolingual_evaluation(lang, model, device, source)
+    multilingual_results = {
+        lang: multilingual_evaluation(lang, model, device, source)
         for lang in lang_dict.keys()
     }
-    save_monolingual_results(monolingual_results, model_name, nickname, source)
+    save_multilingual_results(multilingual_results, model_name, nickname, source)
     
-    multilingual_results = {}
-    update_ranking(monolingual_results, multilingual_results, model_name, nickname, source)
+    crosslingual_results = {}
+    update_ranking(multilingual_results, crosslingual_results, model_name, nickname, source)
 
 
 
-def run_multilingual_only(model_name, nickname, main_lang, device, source):
+def run_crosslingual_only(model_name, nickname, main_lang, device, source):
     model = SentenceTransformer(model_name, device=device)
-    multilingual_results = {
-        f"{main_lang}-{lang}": multilingual_evaluation(lang, main_lang, model, device, source)
+    crosslingual_results = {
+        f"{main_lang}-{lang}": crosslingual_evaluation(lang, main_lang, model, device, source)
         for lang in lang_dict.keys() if lang != main_lang
     }
-    save_multilingual_results(multilingual_results, model_name, nickname, source)
+    save_crosslingual_results(crosslingual_results, model_name, nickname, source)
 
-    monolingual_results = {}
-    update_ranking(monolingual_results, multilingual_results, model_name, nickname, source)
+    multilingual_results = {}
+    update_ranking(multilingual_results, crosslingual_results, model_name, nickname, source)
 
 
 
@@ -324,27 +324,27 @@ def run_multilingual_only(model_name, nickname, main_lang, device, source):
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='Evaluate sentence transformer models on multilingual job title matching')
+    parser = argparse.ArgumentParser(description='Evaluate sentence transformer models on crosslingual job title matching')
     parser.add_argument('--model', type=str, default='paraphrase-multilingual-MiniLM-L12-v2',
                         help='Model name from HuggingFace or local path')
     parser.add_argument('--source', type=str, default='validation', choices=['validation', 'test'],
                         help='Dataset source to use for evaluation')
     parser.add_argument('--nickname', type=str, default='default', help='Alias for the model in results')
     parser.add_argument('--main-lang', type=str, default='en', choices=['en', 'es', 'de', 'zh'],
-                        help='Main language for multilingual evaluation')
+                        help='Main language for crosslingual evaluation')
     parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'],
                         help='Device to run the model on')
-    parser.add_argument('--mono-only', action='store_true', help='Run only monolingual evaluations')
-    parser.add_argument('--multi-only', action='store_true', help='Run only multilingual evaluations')
+    parser.add_argument('--mono-only', action='store_true', help='Run only multilingual evaluations')
+    parser.add_argument('--multi-only', action='store_true', help='Run only crosslingual evaluations')
     args = parser.parse_args()
 
     if args.mono_only and args.multi_only:
         parser.error("Cannot use --mono-only and --multi-only together")
 
     if args.mono_only:
-        run_monolingual_only(args.model, args.nickname, args.device, args.source)
+        run_multilingual_only(args.model, args.nickname, args.device, args.source)
     elif args.multi_only:
-        run_multilingual_only(args.model, args.nickname, args.main_lang, args.device, args.source)
+        run_crosslingual_only(args.model, args.nickname, args.main_lang, args.device, args.source)
     else:
         all_lang_evaluation(args.model, args.nickname, args.main_lang, args.device, args.source)
 
