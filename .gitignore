@@ -9,8 +9,8 @@ src/output/*
 !src/output/ranking*
 
 
-workspace/Plantilla\ TFM.*
-workspace/fullname_esp.*
-workspace/indent.log
-!workspace/Plantilla\ TFM.pdf
-!workspace/Plantilla\ TFM.tex
+latex/Plantilla\ TFM.*
+latex/fullname_esp.*
+latex/indent.log
+!latex/Plantilla\ TFM.pdf
+!latex/Plantilla\ TFM.tex
