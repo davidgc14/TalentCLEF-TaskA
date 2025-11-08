@@ -26,6 +26,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{setspace}
+\usepackage{glossaries}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% SCRIPT DE TODO'S O TAREAS PENDIENTES CON BOCADILLOS.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -106,6 +107,12 @@
 
 \setlength\headheight{20pt}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%% GLOSARIO %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{config/glossary.tex}
+\makeglossaries
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% COMIENZA EL DOCUMENTO
@@ -236,15 +243,21 @@
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% GLOSARIO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\printglossary[type=\acronymtype]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% APÉNDICES SI PROCEDE (COMENTAR)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\appendix
-\chapter{Publicaciones}
-\label{ch:publicaciones}
-\fancyhead[RE]{\textsc{APÉNDICE} \thechapter. Publicaciones}
-\fancyhead[LO]{\textsc{APÉNDICE} \thechapter. Publicaciones}
+% \appendix
+% \chapter{Publicaciones}
+% \label{ch:publicaciones}
+% \fancyhead[RE]{\textsc{APÉNDICE} \thechapter. Publicaciones}
+% \fancyhead[LO]{\textsc{APÉNDICE} \thechapter. Publicaciones}
 
-Publicaciones derivadas del trabajo realizado.
+% Publicaciones derivadas del trabajo realizado.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
