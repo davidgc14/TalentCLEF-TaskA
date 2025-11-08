@@ -10,5 +10,6 @@ src/output/*
 
 
 latex/TFM.*
+latex/indent.log
 !latex/TFM.pdf
 !latex/TFM.tex
