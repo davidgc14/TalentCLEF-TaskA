@@ -10,12 +10,22 @@
 \section{Motivación}
 \label{sec:Motivacion}
 
-\noindent Motivación del trabajo a realizar.\todo{Ejemplo de TO-DO: Hay que completar todo este parrafo y toda la seccion cuando tenga idea de lo que hay que hacer.}
+\noindent El panorama del mercado laboral actual está experimentando una gran transformación impulsada principalmente por la rápida evolución tecnológica y la incorporación de la \gls{AI} en nuestras vidas. Estudios recientes indicaban que para finales de 2025, aproximadamente 90 millones de puestos de trabajo habrán sido automatizados, y una cantidad similar de ocupaciones que no existían a principios de siglo aparecerán en escena \cite{maslej2025artificial}. Esta dinámica de cambio constante, lejos de ser un fenómeno aislado, es consecuencia directa del desarrollo tecnológico, el cual no solo ha automatizado tareas rutinarias y creado roles completamente nuevos, sino que también ha redefinido la naturaleza misma de los puestos de trabajo existentes.
 
-El primer párrafo de cada sección no se indenta, los siguientes sí.
-Las referencias a un artículo del estado del arte se ponen así: El trabajo \cite{Agirre2009} bla bla.
+En este contexto de transición, la adaptabilidad se convierte en un factor clave tanto para los profesionales, que enfrentan una incertidumbre creciente sobre las competencias que serán relevantes a corto plazo, como para las organizaciones, que se ven obligadas a identificar talento con estas capacidades emergentes \cite{ordonez2008competencies}. Esta necesidad ha fomentado la adopción de tecnologías de \gls{NLP} en la \gls{HCM}, con el objetivo de optimizar procesos de adquisición de talento, crear programas de formación personalizados y permitir una planificación estratégica basada en competencias.
 
-En el documento lab-overview se tiene todo en relación a la construcción de los datos, el dataset, los benchmarks\dots
+Sin embargo, el desarrollo y despliegue de estos sistemas inteligentes se enfrenta a importantes desafíos que limitan su eficacia, equidad y generalización. Es precisamente en este punto donde se sitúa la motivación central de este trabajo, que se centra en la Tarea A del TalentCLEF 2025, con un enfoque específico en la lengua española. Si bien el desafío original presenta un escenario multilingüe, existe una necesidad palpable de desarrollar y evaluar soluciones específicamente optimizadas para el español, un idioma con una gran relevancia geográfica y demográfica a nivel global que, no obstante, a menudo no recibe una atención proporcional en el desarrollo de modelos de vanguardia.
+
+Muchos de los modelos multilingües de propósito general, aunque incluyen el español en su entrenamiento, suelen estar optimizados primordialmente para el inglés, lo que puede resultar en un rendimiento subóptimo para lenguas con características morfológicas y sintácticas distintas. Este proyecto se motiva por la hipótesis de que un abordaje especializado, que contemple las particularidades del español —como su flexión de género y la variación dialectal—, puede conducir a mejoras significativas en la tarea de emparejamiento de titulaciones profesionales para este idioma. La complejidad añadida de los marcadores de género en los títulos profesionales (e.g., "director" / "directora", "abogado" / "abogada") representa un desafío técnico particular que debe ser abordado explícitamente para garantizar la equidad de los sistemas, un aspecto crítico que es evaluado en el benchmark de TalentCLEF pero para el cual existen pocas soluciones específicas documentadas.
+
+Además, la disponibilidad del benchmark público de TalentCLEF, que incluye un corpus en español anotado manualmente a partir de datos reales y anonimizados, ofrece una oportunidad única para investigar este problema de forma rigurosa y reproducible. La existencia de este recurso permite superar la limitación histórica en este campo, donde la investigación a menudo se ha visto obstaculizada por la dependencia de conjuntos de datos propietarios. Por lo tanto, este trabajo no solo busca aplicar un modelo existente a un subconjunto de datos, sino que pretende contribuir al avance del estado del arte en NLP para el dominio del capital humano en español, explorando estrategias de fine-tuning, aprendizaje por contraste y posible mitigación de sesgos que estén particularmente adaptadas a las características de esta lengua. El objetivo último es proponer una solución robusta y fair que demuestre un rendimiento superior en el escenario monolingüe en español y que, al mismo tiempo, se comporte de manera consistente frente a las variaciones de género, sirviendo así como un referente para el desarrollo de tecnologías lingüísticas más justas y efectivas en el ámbito laboral hispanohablante.
+
+%%%
+
+\section{Definición del problema}
+\label{sec:DefinicionDelProblema}
+
+\noindent En esta sección se define el problema que se aborda en este trabajo, datos de la competición, tareas\dots
 
 \section{Propuesta y objetivos}
 \label{sec:PropuestaYObjetivos}
@@ -25,7 +35,7 @@ En el documento lab-overview se tiene todo en relación a la construcción de lo
 \section{Estructura del documento}
 \label{sec:EstructuraDelDocumento}
 
-\noindent Breve descripción de los capítulos del trabajo.
+\noindent Breve descripción de los capítulos del trabajo.\todo{Creo qeu esto no hace falta. Preguntar a Laura.}
 
 \begin{description}
 
