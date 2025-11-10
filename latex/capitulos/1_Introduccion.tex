@@ -25,7 +25,26 @@ Además, la disponibilidad del benchmark público de TalentCLEF, que incluye un 
 \section{Definición del problema}
 \label{sec:DefinicionDelProblema}
 
-\noindent En esta sección se define el problema que se aborda en este trabajo, datos de la competición, tareas\dots
+\noindent Este trabajo se centra en la resolución de la primera tarea de la campaña de evaluación TalentCLEF 2025. TalentCLEF es la primera campaña de evaluación enfocada en la gestión de titulaciones profesionales y habilidades (\textit{Skill and Job Title Intelligence}), diseñada para abordar la escasez de benchmarks públicos y abiertos en el dominio de la \gls{HCM} \cite{talentclefMotivation}.
+
+El problema específico que se aborda es  la \gls{Tarea}. El objetivo de esta tarea es desarrollar sistemas que, dada una titulación profesional (\textit{query})\todo{Esto se hace asi? Para dejar nombrada la nomenclatura que usare en el resto del documento.}, identifiquen y generen una lista ordenada (\textit{ranking}) de las titulaciones más similares extraídas de una base de conocimiento (\textit{corpus elements}). Esta capacidad es fundamental para los sistemas de recomendación de candidatos y la adquisición de talento en entornos reales.
+
+El desafío propuesto por TalentCLEF 2025 es multilingüe y cubre cuatro idiomas: inglés, español, alemán y chino, donde los conjuntos de datos proporcionados se componen de tres particiones (entrenamiento, validación y test) con orígenes marcadamente distintos. El conjuntos de validación y testeo de la tarea se construyeron a partir de datos reales de solicitudes de empleo, que fueron cuidadosamente anonimizados y anotados manualmente. Las \textit{queries} de la tarea se definen como los títulos de las ofertas de trabajo, mientras que los \textit{corpus elements} a clasificar se han extraído de los títulos de los últimos puestos de trabajo de los candidatos que aplicaron a dichas ofertas. Por otro lado, el conjunto de entrenamiento, disponible únicamente para inglés, español y alemán, se generó de forma automática extrayendo pares de titulaciones profesionales relacionadas de la taxonomía \gls{ESCO}.
+
+La evaluación oficial de la \gls{Tarea} se estructura en cuatro escenarios distintos:
+
+\begin{itemize}
+    \item Una evaluación monolingüe para inglés, español y alemán.
+    \item Una evaluación multilingüe, con consultas en inglés contra corpus en español y alemán.
+    \item Una sub-tarea voluntaria para el idioma chino, para el cual no se proporcionaron datos de entrenamiento.
+    \item Una evaluación específica del sesgo de género para español y alemán, también voluntaria.
+\end{itemize}
+
+La métrica de evaluación principal para la clasificación es el \gls{MAP}, mientras que para la evaluación del sesgo se utiliza el \gls{RBO}.
+
+Si bien el desafío abarca múltiples idiomas, este trabajo se enfoca particularmente en el desarrollo y evaluación de soluciones optimizadas para el español, aprovechando la disponibilidad del corpus anotado y el benchmark público que ofrece la competición.\todo{Debería extenderme más? Entrar en detalle sobre los metodos de evaluación especificos de la tarea, los pipelines de construcción de los datos...}
+
+%%
 
 \section{Propuesta y objetivos}
 \label{sec:PropuestaYObjetivos}
@@ -35,7 +54,7 @@ Además, la disponibilidad del benchmark público de TalentCLEF, que incluye un 
 \section{Estructura del documento}
 \label{sec:EstructuraDelDocumento}
 
-\noindent Breve descripción de los capítulos del trabajo.\todo{Creo qeu esto no hace falta. Preguntar a Laura.}
+\noindent Breve descripción de los capítulos del trabajo.\todo{Creo que esto no hace falta. Preguntar a Laura.}
 
 \begin{description}
 
