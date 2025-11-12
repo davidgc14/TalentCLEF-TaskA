@@ -6,10 +6,128 @@
 \fancyhead[RE]{\textsc{CAPÍTULO} \thechapter. Estado del arte}
 \label{ch:EstadoArte}
 
-\noindent Este capítulo describe en mayor detalle la disciplina que nos ocupa, presentando su origen y su historia hasta el presente. Se muestran las técnicas actuales más utilizadas para resolver las tareas más relevantes del tema abordado, así como sus debilidades. La estructura de este capítulo depende mucho del tema del trabajo.
+% \section{Historia del problema}
+% \label{sec:JobTitleMatching}
 
-\section{Ejemplo sección}
-\label{sec:Ejemplo_seccion2}
+% El \gls{JTM} es una tarea fundamental dentro del dominio de la \gls{HCM}, con aplicaciones directas en la recomendación de empleo, el análisis de la brecha de competencias y la adquisición de talento. El problema central radica en la enorme variabilidad y ambigüedad del lenguaje natural utilizado para describir roles laborales. Un mismo puesto puede ser descrito con numerosas variantes, mientras que títulos idénticos pueden implicar responsabilidades dispares en diferentes organizaciones.
 
-\subsection{Ejemplo subsección}
-\label{sec:Ejemplo_subSeccion2}
+% \subsection{Métodos Tradicionales y Taxonómicos}
+
+% Históricamente, el abordaje de este problema se ha dividido en dos grandes categorías: métodos basados en léxicos y métodos de clasificación taxonómica.
+
+% % \subsubsection{Métodos Léxicos y Basados en Reglas}
+% Los primeros enfoques se basaban en la normalización de cadenas de texto y la comparación mediante métricas de similitud léxica como la distancia de edición de Levenshtein o la similitud de Jaccard\todo{cita}. Estos métodos, aunque simples, son frágiles y fracasan estrepitosamente ante la sinonimia y la polisemia. Los sistemas basados en reglas, por su parte, intentan codificar manualmente el conocimiento del dominio, un esfuerzo costoso, difícil de mantener y poco escalable.
+
+% % \subsubsection{Clasificación frente a Taxonomías}
+% Para estandarizar el dominio, han surgido taxonomías y ontologías como \gls{ESCO} o la \gls{ONET}\todo{cita o pie de pagina explicativo}. Gran parte del esfuerzo en la academia y la industria se ha centrado en la ``normalización'' de titulaciones, que se formula como un problema de clasificación: dado un título de trabajo, asignarlo a la entrada canónica correspondiente en la taxonomía.
+
+% En el contexto del español, si bien la taxonomía \gls{ESCO} proporciona una estructura jerárquica y un amplio conjunto de titulaciones, la investigación previa a TalentCLEF 2025 se ha centrado mayoritariamente en esta tarea de clasificación\todo{cita}. Estos trabajos a menudo emplean métodos que van desde el \gls{ML} clásico, como SVMs con características TF-IDF, hasta enfoques neuronales que modelan la estructura de la taxonomía, tales como métodos basados en grafos o el aprendizaje métrico\todo{cita}.
+
+% \subsection{El Desafío del ``Matching'' en Entornos Reales}
+% El problema abordado por TalentCLEF, y por ende por este trabajo, es sutilmente diferente y más complejo: no se trata de clasificar contra una taxonomía limpia, sino de realizar un \textit{ranking} de emparejamiento entre dos conjuntos de texto en lenguaje natural. Concretamente, se compara una consulta (oferta de trabajo) con un corpus de candidatos (último puesto de trabajo). Este escenario introduce un ruido considerable (abreviaturas, errores tipográficos, títulos internos de empresa\dots) que no está presente en la taxonomía \gls{ESCO}, pero que es común en datos del mundo real.
+
+% La escasez de benchmarks públicos y abiertos para esta tarea específica de \textit{matching} en español ha sido el principal cuello de botella para la investigación. Antes de TalentCLEF, la mayoría de los trabajos se realizaban sobre conjuntos de datos privados o se centraban en el idioma inglés, donde la disponibilidad de datos es mayor. Este trabajo se sitúa precisamente en la intersección de esta necesidad de soluciones robustas para el español y la disponibilidad de un benchmark riguroso para evaluarlas.
+
+
+\section{Historia del problema}
+\label{sec:JobTitleMatching}
+
+El \gls{JTM} constituye una tarea central dentro del campo más amplio de la gestión del talento y la \gls{HCM}. En su forma básica, el problema consiste en determinar la equivalencia o el grado de compatibilidad entre títulos de puestos, a pesar de la enorme variabilidad léxica, la polisemia y las convenciones internas de las organizaciones. Esta variabilidad hace que una misma ocupación pueda aparecer bajo campos muy distintos y, a su vez, que títulos idénticos traduzcan responsabilidades distintas según el contexto organizativo, sectorial o geográfico.
+
+\subsection{Métodos tradicionales y enfoques económicos}
+Históricamente, los trabajos sobre emparejamiento laboral han adoptado perspectivas tanto técnicas como económicas. En economía laboral española existe una persistencia en el proceso de emparejamiento que muestra cómo las fricciones de mercado y la heterogeneidad ocupacional condicionan los resultados del matching laboral \cite{de2008funcion}. Esos estudios clásicos proporcionan un marco para interpretar por qué la normalización de titulaciones no es sólo un problema lingüístico, sino también institucional y estructural: la misma denominación puede implicar distintas funciones y niveles de especialización en diferentes segmentos del mercado laboral \cite{de2017quien}.
+
+Desde el punto de vista computacional, los primeros abordajes aplicados al dominio laboral siguieron estructuras generales de recuperación de información y clasificación de texto: normalización de cadenas, reglas heurísticas y distintas métricas de similitud. Aunque estas técnicas (y los sistemas basados en reglas) pueden ser útiles en entornos controlados, su coste de mantenimiento y su fragilidad frente a sinónimos, abreviaturas y errores hacen que resulten insuficientes para datos del mundo real y escalas grandes \cite{jirjees2025machine}.
+
+\subsection{Transición hacia técnicas de aprendizaje automático}
+La llegada y consolidación del \gls{ML} transformó la investigación y la práctica en \gls{JTM}. Durante los últimos años, la literatura documenta un amplio abanico de técnicas: desde modelos supervisados clásicos hasta arquitecturas neuronales que aprenden representaciones textuales más ricas y robustas frente al ruido y la variabilidad \cite{jirjees2025machine}. Han comenzado a surgir soluciones no supervisadas y semi-supervisadas para detectar patrones, agrupar titulaciones y reducir la dependencia de grandes volúmenes de anotación manual \cite{mamani2022machine,mamani2022proceso}.
+
+Específicamente en entornos hispanohablantes, trabajos recientes han explorado procesos de clustering y pipelines de \gls{ML} no supervisado para identificar la demanda social de puestos y determinar similitudes entre títulos de profesionales de sectores específicos. Estas contribuciones muestran que, aunque las técnicas de clustering capturan agrupaciones útiles, su sensibilidad a la representación textual y su capacidad de generalización condiciona fuertemente la calidad del emparejamiento.
+
+En cuanto a los análisis bibliométricos sobre investigación en esta tarea revelan un crecimiento sostenido del interés científico en la intersección entre \gls{AI} y reclutamiento por parte de la \gls{HRM}, con aplicaciones que abarcan desde selección automatizada hasta orientación profesional y análisis de brechas de competencias \cite{rojas2022bibliometric}. Dichos trabajos también evidencian que, aunque existen esfuerzos notables en sectores como la salud o la tecnología, persiste una desproporción entre la disponibilidad de recursos en inglés y en otras lenguas, lo que limita la comparabilidad y la replicabilidad de soluciones en contextos locales.
+
+\subsection{Del problema de clasificación a la tarea de \emph{matching} en entornos reales}
+Una distinción clave que ha emergido en la literatura reciente es la diferencia entre (i) la clasificación contra una taxonomía canónica y (ii) el matching o ranking entre pares de textos libres (oferta vs. perfil solicitante). Mientras la clasificación se beneficia de puntos de referencia estables, el matching real debe lidiar con ruido, abreviaturas, títulos internos y asimetrías informativas que no aparecen en taxonomías limpias. En consecuencia, las soluciones más robustas tienden a combinar representaciones semánticas aprendidas con estrategias de evaluación y depuración específicas del dominio, integrando tanto medidas globales de similitud como señales estructurales extraídas del mercado laboral \cite{gasco2025brief}.
+
+%%
+
+% \section{Enfoques abordados en TalentCLEF}
+% \label{sec:TalentCLEFOverview}
+
+% La campaña TalentCLEF se ha establecido como el principal foro para el avance en la inteligencia artificial aplicada a la \gls{HCM}. Al ser este trabajo parte de la edición 2025, el estado del arte más relevante proviene del análisis de las soluciones propuestas por los participantes en ediciones anteriores (e.g., TalentCLEF 2023 y 2024).
+
+% \subsection{Arquitecturas Dominantes y Estrategias}
+% El análisis de los informes de trabajo (WIP) de ediciones pasadas revela una clara hegemonía de las arquitecturas basadas en \textit{Transformers}. Las soluciones más exitosas no se basan en un único modelo, sino en complejos \textit{pipelines} de recuperación de información, generalmente divididos en dos etapas:
+
+% \begin{enumerate}
+%     \item \textbf{Etapa de Recuperación (\textit{Retrieve}):} En esta fase, se utiliza un modelo rápido, típicamente un \textit{bi-encoder} (ver Sección \ref{sec:BiEncoders}), para escanear eficientemente la totalidad de la base de conocimiento (\textit{corpus elements}) ] y seleccionar un subconjunto de $k$ candidatos relevantes (e.g., $k=100$) para cada consulta. Modelos como SBERT (Sentence-BERT) o variantes multilingües preentrenadas y luego ajustadas en los datos de la tarea son comunes aquí.
+
+%     \item \textbf{Etapa de Re-clasificación (\textit{Re-rank}):} Los $k$ candidatos se pasan a un modelo mucho más pesado y preciso, un \textit{cross-encoder} (ver Sección \ref{sec:CrossEncoders}). Este modelo realiza una comparación profunda entre la consulta y cada candidato, generando una puntuación de similitud final que se utiliza para el \textit{ranking} definitivo.
+% \end{enumerate}
+
+% Las estrategias ganadoras a menudo complementan este \textit{pipeline} con un preprocesamiento de datos exhaustivo y, crucialmente, técnicas de \textbf{generación de datos sintéticos} o \textbf{aumento de datos}. Dado que el conjunto de entrenamiento proporcionado (basado en \gls{ESCO}) ] difiere significativamente en su dominio de los datos de validación y testeo (datos reales)21], los participantes han recurrido a técnicas como la retro-traducción o el uso de LLMs (e.g., GPT-3.5) para generar pares de entrenamiento más realistas y reducir el \textit{domain shift}.
+
+% \subsection{Sub-tarea de Sesgo de Género (Gender Bias)}
+% \label{sec:GenderBiasSOA}
+
+% Una contribución significativa de TalentCLEF ha sido la inclusión de una evaluación específica del sesgo de género para español y alemán ], un problema que este trabajo reconoce pero no aborda en profundidad]. El objetivo de esta sub-tarea es medir si los sistemas de \textit{ranking} exhiben sesgos basados en los marcadores de género gramaticales (e.g., "director" vs "directora").
+
+% La métrica de evaluación utilizada es el \gls{RBO} (\textit{Rank-Biased Overlap})29], que compara la similitud entre las listas de resultados devueltas para una consulta y su contraparte de género opuesto. Un RBO de 1.0 implicaría que los \textit{rankings} son idénticos (sin sesgo), mientras que un RBO bajo indica una alta divergencia en los resultados (presencia de sesgo).
+
+% Los enfoques propuestos por los participantes para mitigar este sesgo ] incluyen:
+% \begin{itemize}
+%     \item \textbf{Normalización de Datos:} Convertir todas las titulaciones a una forma neutra o canónica (e.g., siempre masculino o siempre femenino) antes de entrenar o inferir.
+%     \item \textbf{Aumento de Datos Específico:} Generar pares de entrenamiento sintéticos que incluyan ambas variantes de género, enseñando explícitamente al modelo a tratarlas como equivalentes semánticos.
+%     \item \textbf{Métodos de \textit{Debiasing}} en el espacio de \textit{embeddings}, aunque estos son menos comunes y más complejos de implementar.
+% \end{itemize}
+% Los resultados de ediciones anteriores muestran que existe una tensión: los métodos que mitigan el sesgo de forma más agresiva (e.g., normalización estricta) pueden lograr un RBO alto, pero a veces sufren una ligera penalización en la métrica principal de \gls{MAP}29].
+
+% \section{Modelos Transformers para Semejanza Semántica}
+% \label{sec:TransformersSOA}
+
+% La base tecnológica de este trabajo, y del estado del arte actual en \gls{NLP}, son los modelos \textit{Transformers}. Introducidos por Vaswani et al. (2017) con el artículo "Attention Is All You Need", estos modelos han reemplazado a las arquitecturas recurrentes (RNN) y convolucionales (CNN) gracias a su mecanismo de auto-atención (\textit{self-attention}), que les permite modelar dependencias a larga distancia y capturar el contexto de forma superior.
+
+% Modelos preentrenados como BERT (Devlin et al., 2018) y sus variantes (RoBERTa, ALBERT, etc.) han definido el estándar. Para el idioma español ], modelos específicos como BETO (Cañete et al., 2020) o MarIA (Gutiérrez-Fandiño et al., 2022), entrenados sobre corpus masivos en español, han demostrado superar en rendimiento a los modelos multilingües genéricos como mBERT ] en tareas específicas del idioma.
+
+% Para tareas de emparejamiento semántico o \textit{ranking}18], la comunidad ha convergido en dos arquitecturas principales que utilizan estos modelos \textit{Transformers} como base:
+
+% \subsection{Bi-Encoders (Arquitecturas Siamesas)}
+% \label{sec:BiEncoders}
+% En una arquitectura \textit{bi-encoder}, también conocida como red siamesa, los dos elementos a comparar (consulta $A$ y documento $B$) se procesan a través de dos codificadores \textit{Transformers} idénticos (o uno solo, dos veces) de forma \textbf{independiente}.
+
+% \begin{figure}[h]
+%     \centering
+%     % \includegraphics[width=0.7\textwidth]{images/bi-encoder.png} % Placeholder
+%     \fbox{\parbox[c][10em]{.7\textwidth}{\centering \textbf{[Imagen de arquitectura Bi-Encoder]} \\ Texto A $\rightarrow$ [Transformer] $\rightarrow$ Embedding A \\ Texto B $\rightarrow$ [Transformer] $\rightarrow$ Embedding B \\ Comparación (e.g., Coseno) $\rightarrow$ Puntuación}}
+%     \caption{Diagrama conceptual de una arquitectura Bi-Encoder.}
+%     \label{fig:bi-encoder}
+% \end{figure}
+
+% Cada \textit{Transformer} genera un vector de representación de dimensionalidad fija (\textit{embedding}) para su entrada (e.g., promediando los \textit{embeddings} de los \textit{tokens} o usando el \textit{embedding} del \textit{token} `[CLS]`). La similitud entre $A$ y $B$ se calcula entonces de manera muy eficiente, típicamente mediante una similitud coseno en estos dos vectores:
+% $$ \text{sim}(A, B) = \cos(\theta) = \frac{\mathbf{v}_A \cdot \mathbf{v}_B}{\|\mathbf{v}_A\| \|\mathbf{v}_B\|} $$
+
+% \begin{itemize}
+%     \item \textbf{Ventaja:} Escalabilidad y velocidad. Permiten pre-calcular los \textit{embeddings} de todo el corpus]. La búsqueda se reduce a un problema de búsqueda de vecino más cercano (NNS), que es extremadamente rápido.
+%     \item \textbf{Desventaja:} Menor precisión. Al procesar $A$ y $B$ por separado, el modelo no puede realizar comparaciones finas o interacciones a nivel de \textit{token} entre las dos entradas.
+% \end{itemize}
+
+% \subsection{Cross-Encoders}
+% \label{sec:CrossEncoders}
+% En una arquitectura \textit{cross-encoder}, las dos entradas $A$ y $B$ se \textbf{concatenan} (generalmente separadas por un \textit{token} especial `[SEP]`) y se pasan \textbf{juntas} a través de un único modelo \textit{Transformer}.
+
+% \begin{figure}[h]
+%     \centering
+%     % \includegraphics[width=0.7\textwidth]{images/cross-encoder.png} % Placeholder
+%     \fbox{\parbox[c][10em]{.7\textwidth}{\centering \textbf{[Imagen de arquitectura Cross-Encoder]} \\ (Texto A + [SEP] + Texto B) $\rightarrow$ [Transformer] $\rightarrow$ Puntuación (desde [CLS])}}
+%     \caption{Diagrama conceptual de una arquitectura Cross-Encoder.}
+%     \label{fig:cross-encoder}
+% \end{figure}
+
+% El mecanismo de auto-atención puede ahora atender a \textit{tokens} de $A$ y $B$ simultáneamente en todas sus capas, permitiendo una modelización de la interacción mucho más profunda y contextual. La salida del modelo (generalmente el \textit{embedding} del \textit{token} `[CLS]` pasado por una capa lineal) es directamente la puntuación de similitud $\text{sim}(A, B) \in [0, 1]$.
+
+% \begin{itemize}
+%     \item \textbf{Ventaja:} Precisión \textit{state-of-the-art}. Capturan matices de la relación entre $A$ y $B$ que los \textit{bi-encoders} no pueden.
+%     \item \textbf{Desventaja:} Lentitud extrema. No es posible pre-calcular nada. Para $N$ consultas y $M$ documentos, se requieren $N \times M$ inferencias completas del \textit{Transformer}.
+% \end{itemize}
+
+% Este panorama sitúa la estrategia de \textit{pipeline} (Bi-Encoder para recuperar + Cross-Encoder para re-clasificar) como el enfoque más robusto y pragmático, y será la base sobre la cual se construirán los experimentos de este trabajo.
