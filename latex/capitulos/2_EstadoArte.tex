@@ -6,28 +6,6 @@
 \fancyhead[RE]{\textsc{CAPÍTULO} \thechapter. Estado del arte}
 \label{ch:EstadoArte}
 
-% \section{Historia del problema}
-% \label{sec:JobTitleMatching}
-
-% El \gls{JTM} es una tarea fundamental dentro del dominio de la \gls{HCM}, con aplicaciones directas en la recomendación de empleo, el análisis de la brecha de competencias y la adquisición de talento. El problema central radica en la enorme variabilidad y ambigüedad del lenguaje natural utilizado para describir roles laborales. Un mismo puesto puede ser descrito con numerosas variantes, mientras que títulos idénticos pueden implicar responsabilidades dispares en diferentes organizaciones.
-
-% \subsection{Métodos Tradicionales y Taxonómicos}
-
-% Históricamente, el abordaje de este problema se ha dividido en dos grandes categorías: métodos basados en léxicos y métodos de clasificación taxonómica.
-
-% % \subsubsection{Métodos Léxicos y Basados en Reglas}
-% Los primeros enfoques se basaban en la normalización de cadenas de texto y la comparación mediante métricas de similitud léxica como la distancia de edición de Levenshtein o la similitud de Jaccard\todo{cita}. Estos métodos, aunque simples, son frágiles y fracasan estrepitosamente ante la sinonimia y la polisemia. Los sistemas basados en reglas, por su parte, intentan codificar manualmente el conocimiento del dominio, un esfuerzo costoso, difícil de mantener y poco escalable.
-
-% % \subsubsection{Clasificación frente a Taxonomías}
-% Para estandarizar el dominio, han surgido taxonomías y ontologías como \gls{ESCO} o la \gls{ONET}\todo{cita o pie de pagina explicativo}. Gran parte del esfuerzo en la academia y la industria se ha centrado en la ``normalización'' de titulaciones, que se formula como un problema de clasificación: dado un título de trabajo, asignarlo a la entrada canónica correspondiente en la taxonomía.
-
-% En el contexto del español, si bien la taxonomía \gls{ESCO} proporciona una estructura jerárquica y un amplio conjunto de titulaciones, la investigación previa a TalentCLEF 2025 se ha centrado mayoritariamente en esta tarea de clasificación\todo{cita}. Estos trabajos a menudo emplean métodos que van desde el \gls{ML} clásico, como SVMs con características TF-IDF, hasta enfoques neuronales que modelan la estructura de la taxonomía, tales como métodos basados en grafos o el aprendizaje métrico\todo{cita}.
-
-% \subsection{El Desafío del ``Matching'' en Entornos Reales}
-% El problema abordado por TalentCLEF, y por ende por este trabajo, es sutilmente diferente y más complejo: no se trata de clasificar contra una taxonomía limpia, sino de realizar un \textit{ranking} de emparejamiento entre dos conjuntos de texto en lenguaje natural. Concretamente, se compara una consulta (oferta de trabajo) con un corpus de candidatos (último puesto de trabajo). Este escenario introduce un ruido considerable (abreviaturas, errores tipográficos, títulos internos de empresa\dots) que no está presente en la taxonomía \gls{ESCO}, pero que es común en datos del mundo real.
-
-% La escasez de benchmarks públicos y abiertos para esta tarea específica de \textit{matching} en español ha sido el principal cuello de botella para la investigación. Antes de TalentCLEF, la mayoría de los trabajos se realizaban sobre conjuntos de datos privados o se centraban en el idioma inglés, donde la disponibilidad de datos es mayor. Este trabajo se sitúa precisamente en la intersección de esta necesidad de soluciones robustas para el español y la disponibilidad de un benchmark riguroso para evaluarlas.
-
 
 \section{Historia del problema}
 \label{sec:JobTitleMatching}
@@ -35,11 +13,13 @@
 El \gls{JTM} constituye una tarea central dentro del campo más amplio de la gestión del talento y la \gls{HCM}. En su forma básica, el problema consiste en determinar la equivalencia o el grado de compatibilidad entre títulos de puestos, a pesar de la enorme variabilidad léxica, la polisemia y las convenciones internas de las organizaciones. Esta variabilidad hace que una misma ocupación pueda aparecer bajo campos muy distintos y, a su vez, que títulos idénticos traduzcan responsabilidades distintas según el contexto organizativo, sectorial o geográfico.
 
 \subsection{Métodos tradicionales y enfoques económicos}
+
 Históricamente, los trabajos sobre emparejamiento laboral han adoptado perspectivas tanto técnicas como económicas. En economía laboral española existe una persistencia en el proceso de emparejamiento que muestra cómo las fricciones de mercado y la heterogeneidad ocupacional condicionan los resultados del matching laboral \cite{de2008funcion}. Esos estudios clásicos proporcionan un marco para interpretar por qué la normalización de titulaciones no es sólo un problema lingüístico, sino también institucional y estructural: la misma denominación puede implicar distintas funciones y niveles de especialización en diferentes segmentos del mercado laboral \cite{de2017quien}.
 
 Desde el punto de vista computacional, los primeros abordajes aplicados al dominio laboral siguieron estructuras generales de recuperación de información y clasificación de texto: normalización de cadenas, reglas heurísticas y distintas métricas de similitud. Aunque estas técnicas (y los sistemas basados en reglas) pueden ser útiles en entornos controlados, su coste de mantenimiento y su fragilidad frente a sinónimos, abreviaturas y errores hacen que resulten insuficientes para datos del mundo real y escalas grandes \cite{jirjees2025machine}.
 
 \subsection{Transición hacia técnicas de aprendizaje automático}
+
 La llegada y consolidación del \gls{ML} transformó la investigación y la práctica en \gls{JTM}. Durante los últimos años, la literatura documenta un amplio abanico de técnicas: desde modelos supervisados clásicos hasta arquitecturas neuronales que aprenden representaciones textuales más ricas y robustas frente al ruido y la variabilidad \cite{jirjees2025machine}. Han comenzado a surgir soluciones no supervisadas y semi-supervisadas para detectar patrones, agrupar titulaciones y reducir la dependencia de grandes volúmenes de anotación manual \cite{mamani2022machine,mamani2022proceso}.
 
 Específicamente en entornos hispanohablantes, trabajos recientes han explorado procesos de clustering y pipelines de \gls{ML} no supervisado para identificar la demanda social de puestos y determinar similitudes entre títulos de profesionales de sectores específicos. Estas contribuciones muestran que, aunque las técnicas de clustering capturan agrupaciones útiles, su sensibilidad a la representación textual y su capacidad de generalización condiciona fuertemente la calidad del emparejamiento.
@@ -47,40 +27,66 @@ Específicamente en entornos hispanohablantes, trabajos recientes han explorado 
 En cuanto a los análisis bibliométricos sobre investigación en esta tarea revelan un crecimiento sostenido del interés científico en la intersección entre \gls{AI} y reclutamiento por parte de la \gls{HRM}, con aplicaciones que abarcan desde selección automatizada hasta orientación profesional y análisis de brechas de competencias \cite{rojas2022bibliometric}. Dichos trabajos también evidencian que, aunque existen esfuerzos notables en sectores como la salud o la tecnología, persiste una desproporción entre la disponibilidad de recursos en inglés y en otras lenguas, lo que limita la comparabilidad y la replicabilidad de soluciones en contextos locales.
 
 \subsection{Del problema de clasificación a la tarea de \emph{matching} en entornos reales}
+
 Una distinción clave que ha emergido en la literatura reciente es la diferencia entre (i) la clasificación contra una taxonomía canónica y (ii) el matching o ranking entre pares de textos libres (oferta vs. perfil solicitante). Mientras la clasificación se beneficia de puntos de referencia estables, el matching real debe lidiar con ruido, abreviaturas, títulos internos y asimetrías informativas que no aparecen en taxonomías limpias. En consecuencia, las soluciones más robustas tienden a combinar representaciones semánticas aprendidas con estrategias de evaluación y depuración específicas del dominio, integrando tanto medidas globales de similitud como señales estructurales extraídas del mercado laboral \cite{gasco2025brief}.
 
 %%
 
-% \section{Enfoques abordados en TalentCLEF}
-% \label{sec:TalentCLEFOverview}
+\section{Enfoques abordados en TalentCLEF}
+\label{sec:TalentCLEFOverview}
 
-% La campaña TalentCLEF se ha establecido como el principal foro para el avance en la inteligencia artificial aplicada a la \gls{HCM}. Al ser este trabajo parte de la edición 2025, el estado del arte más relevante proviene del análisis de las soluciones propuestas por los participantes en ediciones anteriores (e.g., TalentCLEF 2023 y 2024).
+La Tarea A de TalentCLEF 2025, centrada en el Multilingual \gls{JTM}, atrajo una variedad de enfoques que buscaron resolver el desafío de alinear semánticamente títulos de trabajo en inglés, español, alemán y, opcionalmente, chino. El análisis de las soluciones presentadas por los participantes revela una fuerte tendencia hacia el uso de modelos de lenguaje basados en Transformers, aunque las estrategias de implementación, entrenamiento y uso de recursos externos variaron significativamente.
 
-% \subsection{Arquitecturas Dominantes y Estrategias}
-% El análisis de los informes de trabajo (WIP) de ediciones pasadas revela una clara hegemonía de las arquitecturas basadas en \textit{Transformers}. Las soluciones más exitosas no se basan en un único modelo, sino en complejos \textit{pipelines} de recuperación de información, generalmente divididos en dos etapas:
+\subsection{Estrategias Dominantes}
 
-% \begin{enumerate}
-%     \item \textbf{Etapa de Recuperación (\textit{Retrieve}):} En esta fase, se utiliza un modelo rápido, típicamente un \textit{bi-encoder} (ver Sección \ref{sec:BiEncoders}), para escanear eficientemente la totalidad de la base de conocimiento (\textit{corpus elements}) ] y seleccionar un subconjunto de $k$ candidatos relevantes (e.g., $k=100$) para cada consulta. Modelos como SBERT (Sentence-BERT) o variantes multilingües preentrenadas y luego ajustadas en los datos de la tarea son comunes aquí.
+La mayoría de las soluciones giraron en torno a modelos de \textit{Sentence Transformers} multilingües preentrenados, como MPNet \cite{brikman2025multilingual}, JobBERT \cite{decorte2025multilingual} o variantes de SBERT \cite{nizami2025enhancing, bhangale2025fine}. El objetivo común fue la generación de embeddings en un espacio semántico compartido, donde títulos de trabajo equivalentes en diferentes idiomas tuvieran una alta similitud\footnote{La similitud medida en los espacios vectoriales generados fue la similitud coseno, elegida de forma unánime entre todas las propuestas de solución al problema.}.
 
-%     \item \textbf{Etapa de Re-clasificación (\textit{Re-rank}):} Los $k$ candidatos se pasan a un modelo mucho más pesado y preciso, un \textit{cross-encoder} (ver Sección \ref{sec:CrossEncoders}). Este modelo realiza una comparación profunda entre la consulta y cada candidato, generando una puntuación de similitud final que se utiliza para el \textit{ranking} definitivo.
-% \end{enumerate}
+Un hallazgo clave, destacado por el equipo NLPnorth \cite{zhang2025nlpnorth}, fue la comparación directa de tres métodos de ajuste fino:
+\begin{itemize}
+    \item \textbf{Discriminativo (Clasificación):} Reformular la tarea como una clasificación binaria (si dos títulos coinciden o no), generando para ello pares negativos.
+    \item \textbf{Contrastivo:} Entrenar el modelo para acercar las representaciones de pares positivos y alejar las de pares negativos.
+    \item \textbf{Basado en Prompts:} Utilizar LLMs para evaluar la similitud.
+\end{itemize}
+Los resultados de NLPnorth sugirieron que el aprendizaje contrastivo fue su estrategia más efectiva.
 
-% Las estrategias ganadoras a menudo complementan este \textit{pipeline} con un preprocesamiento de datos exhaustivo y, crucialmente, técnicas de \textbf{generación de datos sintéticos} o \textbf{aumento de datos}. Dado que el conjunto de entrenamiento proporcionado (basado en \gls{ESCO}) ] difiere significativamente en su dominio de los datos de validación y testeo (datos reales)21], los participantes han recurrido a técnicas como la retro-traducción o el uso de LLMs (e.g., GPT-3.5) para generar pares de entrenamiento más realistas y reducir el \textit{domain shift}.
+Otros equipos, como UDII-UPM \cite{rodriguez2025udii}, exploraron el rendimiento de modelos preentrenados sin ajuste fino, aplicando un enfoque \textit{zero-shot}, proponiendo una fusión de representaciones semánticas de diferentes modelos para robustecer el matching. Por el contrario, el equipo Pjmathematician utilizó embeddings GIST e incorporó datos generados mediante LLMs \cite{vachharajani2025pjmathematician}.
 
-% \subsection{Sub-tarea de Sesgo de Género (Gender Bias)}
-% \label{sec:GenderBiasSOA}
+\subsection{El Rol Crítico de Recursos Externos}
 
-% Una contribución significativa de TalentCLEF ha sido la inclusión de una evaluación específica del sesgo de género para español y alemán ], un problema que este trabajo reconoce pero no aborda en profundidad]. El objetivo de esta sub-tarea es medir si los sistemas de \textit{ranking} exhiben sesgos basados en los marcadores de género gramaticales (e.g., "director" vs "directora").
+El uso de la taxonomía \gls{ESCO} fue un diferenciador clave para varias de las soluciones de mayor rendimiento.
 
-% La métrica de evaluación utilizada es el \gls{RBO} (\textit{Rank-Biased Overlap})29], que compara la similitud entre las listas de resultados devueltas para una consulta y su contraparte de género opuesto. Un RBO de 1.0 implicaría que los \textit{rankings} son idénticos (sin sesgo), mientras que un RBO bajo indica una alta divergencia en los resultados (presencia de sesgo).
+\subsubsection{Uso de ESCO}
+La taxonomía \gls{ESCO} no solo sirvió como base de conocimiento, sino también como fuente de datos de entrenamiento. El equipo VerbaNex \cite{novoa2025verbanex} utilizó las relaciones jerárquicas de ESCO para generar automáticamente pares adicionales positivos y negativos, ajustando su modelo para crear un espacio semántico alineado con la taxonomía. De manera similar, NLPnorth \cite{zhang2025nlpnorth} también extrajo datos adicionales de ESCO para su entrenamiento\footnote{Cabe destacar que el conjunto de datos de entrenamiento ya habían sido generado por la organización y se encontraba a disposición de los participantes. Sin embargo, conociendo la procedencia y método de producción de este set de datos, algunos participantes decidieron aumentar dicho set para una mejor generalización de los modelos en el aprendizaje.}.
 
-% Los enfoques propuestos por los participantes para mitigar este sesgo ] incluyen:
-% \begin{itemize}
-%     \item \textbf{Normalización de Datos:} Convertir todas las titulaciones a una forma neutra o canónica (e.g., siempre masculino o siempre femenino) antes de entrenar o inferir.
-%     \item \textbf{Aumento de Datos Específico:} Generar pares de entrenamiento sintéticos que incluyan ambas variantes de género, enseñando explícitamente al modelo a tratarlas como equivalentes semánticos.
-%     \item \textbf{Métodos de \textit{Debiasing}} en el espacio de \textit{embeddings}, aunque estos son menos comunes y más complejos de implementar.
-% \end{itemize}
-% Los resultados de ediciones anteriores muestran que existe una tensión: los métodos que mitigan el sesgo de forma más agresiva (e.g., normalización estricta) pueden lograr un RBO alto, pero a veces sufren una ligera penalización en la métrica principal de \gls{MAP}29].
+Otros equipos adoptaron un enfoque híbrido. El sistema de dos etapas de Rodríguez et al. \cite{rodriguez2025two} utilizó \gls{ESCO} como un primer filtro o sistema de recuperación de candidatos, para luego refinar la lista de candidatos mediante un LLM en una etapa de \textit{re-ranking}.
+
+\subsubsection{Uso de LLMs}
+Además del \textit{re-ranking} mencionado, varios equipos utilizaron algún \gls{LLM} para la generación de datos. El equipo NT \cite{nga2025nt} propuso un sistema basado en la generación de descripciones de trabajo mediante LLMs, seguida de una recuperación de información. Sin embargo, su rendimiento fue bastante limitado en comparación con otros enfoques basados en Transformers.
+
+\subsection{Gestión de Escenarios Multilingües y Cross-Lingües}
+
+El desafío principal de la tarea era la correcta alineación semántica entre idiomas.
+\begin{itemize}
+    \item \textbf{Espacio Semántico Compartido:} La estrategia dominante fue el uso de codificadores multilingües (SBERT, MPNet) ajustados para proyectar todos los idiomas en un único espacio vectorial \cite{brikman2025multilingual, nizami2025enhancing, novoa2025verbanex}.
+    \item \textbf{Inglés como Lengua Pivote:} El equipo de Rodríguez et al. \cite{rodriguez2025two} investigó explícitamente el uso del inglés como idioma pivote, traduciendo los títulos de otros idiomas al inglés antes de la comparación, una estrategia que demostró mejorar el rendimiento en algunos escenarios cross-lingües.
+    \item \textbf{Recuperación Híbrida:} El equipo AlexU-NLP \cite{barakat2025alexu} propuso un sistema de recuperación híbrido con un enfoque de \textit{curriculum learning}, diseñado para gestionar la dificultad progresiva de los pares multilingües.
+\end{itemize}
+
+\subsection{Consideraciones Específicas: Chino y Sesgo de Género}
+
+Aunque la mayoría de los participantes se centraron en inglés, español y alemán, la tarea incluía dos consideraciones importantes: el idioma chino y la evaluación del sesgo de género.
+
+\subsubsection{El Caso del Chino}
+El idioma chino (en pares \textit{zh-zh} y \textit{en-zh}) fue una pista opcional dentro de la Tarea A. Sin embargo, la mayoría de los trabajos centraron sus esfuerzos en los idiomas europeos, debido a que el chino no se encontraba dentro de los datos de entrenamiento, sino únicamente en validación y testeo, con la intención de evaluar la capacidad multilingue de las distintas propuestas. 
+
+\subsubsection{Evaluación del Sesgo de Género}
+Una componente evaluativa clave de la tarea fue la medición del sesgo de género. En idiomas como el español y el alemán, donde los títulos de trabajo pueden tener marcas explícitas de género, se evaluó cómo las distintas soluciones manejaban estas diferencias,  para evaluar si los sistemas perpetuaban o mitigaban sesgos de género en sus predicciones. Los datos de la competición incluían anotaciones ocultas de género y expresiones con marcas de género para permitir este análisis. La organización proponía buscar un sistema que minimizara las diferencias de rendimiento entre títulos de trabajo asociados a diferentes grupos de género.
+
+A pesar de que esta evaluación fue central, pocos trabajos de los participantes detallaron explícitamente las técnicas de mitigación del sesgo que aplicaron. La mayoría de los sistemas se centraron en la precisión del matching semántico. Los trabajos de NLPnorth y de Ixa evaluarion este tema con detenimiento, consiguiendo una puntuación perfecta en la métrica de sesgo de género.
+
+
+
+
 
 % \section{Modelos Transformers para Semejanza Semántica}
 % \label{sec:TransformersSOA}
