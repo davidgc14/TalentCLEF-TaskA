@@ -39,7 +39,7 @@ La Tarea A de TalentCLEF 2025, centrada en el Multilingual \gls{JTM}, atrajo una
 
 \subsection{Estrategias Dominantes}
 
-La mayoría de las soluciones giraron en torno a modelos de \textit{Sentence Transformers} multilingües preentrenados, como MPNet \cite{brikman2025multilingual}, JobBERT \cite{decorte2025multilingual} o variantes de SBERT \cite{nizami2025enhancing, bhangale2025fine}. El objetivo común fue la generación de embeddings en un espacio semántico compartido, donde títulos de trabajo equivalentes en diferentes idiomas tuvieran una alta similitud\footnote{La similitud medida en los espacios vectoriales generados fue la similitud coseno, elegida de forma unánime entre todas las propuestas de solución al problema.}.
+La mayoría de las soluciones giraron en torno a modelos de \textit{Sentence Transformers} multilingües preentrenados, como MPNet \cite{brikman2025multilingual}, JobBERT \cite{decorte2025multilingual} o variantes de SBERT \cite{nizami2025enhancing,bhangale2025fine}. El objetivo común fue la generación de embeddings en un espacio semántico compartido, donde títulos de trabajo equivalentes en diferentes idiomas tuvieran una alta similitud\footnote{La similitud medida en los espacios vectoriales generados fue la similitud coseno, elegida de forma unánime entre todas las propuestas de solución al problema.}.
 
 Un hallazgo clave, destacado por el equipo NLPnorth \cite{zhang2025nlpnorth}, fue la comparación directa de tres métodos de ajuste fino:
 \begin{itemize}
@@ -67,7 +67,7 @@ Además del \textit{re-ranking} mencionado, varios equipos utilizaron algún \gl
 
 El desafío principal de la tarea era la correcta alineación semántica entre idiomas.
 \begin{itemize}
-    \item \textbf{Espacio Semántico Compartido:} La estrategia dominante fue el uso de codificadores multilingües (SBERT, MPNet) ajustados para proyectar todos los idiomas en un único espacio vectorial \cite{brikman2025multilingual, nizami2025enhancing, novoa2025verbanex}.
+    \item \textbf{Espacio Semántico Compartido:} La estrategia dominante fue el uso de codificadores multilingües (SBERT, MPNet) ajustados para proyectar todos los idiomas en un único espacio vectorial \cite{brikman2025multilingual,nizami2025enhancing,novoa2025verbanex}.
     \item \textbf{Inglés como Lengua Pivote:} El equipo de Rodríguez et al. \cite{rodriguez2025two} investigó explícitamente el uso del inglés como idioma pivote, traduciendo los títulos de otros idiomas al inglés antes de la comparación, una estrategia que demostró mejorar el rendimiento en algunos escenarios cross-lingües.
     \item \textbf{Recuperación Híbrida:} El equipo AlexU-NLP \cite{barakat2025alexu} propuso un sistema de recuperación híbrido con un enfoque de \textit{curriculum learning}, diseñado para gestionar la dificultad progresiva de los pares multilingües.
 \end{itemize}
@@ -82,7 +82,7 @@ El idioma chino (en pares \textit{zh-zh} y \textit{en-zh}) fue una pista opciona
 \subsubsection{Evaluación del Sesgo de Género}
 Una componente evaluativa clave de la tarea fue la medición del sesgo de género. En idiomas como el español y el alemán, donde los títulos de trabajo pueden tener marcas explícitas de género, se evaluó cómo las distintas soluciones manejaban estas diferencias,  para evaluar si los sistemas perpetuaban o mitigaban sesgos de género en sus predicciones. Los datos de la competición incluían anotaciones ocultas de género y expresiones con marcas de género para permitir este análisis. La organización proponía buscar un sistema que minimizara las diferencias de rendimiento entre títulos de trabajo asociados a diferentes grupos de género.
 
-A pesar de que esta evaluación fue central, pocos trabajos de los participantes detallaron explícitamente las técnicas de mitigación del sesgo que aplicaron. La mayoría de los sistemas se centraron en la precisión del matching semántico. Los trabajos de NLPnorth y de Ixa evaluarion este tema con detenimiento, consiguiendo una puntuación perfecta en la métrica de sesgo de género.
+A pesar de que esta evaluación fue central, pocos trabajos de los participantes detallaron explícitamente las técnicas de mitigación del sesgo que aplicaron. La mayoría de los sistemas se centraron en la precisión del matching semántico. Los trabajos de NLPnorth y de Ixa\todo{Revisar nombre de equipos y de autores, para que haya unificación en la forma en la que los llamo.} evaluarion este tema con detenimiento, consiguiendo una puntuación perfecta en la métrica de sesgo de género.
 
 
 
