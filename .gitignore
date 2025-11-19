@@ -13,3 +13,5 @@ latex/TFM.*
 latex/indent.log
 !latex/TFM.pdf
 !latex/TFM.tex
+
+__init__.py
