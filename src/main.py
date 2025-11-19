@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer, util
 from pathlib import Path
-import evaluation_file
+from evaluation_file import evaluate_run
 import time
 import json
 
@@ -83,7 +83,7 @@ def write_run_file(results, run_file):
 def run_evaluation(qrels_path, run_file):
     """Run the evaluation script and return results as dict."""
     print('Evaluating with evaluation_file.py...')
-    results = evaluation_file.evaluate_run(qrels_path, run_file)
+    results = evaluate_run(qrels_path, run_file)
     return results
 
 
@@ -255,12 +255,13 @@ def update_ranking(multilingual_results, crosslingual_results, model_name, nickn
                        'map_en_es', 'map_en_de', 'map_en_zh']
     
     if not df.empty:
-        new_record_comparison = {k: new_record[k] for k in comparison_cols}
+        # Solo comparar las keys que existen en new_record
+        new_record_comparison = {k: new_record.get(k, np.nan) for k in comparison_cols}
         existing_records = df[comparison_cols].to_dict('records')
         
         for existing in existing_records:
-            if all(abs(existing.get(k, 0) - new_record_comparison.get(k, 0)) < 1e-6 
-                   if isinstance(new_record_comparison.get(k), float) 
+            if all(abs(existing.get(k, np.nan) - new_record_comparison.get(k, np.nan)) < 1e-6 
+                   if isinstance(new_record_comparison.get(k), (float, int)) and not np.isnan(new_record_comparison.get(k, np.nan))
                    else existing.get(k) == new_record_comparison.get(k) 
                    for k in comparison_cols):
                 print("Ya existe un registro idéntico en el ranking. No se agregará el nuevo registro.")
