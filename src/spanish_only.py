@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer, util
 from pathlib import Path
-from evaluation_file import evaluate_run
+from .evaluation_file import evaluate_run
 import time
 import json
 import tempfile
