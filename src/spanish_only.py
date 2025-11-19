@@ -50,8 +50,8 @@ def load_spanish_data(data_dir):
 def encode_data(model, queries_texts, corpus_texts, model_name, device):
     """Encode queries and corpus using the model."""
     print('Encoding data:', model_name, 'on device:', device)
-    query_embeddings = model.encode(queries_texts, convert_to_tensor=True, show_progress_bar=True)
-    corpus_embeddings = model.encode(corpus_texts, convert_to_tensor=True, show_progress_bar=True)
+    query_embeddings = model.encode(queries_texts, convert_to_tensor=True, show_progress_bar=True, device=device)
+    corpus_embeddings = model.encode(corpus_texts, convert_to_tensor=True, show_progress_bar=True, device=device)
     return query_embeddings, corpus_embeddings
 
 
