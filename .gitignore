@@ -17,3 +17,5 @@ latex/indent.log
 __init__.py
 
 temp.*
+
+models/finetuned/*
