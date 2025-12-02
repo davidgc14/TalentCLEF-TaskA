@@ -1,47 +1,43 @@
 <h1 style="font-size: 3em;">TalentCLEF TaskA: Evaluación de similitudes</h1>
 
-# Análisis previo
+# Arquitectura
 
-## Descripción del corpus
+Me encuentro actualmente en busqueda del mejor modelo de embedding para la tarea de Retrieval, ya sea con finetunning propio o no.
 
-https://talentclef.github.io/talentclef/docs/talentclef-2025/data/description_corpus/
+Posteriormente habra que buscar un modelo de reranking.
 
-## Analisis de datos
+# Embedding
 
-En la evaluación, tenemos tres archivos:
+## Notas sobre la evaluación previa a finetunning
 
-corpus_elements: Conjunto nuevo de trabajos sobre el cual debemos encontrar la similitud frente a uno dado
+### Hugging face
 
-queries: solicitudes que pretenden encontrar, contrastando con todos los de corpus_elements, si existe similitud (1) o no (0). Para eso habrá que definir un threshold a futuro para ver cuales colapsan a 1 y cuales a 0. (Updated: Creo que no es necesario, pues el propio archivo de evaluación construye el ranking y evalua cómo de buena es la similitud)
+se han ejecutado todos los modelos de hugging face que atendian a los siguientes filtros:
 
-qrels: relaciones entre las queries y cada uno de los elementos del corpus. Solo se muestran los que si presentan relación (cuarta columna, indicando con un 1).
+- Libreria Transformers
+- Contener idioma español
+- Tarea Sentence similarity
 
-Los datos de las queries pueden o no pertenecer al corpus conocido (la idea es que no necesariamente, y se construya pensando que no va a haber una solicitud en nuestro corpus). He encontrado algunos casos en los que si aparece en ambos. Ejemplo: lawyer
+estos estan guardados en la tabla hf_evaluation_results.csv
 
-Resulta que los datos DE VALIDACIÓN se han obtenido de applications a trabajos que ha hecho la gente, donde las queries son las ofertas, y los titulos del corpus elements son los títulos de la gente que ha aplicado al puesto en cuestión. El training set se ha obtenido del ESCO directamente.
+### MTEB
 
-# Primera aproximación: Embeddings preentrenados
+Ahora se estan ejecutando los modelos de la tabla de MTEB leaderboard. Se esta empezando con los modelos más pesados, para luego poder evaluarlos todos de manera continua con un bucle for. Se estan guardando los resultados en la carpeta models/results/mteb
 
-Para la primera aproximación he optado por la forma más sencilla de abordarlo: no entrenar ningún modelo, sino usar un modelo ya entrenado en otros corpus de texto. Para ello me he servido del modelo _sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2_ que está preparado para ser multilingüe. Con este modelo obtenemos las representaciones vectoriales en el espacio de embedding preentrenado de 384 dimensiones. (Para monolingüe inglés también está disponible _sentence-transformers/all-MiniLM-L6-v2_).
+Para obtener esta tabla se ha aplicado el siguiente filtro:
 
-Para medir su similitud se usa la similitud coseno, obteniendo una métrica definida en el intervalo [0,1].
+- Tarea Retrieval
+- Modelo Open Source
 
-## Búsqueda del threshold (deprecated?)
+Aqui no se ha aplicado filtro de idioma, ya que la gran mayoria son multilingues. La presencia de modelos monolingues para la resolucion de esta tarea es escaso.
 
-_Nota: Esta sección se desarrolló sin conocer el archivo de evaluación. Se mantiene por si resulta útil en el futuro, pero a priori esta sección es completamente prescindible._
+He tomado el top 100 aplicado el filtro anterior, y de estos he intentado evaluarlos todos. Sin embargo, por escasez de recursos ha sido bastante complicado ejecutar aquellos que requirieran de más de 20GB de almacenamiento para ejecutarse. En concreto se ha descartado la ejecucción de los siguientes modelos:
 
-Para decidir el threshold, he abordado su búsqueda gracias a los datos de entrenamiento. Usando los pares que me proporciona el entrenamiento, tengo seguro cuáles sí puedo considerar como parejas válidas. A partir de ellas puedo generar parejas que no tengan relación aparente (o por lo menos que no haya una conexión directa en los datos de entrenamiento) para conseguir un conjunto de datos que NO son parejas deseables (inferiores al threshold). Con ello consigo los dos conjuntos para poder aplicar clasificación binaria basada en un valor límite (threshold).
+- Puesto 16 GritLM/GritLM-8x7B Memoria necesaria: 89079 Mb
+- Puesto 2 tencent/KaLM-Embedding-Gemma3-12B-2511 Memoria necesaria: 44884 Mb
+- Puesto 7 Alibaba-NLP/gte-Qwen2-7B-instruct Memoria necesaria: 29040 Mb
+- Puesto 51 McGill-NLP/LLM2Vec-Mistral-7B-Instruct-v2-mntp-supervised Memoria necesaria: 27126 Mb
 
-Para descubrir estas conexiones, he usado grafos. Tras generar el grafo resultante de los pares de conexiones (parejas) que hay en el entrenamiento, he obtenido las distintas componentes conexas, mediante las cuales he podido generar las parejas de términos que no están relacionados a priori.
+### Español
 
-Una vez obtenido el threshold que maximiza la F1, he aplicado el modelo mencionado anteriormente para generar un embedding y con él una similitud coseno entre los pares de titlejobs que se encuentran en el conjunto de validación. Tras ello, he obtenido una matriz de tamaño query x corpus_element con las predicciones del modelo base, colapsando a 0 o 1 según si superaba el umbral encontrado. Tras ello se ha aplicado el classification report.
-
-**TO-DO**:
-
-- Tengo que volver a comprobar si puedo separar por grupos, en lugar por componentes conexas, usando el family_id. Al parecer es el ID del ESCO, por lo que puede diferir de las componentes conexas, habiendo varias componentes conexas que puedan pertenecer al mismo family_id, o al revés.
-
-## Evaluación
-
-Para la evaluación me he servido del tutorial proporcionado por la organización (que lo he adaptado a mi caso en el archivo `evaluation_path.ipynb`, y posteriormente en `main.py`). Este flujo de evaluación se sirve del archivo `talentclef_evaluate.py` (refactorizado a `evaluation_file`), el cual contiene todas las métricas de evaluación para una correcta valoración del modelo.
-
-Actualmente, al ejecutar el archivo `main.py`, se genera una carpeta por ejecución en el directorio **output**, donde se guardan los archivos con los rankings y los resultados de las evaluaciones de cada uno de los rankings. Este archivo ejecuta uno por uno el ranking monolingue para cada uno de los cuatro idiomas, y posteriormente los tres casos multilingue. Los resultados se guardan en dos archivos .json por separado.
+Se ha buscado autores especificos de modelos españoles para tener una muestra de evaluación. Los mas destacados son "somosnlp", "PlanTL-GOB-ES" y "dccuchile". Además he investigado sobre algunos especificos, y he generado una lista con los modelos en español para ver que tal rinden. Estan guardados en su carpeta correspondiente
