@@ -22,7 +22,7 @@ estos estan guardados en la tabla hf_evaluation_results.csv
 
 ### MTEB
 
-Ahora se estan ejecutando los modelos de la tabla de MTEB leaderboard. Se esta empezando con los modelos más pesados, para luego poder evaluarlos todos de manera continua con un bucle for. Se estan guardando los resultados en la carpeta models/results/mteb
+Ahora se estan ejecutando los modelos de la tabla de MTEB leaderboard (obtenida a dia 1 de diciembre de 2025). Se esta empezando con los modelos más pesados, para luego poder evaluarlos todos de manera continua con un bucle for. Se estan guardando los resultados en la carpeta models/results/mteb
 
 Para obtener esta tabla se ha aplicado el siguiente filtro:
 
@@ -41,3 +41,43 @@ He tomado el top 100 aplicado el filtro anterior, y de estos he intentado evalua
 ### Español
 
 Se ha buscado autores especificos de modelos españoles para tener una muestra de evaluación. Los mas destacados son "somosnlp", "PlanTL-GOB-ES" y "dccuchile". Además he investigado sobre algunos especificos, y he generado una lista con los modelos en español para ver que tal rinden. Estan guardados en su carpeta correspondiente
+
+# Tutoria y next steps
+
+La arquitectura de hacer fusion ranking de varios modelos y luego reranking tiene sentido. El fusion ranking existen librerias que mezclan y ponderan los rankings automaticamente. Debo justificar el uso de las librerias en concreto que use.
+
+## Arquitectura de sistema
+
+Aqui debo de hablar de:
+
+- Arquitectura general
+- Cada uno de los tres bloques de la pipeline
+- Las tecnologias usadas (funciones de pesado, funciones de perdida, librerias, teconologias...)
+- Describir el flujo de trabajo (que cosas voy a probar, el orden de las pruebas...)
+
+## Resultados
+
+Aqui debo mostrar todo el flujo de trabajo que me ha llevado a seleccionar el modelo final. Además debo definir que la medida MAP será la que determinará el rendimiento general de una solución.
+
+### Bloque 1: Seleccion de modelos base para entrenar
+
+- Todos los modelos que se han probado
+- Comparacion de tamaños y rendimiento
+- Comparación monolingue multilingue (comprobar que en los resultados de los participantes nadie uso monolingue. Puede ser que el tamaño de los modelos importe. Tambien puede ser que la terminología usada en los datos de entrenamiento o finetuning no se equiparen con el vocabulario usado en la realidad [por ejemplo, la palabra software o manager son palabras que hoy en dia se usan en el castellano como palabras traidas del ingles]). Enunciar posibles razones, pero NO una razon definitiva.
+- Finetunning y seleccion final de candidatos
+
+### Bloque 2: Prueba de varias tecnicas de fusion ranking
+
+No usar demasiadas, ya que lo groso de la experimentacion esta en los pasos anteriores.
+
+### Bloque 3: Prueba de varias tecnicas de reranking
+
+Igual que el anterior
+
+## Evaluacion
+
+Mostrar los resultados
+
+## Discusion
+
+Entrar mas en detalle en el analisis de los resultados y de la evaluacion (seleccion de multilingue por ejemplo)
