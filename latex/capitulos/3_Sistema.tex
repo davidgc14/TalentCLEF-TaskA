@@ -34,4 +34,95 @@ La Figura \ref{fig:arquitectura_diagrama} ilustra el flujo de datos a través de
 
 A continuación, se describen en detalle los componentes técnicos de cada una de las etapas mencionadas.
 
-\subsection{Módulo de Recuperación (Bi-encoders)}
+\subsection{Retrieval}
+
+El objetivo de esta fase es reducir el sesgo que cada uno de los modelos por separado pueda tener para reducir la varianza en los resultados. Para ello, se emplean modelos \textit{Sentence Transformers} bajo una red siamesa de modelos bi-encoders \cite{reimers2019sentence}.
+
+Dada una consulta $q$ y un candidato $d$, el bi-encoder procesa cada texto de forma independiente para generar sus representaciones vectoriales $u$ y $v$. La similitud se calcula mediante la similitud coseno:
+
+\begin{equation}
+    sim(q, d) = \cos(u, v) = \frac{u \cdot v}{\|u\| \|v\|}
+\end{equation}
+
+Para aumentar la robustez del sistema, se entrenarán tres modelos distintos que aporten diversidad al conjunto. Esta búsqueda de modelos estará guiada por los resultados obtenidos sobre una evaluación en los datos de validación, que serán realizadas tanto antes del fine-tuning (zero-shot) como posterior al mismo. Los resultados obtenidos se ordenarán según la métrica MAP detallada en la sección \ref{sec:MAP}.
+
+La fuente principal de obtención de modelos será el repositorio de Hugging Face \cite{huggingface}, priorizando aquellos que hayan demostrado buen rendimiento en tareas de recuperación de información multilingüe o en español.
+
+\subsection{Rank Fusion}
+
+Dado que cada modelo bi-encoder puede destacar en diferentes tipos de consultas (e.g., uno maneja mejor anglicismos y otro mejor la terminología local), combinarlos se espera que mejore el rendimiento general. Se empleará el algoritmo \gls{RRF} \cite{cormack2009reciprocal} para fusionar los tres rankings individuales generados en la etapa de recuperación.
+
+RRF asigna una puntuación a cada candidato del corpus $c$ basándose en su posición en los rankings individuales, penalizando aquellos que aparecen en posiciones bajas y premiando el consenso entre modelos. La fórmula utilizada es la siguiente:
+
+\begin{equation}
+    RRFscore(c \in C) = \sum_{r \in R} \frac{1}{k_{rrf} + r(c)}
+\end{equation}
+
+Donde $C$ es el conjunto de candidatos, $R$ es el conjunto de rankings provenientes de los tres bi-encoders, $r(c)$ es el rango del documento en un ranking específico, y $k_{rrf}$ es una constante de suavizado que mitiga la influencia de documentos con rangos muy altos, para evitar así la presencia de outliers.
+
+\subsection{Re-ranking}
+
+La lista unificada resultante de la fusión pasa a una etapa final de reordenamiento. A diferencia de los bi-encoders, el cross-encoder recibe como entrada el par concatenado $(q, c)$ y utiliza un mecanismo de \textit{full self-attention} sobre la secuencia conjunta.
+
+Esto permite que el modelo capture interacciones no lineales y dependencias sintácticas entre la consulta y el candidato que son imposibles de representar mediante estructuras computacionales más simples. Debido a su alto coste computacional, este proceso se aplica únicamente a los candidatos más prometedores resultantes de la etapa anterior. El modelo emitirá un \textit{logit} que representará la puntuación de relevancia final utilizada para ordenar la lista definitiva.
+
+\section{Tecnologías y Estrategias de Aprendizaje}
+
+La implementación del sistema se apoya en un conjunto de tecnologías y funciones de pérdida seleccionadas específicamente para maximizar el aprendizaje de similitud semántica.
+
+\subsection{Librerías y Entorno}
+
+El desarrollo se llevará a cabo utilizando el lenguaje Python, apoyándose en el ecosistema de \textbf{Hugging Face} y la librería \textbf{SentenceTransformers} \cite{reimers2019sentence}, que facilita el entrenamiento de los modelos bi-encoders que necesitamos. Para la gestión de tensores y el entrenamiento en GPU, se utilizará \textbf{PyTorch}. 
+
+\subsection{Funciones de Pérdida (Loss Functions)}
+
+El entrenamiento de los modelos de recuperación es crítico. Se utilizarán estrategias de aprendizaje contrastivo para optimizar el espacio vectorial:
+
+\begin{itemize}
+    \item \textbf{Retrieval:} \gls{MNRL} será la función de pérdida principal utilizada para el entrenamiento de los modelos bi-encoder. \gls{MNRL} trata cada par (query, candidato) como un ejemplo positivo y considera todos los demás documentos del lote como negativos. Esto permite un entrenamiento altamente eficiente sin necesidad de definir negativos explícitos, aprovechando una gran cantidad de negativos en cada iteración y mejorando la discriminación en el espacio de representación.
+    \item \textbf{GISTEmbedLoss:} Para la etapa de \textit{re-ranking}, se empleará una función de pérdida de clasificación binaria (\textit{BCEWithLogitsLoss}), tratando el problema como uno de decisión sobre pares (relacionado / no relacionado).
+\end{itemize}
+
+\subsection{Función de evaluación}
+\label{sec:MAP}
+
+Para monitorizar el rendimiento durante el entrenamiento y la validación, se utilizará la métrica \textbf{Mean Average Precision (MAP)}, la cual es la que propuso la organización para la evaluación de la \gls{Tarea}. A diferencia de métricas que solo contabilizan el volumen de aciertos, el \gls{MAP} penaliza que los documentos relevantes aparezcan en posiciones inferiores de la lista de resultados, otorgando mayor peso a los aciertos en las primeras posiciones.
+
+Sea una consulta \( q \) asociada a un conjunto de candidatos relevantes conocidos \( C_q \). La \gls{AP} se define formalmente como:
+
+\[
+    \mathrm{AP}(q) = \frac{1}{|C_q|} \sum_{k=1}^{N} P(k) \cdot \mathbb{I}(\text{doc}_k \in C_q),
+\]
+
+donde:
+\begin{itemize}
+    \item \( |C_q| \) es el número total de documentos relevantes para la consulta \( q \).
+    \item \( N \) es el número de documentos recuperados.
+    \item \( P(k) \) es la precisión calculada hasta la posición de corte \( k \).
+    \item \( \mathbb{I}(\cdot) \) es una función indicadora que toma el valor 1 si el documento en la posición \( k \) es relevante (\( \text{doc}_k \in C_q \)) y 0 en caso contrario.
+\end{itemize}
+
+Finalmente, el valor de \textbf{MAP} se obtiene promediando la \gls{AP} sobre la totalidad del conjunto de consultas \( Q \):
+
+\[
+    \mathrm{MAP} = \frac{1}{|Q|} \sum_{q \in Q} \mathrm{AP}(q).
+\]
+
+
+\section{Flujo de Trabajo Experimental}
+
+Para validar la arquitectura propuesta y alcanzar los objetivos definidos, se plantea un flujo de trabajo iterativo dividido en cuatro fases principales:
+
+\subsection{Fase 1: Zero-shot}
+Inicialmente, se evaluará el rendimiento de un conjunto de modelos pre-entrenados seleccionados (multilingües y monolingües) sin realizar ningún tipo de entrenamiento. Esto establecerá una línea base de rendimiento y permitirá cuantificar la ganancia obtenida posteriormente mediante el entrenamiento con los datos proporcionados.
+
+\subsection{Fase 2: Entrenamiento de Bi-encoders}
+Se procederá al fine-tuning de los 8\todo{Revisar si hacer 5, 8 o 10} mejores modelos de recuperación utilizando los datos de entrenamiento proporcionados por la organización de TalentCLEF, consistentes en pares extraídos de ESCO. 
+
+En esta fase, se aplicará un Early Stopping basado en la función de pérdida \gls{MNRL} y se monitorizará el rendimiento en el conjunto de validación utilizando la métrica \gls{MAP}. Se experimentará con diferentes configuraciones de tasas de aprendizaje y de tamaños del lote, tratando de optimizar la convergencia y la generalización del modelo. 
+
+\subsection{Fase 3: Optimización de la Fusión}
+Una vez entrenados los modelos individuales, se experimentará con la estrategia de fusión. Se evaluará el impacto de diferentes combinaciones de modelos y se ajustará el parámetro $k$ del algoritmo \gls{RRF} para maximizar la métrica \gls{MAP} en el conjunto de validación.
+
+\subsection{Fase 4: Implementación del Re-ranking}
+Finalmente, se integrará el cross-encoder. Se analizará el compromiso entre rendimiento y tiempo de cómputo variando la profundidad del re-ranking. El resultado de esta fase constituirá el sistema final a evaluar en la competición.
