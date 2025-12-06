@@ -5,3 +5,33 @@
 \chapter{Arquitectura del sistema}
 \fancyhead[RE]{\textsc{CAPÍTULO} \thechapter. Arquitectura del sistema}
 \label{ch:Arquitectura_del_sistema}
+
+
+% En este capítulo se detalla la propuesta metodológica diseñada para abordar la resolución de la \gls{Tarea}. Basándonos en el análisis previo, donde se identificó la eficacia de los modelos basados en Transformers y la necesidad de estrategias robustas de entrenamiento contrastivo, se propone una arquitectura modular en cascada.
+
+% Esta arquitectura combina la eficiencia de los modelos de recuperación densa con la precisión de los modelos de reranking, integrando una etapa intermedia de fusión de rankings para maximizar la diversidad y la cobertura de los resultados recuperados.
+
+\section{Arquitectura general}
+
+El flujo de procesamiento de una query (título de una oferta de empleo) hasta la obtención del ranking final de candidatos se ha estructurado en tres etapas secuenciales:
+
+\begin{enumerate}
+    \item \textbf{Retrieval:} Utilización de tres modelos bi-encoder independientes, a los que se les ha aplicado \textit{fine-tuning} con los datos de entrenamiento para la tarea, proyectando tanto las consultas como los candidatos en un espacio vectorial común. Cada modelo genera un ranking preliminar de los candidatos más similares.
+    \item \textbf{Rank Fusion:} Agregación de los resultados de los tres modelos de recuperación mediante algoritmos de rank fusion, generando una lista unificada y más robusta que mitiga los sesgos individuales de cada modelo.
+    \item \textbf{Re-ranking:} Refinamiento de la lista fusionada mediante un modelo cross-encoder, que evalúa la interacción semántica profunda entre la consulta y los candidatos seleccionados para producir el ranking final.
+\end{enumerate}
+
+La Figura \ref{fig:arquitectura_diagrama} ilustra el flujo de datos a través de estos módulos.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{imagenes/arquitectura-diagrama.png}
+    \caption{Diagrama de la arquitectura del sistema propuesto: Retrieval, Fusión y Re-ranking.}
+    \label{fig:arquitectura_diagrama}
+\end{figure}
+
+\section{Módulos del sistema}
+
+A continuación, se describen en detalle los componentes técnicos de cada una de las etapas mencionadas.
+
+\subsection{Módulo de Recuperación (Bi-encoders)}
