@@ -117,7 +117,7 @@ Para validar la arquitectura propuesta y alcanzar los objetivos definidos, se pl
 Inicialmente, se evaluará el rendimiento de un conjunto de modelos pre-entrenados seleccionados (multilingües y monolingües) sin realizar ningún tipo de entrenamiento. Esto establecerá una línea base de rendimiento y permitirá cuantificar la ganancia obtenida posteriormente mediante el entrenamiento con los datos proporcionados.
 
 \subsection{Fase 2: Entrenamiento de Bi-encoders}
-Se procederá al fine-tuning de los 8\todo{Revisar si hacer 5, 8 o 10} mejores modelos de recuperación utilizando los datos de entrenamiento proporcionados por la organización de TalentCLEF, consistentes en pares extraídos de ESCO. 
+Se procederá al fine-tuning de los 10 mejores modelos de recuperación utilizando los datos de entrenamiento proporcionados por la organización de TalentCLEF, consistentes en pares extraídos de ESCO. 
 
 En esta fase, se aplicará un Early Stopping basado en la función de pérdida \gls{MNRL} y se monitorizará el rendimiento en el conjunto de validación utilizando la métrica \gls{MAP}. Se experimentará con diferentes configuraciones de tasas de aprendizaje y de tamaños del lote, tratando de optimizar la convergencia y la generalización del modelo. 
 

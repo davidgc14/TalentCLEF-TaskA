@@ -10,13 +10,13 @@
 \section{Motivación}
 \label{sec:Motivacion}
 
-\noindent El panorama del mercado laboral actual está experimentando una gran transformación impulsada principalmente por la rápida evolución tecnológica y la incorporación de la \gls{AI} en nuestras vidas. Estudios recientes indicaban que para finales de 2025, aproximadamente 90 millones de puestos de trabajo habrán sido automatizados, y una cantidad similar de ocupaciones que no existían a principios de siglo aparecerán en escena \cite{maslej2025artificial}\todo{No se si hay que referenciar así, o mejor con números: [1], [2,3]...}. Esta dinámica de cambio constante, lejos de ser un fenómeno aislado, es consecuencia directa del desarrollo tecnológico, el cual no solo ha automatizado tareas rutinarias y creado roles completamente nuevos, sino que también ha redefinido la naturaleza misma de los puestos de trabajo existentes.
+\noindent El panorama del mercado laboral actual está experimentando una gran transformación impulsada principalmente por la rápida evolución tecnológica y la incorporación de la \gls{AI} en nuestras vidas. Estudios recientes indicaban que para finales de 2025, aproximadamente 90 millones de puestos de trabajo habrán sido automatizados, y una cantidad similar de ocupaciones que no existían a principios de siglo aparecerán en escena \cite{maslej2025artificial}. Esta dinámica de cambio constante, lejos de ser un fenómeno aislado, es consecuencia directa del desarrollo tecnológico, el cual no solo ha automatizado tareas rutinarias y creado roles completamente nuevos, sino que también ha redefinido la naturaleza misma de los puestos de trabajo existentes.
 
 En este contexto de transición, la adaptabilidad se convierte en un factor clave tanto para los profesionales, que enfrentan una incertidumbre creciente sobre las competencias que serán relevantes a corto plazo, como para las organizaciones, que se ven obligadas a identificar talento con estas capacidades emergentes \cite{ordonez2008competencies}. Esta necesidad ha fomentado la adopción de tecnologías de \gls{NLP} en la \gls{HCM}, con el objetivo de optimizar procesos de adquisición de talento, crear programas de formación personalizados y permitir una planificación estratégica basada en competencias.
 
 Sin embargo, el desarrollo de estos sistemas inteligentes se enfrenta a importantes desafíos que limitan su eficacia, equidad y generalización. Es precisamente en este punto donde se sitúa la motivación principal de este trabajo, centrado en la Tarea A del TalentCLEF 2025, la cual pretende abordar el problema del emparejamiento de titulaciones profesionales \cite{gasco2025brief}. Además, si bien el desafío original presenta un escenario multilingüe, existe una necesidad palpable de desarrollar y evaluar soluciones específicamente optimizadas para el español, un idioma con una gran relevancia geográfica y demográfica a nivel global que, no obstante, a menudo no recibe una atención adecuada en el desarrollo de modelos.
 
-Muchos de los modelos multilingües de propósito general, aunque incluyen el español en su entrenamiento, suelen estar optimizados primordialmente para el inglés\footnote{Cabe destacar que, en cuanto a presencia en la web, el inglés es el que más presencia tiene, con un 49\%, y el segundo es el español, con un 6\% \cite{w3techs2023usage}. Como consecuencia, la mayoría de los modelos de \gls{NLP} están optimizados para el inglés \cite{guo2025large}.}, lo que suele resultar en un rendimiento menor para otras lenguas menos predominantes. Este proyecto se centra en una aproximación especializada, que contemple las particularidades del español y busque mejorar su rendimiento en la tarea en cuestión. Sin embargo, la complejidad añadida de los marcadores de género en los títulos profesionales representa un desafío técnico particular que, aunque no será abordado en profundidad en este trabajo, sí se estudiarán las propuestas existentes por parte del resto de participantes de la tarea.\todo{No se si tiene sentido decir esto aqui y de esta manera.}
+Muchos de los modelos multilingües de propósito general, aunque incluyen el español en su entrenamiento, suelen estar optimizados primordialmente para el inglés\footnote{Cabe destacar que, en cuanto a presencia en la web, el inglés es el que más presencia tiene, con un 49\%, y el segundo es el español, con un 6\% \cite{w3techs2023usage}. Como consecuencia, la mayoría de los modelos de \gls{NLP} están optimizados para el inglés \cite{guo2025large}.}, lo que suele resultar en un rendimiento menor para otras lenguas menos predominantes. Este proyecto se centra en una aproximación especializada, que contemple las particularidades del español y busque mejorar su rendimiento en la tarea en cuestión. Sin embargo, la complejidad añadida de los marcadores de género en los títulos profesionales representa un desafío técnico particular que, aunque no será abordado en profundidad en este trabajo, sí se estudiarán las propuestas existentes por parte del resto de participantes de la tarea.
 
 Además, la disponibilidad del benchmark público de TalentCLEF, que incluye un corpus en español anotado a partir de datos reales \cite{gasco2025overview}, ofrece una oportunidad única para investigar este problema de forma rigurosa y reproducible. Así, este trabajo no solo busca contribuir al avance de la tecnología en el ámbito de la \gls{HCM}, sino también ofrecer soluciones prácticas que puedan ser implementadas en entornos reales, facilitando así la adaptación de profesionales y organizaciones a un mercado laboral en constante evolución.\todo{Me suena rara la conexión entre el benchmark y la conclusión de la sección. Tengo que pulirla.}
 
@@ -27,7 +27,7 @@ Además, la disponibilidad del benchmark público de TalentCLEF, que incluye un 
 
 \noindent Este trabajo se centra en la resolución de la primera tarea de la campaña de evaluación TalentCLEF 2025. TalentCLEF es la primera campaña de evaluación enfocada en la gestión de titulaciones profesionales y habilidades (\textit{Skill and Job Title Intelligence}), diseñada para abordar la escasez de benchmarks públicos y abiertos en el dominio de la \gls{HCM} \cite{talentclefMotivation}.
 
-El problema específico que se aborda es  la \gls{Tarea}. El objetivo de esta tarea es desarrollar sistemas que, dada una titulación profesional (\textit{query})\todo{Esto se hace así, en cursiva y entre paréntesis? Tengo muchas dudas y muchas inconsistencias en cómo tratar los términos del inglés que usaré durante el trabajo.}, identifiquen y generen una lista ordenada (\textit{ranking}) de las titulaciones más similares extraídas de una base de conocimiento (\textit{corpus elements}).
+El problema específico que se aborda es  la \gls{Tarea}. El objetivo de esta tarea es desarrollar sistemas que, dada una titulación profesional (\textit{query}), identifiquen y generen una lista ordenada (\textit{ranking}) de las titulaciones más similares extraídas de una base de conocimiento (\textit{corpus elements}).
 
 El desafío propuesto por TalentCLEF 2025 es multilingüe y cubre cuatro idiomas: inglés, español, alemán y chino, donde los conjuntos de datos proporcionados se componen de tres particiones: entrenamiento, validación y test, con orígenes marcadamente distintos. Los conjuntos de validación y testeo de la tarea se construyeron a partir de datos reales de solicitudes de empleo, que fueron cuidadosamente anonimizadas y anotadas manualmente. Las \textit{queries} de la tarea se definen como los títulos de las ofertas de trabajo, mientras que los \textit{corpus elements} a clasificar se han extraído de los títulos de los últimos puestos de trabajo de los candidatos que aplicaron a dichas ofertas. Por otro lado, el conjunto de entrenamiento (disponible únicamente para inglés, español y alemán) se generó de forma automática extrayendo pares de titulaciones profesionales relacionadas de la taxonomía \gls{ESCO}.
 
@@ -42,7 +42,7 @@ La evaluación oficial de la \gls{Tarea} se estructura en cuatro escenarios dist
 
 La métrica de evaluación principal para la clasificación es la \gls{MAP}, mientras que para la evaluación del sesgo se utiliza la \gls{RBO}. \todo{Incluir aquí información sobre Codabench y los métodos oficiales de evaluación}
 
-Si bien el desafío abarca múltiples idiomas, este trabajo se enfoca particularmente en el desarrollo y evaluación de soluciones optimizadas para el español, aprovechando la disponibilidad del corpus anotado y el benchmark público que ofrece la competición.\todo{Debería extenderme más? Entrar en detalle sobre los metodos de evaluación especificos de la tarea, los pipelines de construcción de los datos... O quizás hablar mas del enfoque en español?}
+Si bien el desafío abarca múltiples idiomas, este trabajo se enfoca particularmente en el desarrollo y evaluación de soluciones optimizadas para el español, aprovechando la disponibilidad del corpus anotado y el benchmark público que ofrece la competición.
 
 %%
 
@@ -58,21 +58,19 @@ Los objetivos específicos que se persiguen son los siguientes:
 
     \item \textbf{Selección y adaptación de modelos:} Identificar y seleccionar modelos transformer pre-entrenados multilingües con demostrada eficacia en español, para su posterior adaptación mediante técnicas de fine-tuning específicas para la tarea de ranking definida.
 
-    \item \textbf{Diseño de estrategias de entrenamiento:} Implementar y comparar diferentes estrategias de aprendizaje, con especial atención a las técnicas de aprendizaje contrastivo y funciones de pérdida como InfoNCE o GIST, que han demostrado ser particularmente efectivas en tareas de similitud semántica según los resultados reportados en TalentCLEF 2025.\todo{No sé si tiene sentido hablar en los objetivos sobre técnicas específicas antes de ser mencionadas en la sección del estado del arte, donde profundizo un poco más en ellas.}
+    \item \textbf{Diseño de estrategias de entrenamiento:} Implementar y comparar diferentes estrategias de aprendizaje, con especial atención a las técnicas de aprendizaje contrastivo, que ha demostrado ser particularmente efectivo en tareas de similitud semántica según los resultados reportados en TalentCLEF 2025.
 
     \item \textbf{Evaluación exhaustiva:} Realizar una evaluación rigurosa tanto en el conjunto de desarrollo local como en la plataforma Codabench, empleando la métrica MAP como indicador principal de rendimiento, y estableciendo comparativas con los sistemas participantes en la competición original.
 
     \item \textbf{Análisis de especialización para español:} Evaluar específicamente la efectividad de las soluciones desarrolladas en el contexto del idioma español, analizando si un enfoque especializado permite superar el rendimiento de aproximaciones multilingües generalistas.
 \end{itemize}
 
-Resumen de resultados.\todo{Pendiente de completar una vez tenga los resultados finales.}
+Resumen de resultados.
 
 %%
 
 \section{Estructura del documento}
 \label{sec:EstructuraDelDocumento}
-
-\todo{Creo que toda esta sección no hace falta. Preguntar a Laura.}
 
 \begin{description}
 

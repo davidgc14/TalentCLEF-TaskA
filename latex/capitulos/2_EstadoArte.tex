@@ -91,13 +91,13 @@ A pesar de que esta evaluación fue central, pocos trabajos de los participantes
 \section{Transformers para Semejanza Semántica}
 \label{sec:Transformers}
 
-Los transformers\todo{No se si todas las palabras del inglés deben ponerse en cursiva o no hace falta.} han sido la palanca tecnológica dominante en las tareas de comprensión y comparación semántica de textos desde su aparición. En el contexto de la tarea, su adopción no sólo ha permitido avances significativos en calidad de ranking, sino que ha generado un conjunto diverso de arquitecturas y estrategias de uso que conviene desglosar.
+Los transformers han sido la palanca tecnológica dominante en las tareas de comprensión y comparación semántica de textos desde su aparición. En el contexto de la tarea, su adopción no sólo ha permitido avances significativos en calidad de ranking, sino que ha generado un conjunto diverso de arquitecturas y estrategias de uso que conviene desglosar.
 
 \subsection{Definición y características}
-Un transformer es una arquitectura de red neuronal basada principalmente en mecanismos de atención que procesan secuencias sin recurrir a operaciones recurrentes o convolucionales. La atención\todo{No sé si debería extenderme más en la explicación de la atención en los modelos transformers.} permite que cada posición de entrada sintetice información de todas las demás posiciones mediante pesos aprendidos; esto facilita la captura de relaciones de largo alcance, la paralelización durante el entrenamiento y la construcción de representaciones contextualizadas de tokens y oraciones \cite{vaswani2017attention}. Aunque el diseño original incluye bloques de encoder y decoder, la práctica moderna para tareas de recuperación y matching usa variantes sólo-encoder (para embeddings), encoder-decoder y modelos sólo-decoder (para \gls{LLM}) según el uso concreto.
+Un transformer es una arquitectura de red neuronal basada principalmente en mecanismos de atención que procesan secuencias sin recurrir a operaciones recurrentes o convolucionales. La atención permite que cada posición de entrada sintetice información de todas las demás posiciones mediante pesos aprendidos; esto facilita la captura de relaciones de largo alcance, la paralelización durante el entrenamiento y la construcción de representaciones contextualizadas de tokens y oraciones \cite{vaswani2017attention}. Aunque el diseño original incluye bloques de encoder y decoder, la práctica moderna para tareas de recuperación y matching usa variantes sólo-encoder (para embeddings), encoder-decoder y modelos sólo-decoder (para \gls{LLM}) según el uso concreto.
 
 \subsection{Su utilización en la tarea}
-En\todo{Tienen que ir las subsections también como "sin sangría"?} la práctica aparecen tres patrones arquitectónicos generales, con variantes muy interesantes:
+En la práctica aparecen tres patrones arquitectónicos generales, con variantes muy interesantes:
 
 \subsubsection{Bi-encoders} % (sentence-transformers / dual encoders)
 Cada query se codifica por separado con el mismo encoder para producir vectores en un espacio semántico compartido, y usa la similitud entre vectores para ordenar candidatos. Este esquema es ideal cuando se requiere recuperar a escala, porque la indexación de vectores y la búsqueda aproximada permiten latencias bajas. Su principal fortaleza es la eficiencia en la fase de inferencia; su principal limitación es que la interacción entre consulta y candidato es sólo implícita en el espacio vectorial, por lo que puede fallar a la hora de resolver matices finos.
@@ -116,37 +116,4 @@ El rendimiento de los transformers depende tanto de la arquitectura como de la e
     \item \textbf{Variantes de las técnicas contrastivas:} existen algunas modificaciones, como focal-\gls{InfoNCE}, que tratan de penalizar más los errores en ejemplos difíciles y estabilizar el aprendizaje cuando existe un desbalance fuerte entre positivos y negativos. Con ello consiguen mejorar la capacidad de priorizar los verdaderos positivos en los primeros puestos del ranking \cite{hou2023improving}.
     \item \textbf{Curriculum learning:} comenzar con negativos fáciles y evolucionar hacia negativos más difíciles (o introducir negativos guiados por similitud léxica/semántica) puede estabilizar el entrenamiento y evitar que el modelo colapse ante una distribución ``long-tail'' de títulos.
     \item \textbf{Fine-tuning multilingüe:} ajustar modelos multilingües con datos balanceados por idioma puede ayudar a alinear representaciones cross-lingües y a reducir la fragmentación de la representación del embedding. Algunos métodos modernos de entrenamiento masivo multilingüe han demostrado que el aprendizaje dirigido para varios idiomas simultáneamente mejora la transferencia entre pares idiomáticos \cite{mao2024ems}.
-\end{itemize}\todo{No se si debo entrar más en detalle sobre InfoNCE o técnicas concretas que vaya a usar en el modelo, o si las debo explicar luego en otra sección.}
-
-% \subsection{Beneficios de unas técnicas sobre otras}
-% La elección entre bi-encoders, cross-encoders y LLM-augmented pipelines obedece a un trade-off clásico entre \emph{eficiencia} y \emph{precisión}:
-
-% \begin{itemize}
-%     \item \textbf{Bi-encoders:} su mayor ventaja es la escalabilidad y la latencia baja en sistemas de producción; son excelentes para obtener candidatos iniciales. Funcionan muy bien cuando se ha invertido en un fine-tuning cuidadoso con negatives difíciles.
-%     \item \textbf{Cross-encoders:} imprescindibles cuando la tarea exige distinciones semánticas finas o cuando el coste de equivocarse en el top-1 es elevado. Su uso como re-ranker combina lo mejor de ambos mundos: velocidad en el retrieval y precisión en la selección final.
-%     \item \textbf{LLMs y generación:} permiten enriquecer los ejemplos y crear señales que los encoders tradicionales no capturan (explicaciones, desambiguaciones, traducciones). Útiles para datos escasos o para lenguas con poca anotación directa. Sin embargo, introducir generación automática requiere controles de calidad y mecanismos para evitar que el ruido sintético degrade los embeddings.
-% \end{itemize}
-
-% \subsection{Desventajas y riesgos prácticos}
-% A pesar de su eficacia, los transformers tienen limitaciones que condicionan su empleo en aplicaciones de \gls{HCM}:
-
-% \begin{itemize}
-%     \item \textbf{Coste computacional y latencia:} los cross-encoders y los LLMs son caros en tiempo y memoria. En producción es necesario combinar técnicas de distillation, early-exit o re-ranking para mantener aceptables latencias.
-%     \item \textbf{Necesidad de datos y sensibilidad al dominio:} los transformers preentrenados requieren fine-tuning con datos representativos del dominio (títulos laborales, abreviaturas sectoriales). El dominio laboral es heterogéneo; sin ejemplos suficientes, el rendimiento puede degradarse por shift de dominio.
-%     \item \textbf{Tokenización y particularidades lingüísticas:} las decisiones de tokenización (subword, caracteres, vocabularios multilingües) afectan el tratamiento de idiomas como el chino, donde la segmentación palabra/ carácter influye en la calidad de las representaciones; estudios recientes han mostrado que combinar granularidades mejora el comportamiento de modelos preentrenados en chino \cite{liang2023character}.
-%     \item \textbf{Sesgos y equidad:} los transformers reflejan sesgos presentes en los datos de preentrenamiento y fine-tuning. En el contexto del emparejamiento laboral, esto puede traducirse en diferencias de ranking por género, edad o nacionalidad si no se evalúa y mitiga explícitamente; la literatura reciente ofrece marcos y técnicas para detección y mitigación que conviene incorporar al ciclo de evaluación \cite{nemani2024gender}.
-%     \item \textbf{Robustez frente al ruido y abreviaturas:} aunque las representaciones contextualizadas ayudan con sinonimia, los títulos internos y formatos erróneos pueden seguir confundiendo los modelos sin un preprocesamiento o estrategias de augmentación específicas.
-% \end{itemize}
-
-% \subsection{Consideraciones de implementación}
-% Para integrar transformers en un sistema de ranking multilingüe eficaz conviene atender a varios aspectos prácticos:
-
-% \begin{itemize}
-%     \item \textbf{Infraestructura de retrieval:} indexación de vectores y búsqueda ANN (approximate nearest neighbor) para bi-encoders; pipeline de recuperación + re-ranking para equilibrar costo y precisión \cite{sbertRetrieveamp}.
-%     \item \textbf{Estrategia de evaluación:} además de métricas tradicionales (MAP, MRR), usar medidas de estabilidad de ranking y pruebas por subgrupos (género, idioma) para detectar sesgos y verificación de calidad por idioma.
-%     \item \textbf{Ciclo de vida del modelo:} monitorizar deriva de dominio, actualizar con nuevos ejemplos reales y mantener un proceso de curado/filtrado de ejemplos sintéticos provenientes de LLMs.
-%     \item \textbf{Eficiencia y compactación:} técnicas de distillation, quantization y early-exit permiten desplegar modelos de menor coste manteniendo buena parte del rendimiento.
-% \end{itemize}
-
-% \subsection{Resumen}
-% Los transformers ofrecen un marco potente y flexible para Task A: permiten aprender representaciones semánticas robustas, facilitar la transferencia cross-lingüe y sostener pipelines híbridos que combinan rapidez y precisión. No obstante, su efectividad depende de prácticas cuidadosas de entrenamiento (negative mining, curriculum, augmentación), decisiones de tokenización en idiomas específicos como el chino, y de una evaluación amplia que incorpore aspectos de equidad y robustez. La arquitectura óptima en TalentCLEF —como se ha visto entre los participantes— suele ser una combinación pragmática: bi-encoder afinado para retrieval, generación/augmentación controlada con LLMs para enriquecer datos, y cross-encoder o LLM-based re-ranking para maximizar la precisión en el top-k.
+\end{itemize}
