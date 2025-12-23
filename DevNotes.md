@@ -82,3 +82,5 @@ Mostrar los resultados
 ## Discusion
 
 Entrar mas en detalle en el analisis de los resultados y de la evaluacion (seleccion de multilingue por ejemplo)
+
+Incluir un analisis de errores (muy tipico en articulos cientificos): Que es lo que podria haber inducido a los resultados, que cosas han podido fallar... Investigar acerca de como hacer bien un analisis de errores.
