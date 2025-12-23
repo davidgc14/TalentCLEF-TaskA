@@ -6,15 +6,52 @@
 \fancyhead[RE]{\textsc{CAPÍTULO} \thechapter. Estado del arte}
 \label{ch:EstadoArte}
 
+\section{Fundamentos y Evolución de la Recuperación de Información}
+\label{sec:RetrievalHistory}
 
-\section{Historia del problema}
+\noindent La capacidad de identificar y organizar información relevante dentro de grandes volúmenes de datos ha sido uno de los pilares fundamentales de las ciencias de la computación. Antes de abordar el estudio específico del emparejamiento de ocupaciones, es imperativo analizar la evolución de la \gls{IR} y cómo los paradigmas de ordenación han transitado desde reglas deterministas hacia arquitecturas híbridas de alta complejidad.
+
+\subsection{Modelos Clásicos: Del Determinismo a la Similitud Estadística}
+
+En sus orígenes, los sistemas de \gls{IR} operaban bajo modelos booleanos que buscaban la coincidencia exacta entre términos. En este esquema, la recuperación se limitaba a una lógica binaria donde un documento era relevante únicamente si contenía los términos precisos de la consulta. Si bien este enfoque garantizaba precisión terminológica, carecía de una noción de relevancia gradual, lo que resultaba insuficiente para gestionar la ambigüedad y sinonimia del lenguaje natural.
+
+La transición hacia el Modelo de Espacio Vectorial y el uso de métricas de ponderación como \gls{TF-IDF} supuso un cambio de paradigma. Por primera vez, los elementos no solo se recuperaban, sino que se ordenaban mediante el cálculo de medidas de similitud \cite{salton1975vector}. Posteriormente, el desarrollo de modelos probabilísticos como \gls{BM25} perfeccionó esta aproximación, estableciendo un estándar de robustez léxica que sigue vigente hoy en día \cite{robertson2009probabilistic}. No obstante, estos métodos tradicionales se encuentran limitados por el denominado \textit{vocabulary mismatch}, al ser incapaces de interpretar el contexto o la semántica profunda más allá de la presencia explícita de términos.
+
+\subsection{El Papel del Aprendizaje Automático}
+
+La llegada del \gls{ML} permitió que la disciplina evolucionara hacia el \gls{LTR} definido ampliamente en \cite{liu2009learning}. En lugar de depender de funciones de relevancia estáticas, los sistemas comienzan a emplear modelos supervisados capaces de combinar múltiples señales (características léxicas, metadatos, popularidad, etc.) para optimizar funciones de pérdida específicas.
+
+Este periodo consolidó aproximaciones fundamentales para la ordenación de resultados: los enfoques \textit{pointwise} (evaluación individual), \textit{pairwise} (comparación de pares) y \textit{listwise} (optimización de la lista completa). Aunque el \gls{LTR} mejoró significativamente la precisión, su dependencia de un ajuste de características manual limitaba su capacidad de generalización en dominios con alta variabilidad lingüística.
+
+\subsection{Recuperación Neuronal y Representaciones Densas}
+
+La irrupción del \gls{DL} y los modelos basados en \textit{Transformers} han redefinido la \gls{IR} contemporánea. El cambio fundamental reside en el paso de la recuperación dispersa, basada en palabras clave, a la recuperación densa, basada en embeddings \cite{karpukhin2020dense}. Mediante el uso de modelos de lenguaje, es posible proyectar consultas y documentos en un espacio vectorial continuo donde la cercanía geométrica representa similitud semántica, permitiendo capturar conceptos incluso en ausencia de coincidencias léxicas exactas.
+
+\subsection{Estrategias de Refinamiento}
+
+A medida que los corpus documentales han ganado en escala, ha surgido una tensión técnica entre dos objetivos contrapuestos: la exhaustividad y la precisión. La imposibilidad de aplicar modelos de máxima complejidad sobre millones de documentos en tiempo real ha motivado la aparición de estrategias de modificación del ranking original, con la intención de optimizar la calidad de los resultados presentados.
+
+\subsubsection{Re-ranking: Precisión mediante Interacción Profunda}
+La técnica de \textit{re-ranking} surge de la necesidad de aplicar modelos de alta intensidad computacional sobre un subconjunto reducido de candidatos. Para ello, tras una recuperación rápida basada en métodos léxicos o vectoriales aproximados, se selecciona una ``ventana'' de resultados para ser analizada por un modelo más costoso. Esta fase permite evaluar interacciones semánticas finas que son computacionalmente inviables en la fase de búsqueda masiva, garantizando que los elementos en las posiciones superiores sean los de mayor relevancia real. Un ejemplo claro es el mostrado en \cite{nogueira2019passage}, donde demuestran que el uso de cross-encoders en la etapa de re-ranking mejora sustancialmente la calidad del ranking final.
+
+\subsubsection{Fusión de Rankings: Robustez y Diversidad de Señales}
+Paralelamente, la Fusión de Rankings (\textit{Rank Fusion}) aborda la varianza intrínseca entre diferentes modelos. La evidencia en la literatura científica demuestra que distintos algoritmos de recuperación suelen identificar diferentes subconjuntos de elementos relevantes. La motivación de la fusión reside en el principio de robustez: combinar múltiples listas de resultados permite mitigar los sesgos de modelos individuales. Algoritmos como \gls{RRF} desarrollado en \cite{cormack2009reciprocal} se han convertido en estándares debido a su capacidad para integrar fuentes heterogéneas basándose en la posición relativa, mejorando la estabilidad del sistema sin necesidad de normalizar puntuaciones dispares.
+
+\subsection{El Paradigma de las Arquitecturas Híbridas}
+
+En la actualidad, el estado del arte no se define por el uso de una única técnica, sino por la integración de múltiples capas de procesamiento. La transición hacia sistemas que combinan la recuperación inicial con fases posteriores de refinamiento y consolidación de resultados ha demostrado ser el enfoque más eficaz\footnote{Este hecho se ve reflejado en las propuestas de solución planteadas por los distintos participantes en la competición de TalentCLEF, como se detallará más en detalle en la sección \ref{sec:TalentCLEFOverview}.}. 
+
+Históricamente, se ha evidenciado que la unión de diversas metodologías genera sistemas significativamente más estables y precisos. Este marco de trabajo híbrido constituye el fundamento sobre el que se desarrollan las soluciones modernas de alta precisión, permitiendo una adaptación flexible a problemas de dominio específico como el que se aborda en este trabajo.
+
+
+\section{Historia y Evolución del Emparejamiento de Titulaciones}
 \label{sec:JobTitleMatching}
 
-El \gls{JTM} constituye una tarea central dentro del campo más amplio de la gestión del talento y la \gls{HCM}. En su forma básica, el problema consiste en determinar la equivalencia o el grado de compatibilidad entre títulos de puestos de trabajo, a pesar de la enorme variabilidad léxica, la polisemia y las convenciones internas de las organizaciones. Esta variabilidad hace que una misma ocupación pueda aparecer bajo campos muy distintos y, a su vez, que títulos idénticos traduzcan responsabilidades distintas según el contexto organizativo, sectorial o geográfico.
+\noindent Dentro de este marco, el \gls{JTM} se presenta como una aplicación especializada de estos principios dentro del ámbito de la gestión del talento y la \gls{HCM}. En su forma básica, el problema consiste en determinar la equivalencia o el grado de compatibilidad entre títulos de puestos de trabajo, a pesar de la enorme variabilidad léxica, la polisemia y las convenciones internas de las organizaciones. Esta variabilidad hace que una misma ocupación pueda aparecer bajo campos muy distintos y, a su vez, que títulos idénticos traduzcan responsabilidades distintas según el contexto organizativo, sectorial o geográfico.
 
 \subsection{Métodos tradicionales y enfoques económicos}
 
-Históricamente, las investigaciones sobre \gls{JTM} han adoptado perspectivas tanto técnicas como económicas. En el campo de la economía laboral española existe una persistencia en el proceso de emparejamiento que muestra cómo las fricciones de mercado y la heterogeneidad ocupacional condicionan los resultados del matching laboral \cite{de2008funcion}. Estos estudios clásicos proporcionan un marco para interpretar por qué la normalización de titulaciones no es sólo un problema lingüístico, sino también institucional y estructural: la misma denominación puede implicar distintas funciones y niveles de especialización en diferentes segmentos del mercado laboral \cite{de2017quien}.
+Históricamente, las investigaciones sobre \gls{JTM} han adoptado perspectivas tanto técnicas como económicas. En el campo de la economía laboral española, por ejemplo, existe una persistencia en el proceso de emparejamiento que muestra cómo las fricciones de mercado y la heterogeneidad ocupacional condicionan los resultados del matching laboral \cite{de2008funcion}. Estos estudios clásicos proporcionan un marco para interpretar por qué la normalización de titulaciones no es sólo un problema lingüístico, sino también institucional y estructural: la misma denominación puede implicar distintas funciones y niveles de especialización en diferentes segmentos del mercado laboral \cite{de2017quien}.
 
 Desde el punto de vista computacional, los primeros abordajes aplicados al dominio laboral siguieron estructuras generales de recuperación de información y clasificación de texto, basadas principalmente en normalización de cadenas y reglas heurísticas. Aunque estas técnicas (y los sistemas basados en reglas) pueden ser útiles en entornos controlados, su coste de mantenimiento y su fragilidad frente a sinónimos, abreviaturas y errores hacen que resulten insuficientes para datos del mundo real \cite{jirjees2025machine}.
 
