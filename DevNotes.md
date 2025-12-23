@@ -69,6 +69,7 @@ Aqui debo mostrar todo el flujo de trabajo que me ha llevado a seleccionar el mo
 ### Bloque 2: Prueba de varias tecnicas de fusion ranking
 
 No usar demasiadas, ya que lo groso de la experimentacion esta en los pasos anteriores.
+https://gemini.google.com/share/8dd4fd582e49
 
 ### Bloque 3: Prueba de varias tecnicas de reranking
 
