@@ -1,0 +1,11 @@
+model_name,num_params,previous_map,finetuned_map,trained
+Lajavaness/bilingual-embedding-large,559890432,0.449344274613591,0.4902231965377204,True
+jinaai/jina-embeddings-v3,572310396,0.4452910410861434,0.4452910410861434,False
+chienpham/sts-multilingual-mpnet-base-v2,278043648,0.4435878333703372,0.4515577015496898,True
+intfloat/multilingual-e5-large-instruct,559890432,0.442597459544259,0.4901653535088296,True
+AIDA-UPM/mstsb-paraphrase-multilingual-mpnet-base-v2,278043648,0.4287347186548532,0.4589244550977687,True
+shtilev/medical_embedded_v4,278043648,0.4264564314683711,0.4580471228267521,True
+sentence-transformers/paraphrase-multilingual-mpnet-base-v2,278043648,0.4169084557578367,0.4601511338599102,True
+Alibaba-NLP/gte-multilingual-base,305368320,0.415535754620837,0.4692721493369378,True
+shtilev/medical_embedded_v5,278043648,0.4116968399864876,0.4568054604519425,True
+Linq-AI-Research/Linq-Embed-Mistral,7110660096,0.4094811821820134,0.4094811821820134,False
