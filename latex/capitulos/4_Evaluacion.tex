@@ -26,3 +26,67 @@ Se han entrenado todos los modelos una unica epoca para evitar el sobreajuste. E
 
 Se han elegido los tres primeros modelos con mejores resultados para hacer el ranking fusion.
 
+\section{Entorno de desarrollo}
+
+Todas las evaluaciones que aquí se muestran han sido realizadas en un entorno virtual de Google Colab \cite{googlecolab} con las características que se muestran en la tabla \ref{tab:especificaciones_sistema}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Componente} & \textbf{Especificación}      \\ \hline
+        Memoria RAM         & 12 GB                        \\ \hline
+        GPU                 & NVIDIA Tesla T4 (15 GB VRAM) \\ \hline
+        Sistema operativo   & Ubuntu 22.04.4 LTS           \\ \hline
+        Intérprete          & Python 3.12.12               \\ \hline
+    \end{tabular}
+    \caption{Especificaciones del sistema}
+    \label{tab:especificaciones_sistema}
+\end{table}
+
+Debido a las limitaciones de memoria y tiempo de ejecución impuestas por Google Colab, se han realizado ciertas adaptaciones en los modelos y conjuntos de datos para asegurar que las evaluaciones pudieran llevarse a cabo de manera eficiente dentro de este entorno. Estas adaptaciones incluyen la no evaluación de modelos con un tamaño excesivo que superaran la memoria disponible, así como de aquellos con los que no sería viable una inferencia posterior dentro de los límites de tiempo establecidos por la plataforma.
+
+\section{Evaluación Zero-Shot}
+
+\subsection{Obtención de modelos preentrenados}
+
+Para esta primera etapa se han evaluado una serie de modelos preentrenados que no han sido sometidos a ningún tipo de alteración o ajuste mediante datos externos. Estos modelos han sido obtenidos a través de la plataforma Hugging Face \cite{huggingface} mediante el uso de la librería Transformers. Esta lista se ha obtenido principalmente de dos fuentes de datos.
+
+La primera fuente, y que ocupa más de la mitad de la lista, ha sido a través del repositorio del MTEB Leaderboard \cite{mteb-leaderboard}, que recopila una gran variedad de modelos preentrenados para tareas de representación y evaluación de texto, evaluados sobre benchmarks estandarizados, proporcionando un ranking actualizado y confiable. Estos modelos, filtrados por aquellos con licencia de uso pública, han sido ordenados y seleccionados los 100 mejores según su desempeño en los siguientes benchmarks:
+
+\begin{itemize}
+    \item BELEBELE Retrieval
+    \item Core17 Instruction Retrieval
+    \item Covid Retrieval
+    \item HAGRID Retrieval
+    \item LEMB Passkey Retrieval
+    \item MIRACL Retrieval Hard Negatives
+    \item MLQA Retrieval
+    \item News21 Instruction Retrieval
+    \item Robust04 Instruction Retrieval
+    \item Statcan Dialogue Dataset Retrieval
+    \item Twitter Hjerne Retrieval
+    \item TREC COVID
+    \item Wikipedia Retrieval Multilingual
+\end{itemize}
+
+Esta lista ha sido complementada con una segunda fuente, que se ha basado en la búsqueda automatizada de modelos preentrenados en Hugging Face, que cumplieran los siguientes criterios:
+
+\begin{itemize}
+    \item Modelos basados en arquitecturas de transformers.
+    \item Modelos diseñados para la tarea de \textit{Sentence Similarity}.
+    \item Modelos que hayan sido entrenados con datos en español.
+\end{itemize}
+
+En su conjunto, estas dos fuentes han permitido la creación de una lista diversa y representativa de modelos preentrenados para su evaluación en la tarea, proporcionando una base sólida para el análisis comparativo en las siguientes secciones. Una vez limpiados de la lista los modelos que no cumplían los requisitos de memoria y tiempo de ejecución, así como configuraciones erróneas, se ha obtenido un total de 190 modelos preentrenados para su evaluación sobre la métrica \gls{MAP}.
+
+Podemos ver a continuación los resultados obtenidos en la gráfica \ref{fig:zero_shot_map}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{imagenes/zero-shot-evaluation-plot.png}
+    \caption{Resultados de los modelos preentrenados en evaluación Zero-Shot sobre la métrica \gls{MAP}. En el eje X se representan los modelos ordenados por su tamaño (número de parámetros) en escala logarítmica.}
+    \label{fig:zero_shot_map}
+\end{figure}
+
+\section{Selección de modelos y entrenamiento}
