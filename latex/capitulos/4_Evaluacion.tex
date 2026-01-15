@@ -52,7 +52,7 @@ Debido a las limitaciones de memoria y tiempo de ejecución impuestas por Google
 
 Para esta primera etapa se han evaluado una serie de modelos preentrenados que no han sido sometidos a ningún tipo de alteración o ajuste mediante datos externos. Estos modelos han sido obtenidos a través de la plataforma Hugging Face \cite{huggingface} mediante el uso de la librería Transformers. Esta lista se ha obtenido principalmente de dos fuentes de datos.
 
-La primera fuente, y que ocupa más de la mitad de la lista, ha sido a través del repositorio del MTEB Leaderboard \cite{mteb-leaderboard}, que recopila una gran variedad de modelos preentrenados para tareas de representación y evaluación de texto, evaluados sobre benchmarks estandarizados, proporcionando un ranking actualizado y confiable. Estos modelos, filtrados por aquellos con licencia de uso pública, han sido ordenados y seleccionados los 100 mejores según su desempeño en los siguientes benchmarks:
+La primera fuente, y que ocupa más de la mitad de la lista, ha sido a través del repositorio del MTEB Leaderboard \cite{mteb-leaderboard}, que recopila una gran variedad de modelos preentrenados para tareas de representación y evaluación de texto, evaluados sobre benchmarks estandarizados, proporcionando un ranking actualizado y confiable. Estos modelos, filtrados por aquellos con licencia de uso pública, han sido ordenados y seleccionados los 100 mejores según su desempeño medio en los siguientes benchmarks:
 
 \begin{itemize}
     \item BELEBELE Retrieval
@@ -78,9 +78,9 @@ Esta lista ha sido complementada con una segunda fuente, que se ha basado en la 
     \item Modelos que hayan sido entrenados con datos en español.
 \end{itemize}
 
-En su conjunto, estas dos fuentes han permitido la creación de una lista diversa y representativa de modelos preentrenados para su evaluación en la tarea, proporcionando una base sólida para el análisis comparativo en las siguientes secciones. Una vez limpiados de la lista los modelos que no cumplían los requisitos de memoria y tiempo de ejecución, así como configuraciones erróneas, se ha obtenido un total de 190 modelos preentrenados para su evaluación sobre la métrica \gls{MAP}.
+En su conjunto, estas dos fuentes han permitido la creación de una lista diversa y representativa de modelos preentrenados para su evaluación en la tarea, proporcionando una base sólida para el análisis comparativo en las siguientes secciones. 
 
-Podemos ver a continuación los resultados obtenidos en la gráfica \ref{fig:zero_shot_map}.
+Una vez limpiados de la lista los modelos que no cumplían los requisitos de memoria y tiempo de ejecución, así como configuraciones erróneas, se ha obtenido un total de 190 modelos preentrenados para su evaluación sobre la métrica \gls{MAP}. Podemos ver los resultados obtenidos en la gráfica \ref{fig:zero_shot_map}.
 
 \begin{figure}[H]
     \centering
