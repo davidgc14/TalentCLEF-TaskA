@@ -52,7 +52,7 @@ Debido a las limitaciones de memoria y tiempo de ejecución impuestas por Google
 
 Para esta primera etapa se han evaluado una serie de modelos preentrenados que no han sido sometidos a ningún tipo de alteración o ajuste mediante datos externos. Estos modelos han sido obtenidos a través de la plataforma Hugging Face \cite{huggingface} mediante el uso de la librería Transformers. Esta lista se ha obtenido principalmente de dos fuentes de datos.
 
-La primera fuente, y que ocupa más de la mitad de la lista, ha sido a través del repositorio del MTEB Leaderboard \cite{mteb-leaderboard}, que recopila una gran variedad de modelos preentrenados para tareas de representación y evaluación de texto, evaluados sobre benchmarks estandarizados, proporcionando un ranking actualizado y confiable. Estos modelos, filtrados por aquellos con licencia de uso pública, han sido ordenados y seleccionados los 100 mejores según su desempeño medio en los siguientes benchmarks:
+La primera fuente, y que ocupa más de la mitad de la lista, ha sido a través del repositorio del MTEB Leaderboard \cite{mteb-leaderboard}, que recopila una gran variedad de modelos preentrenados para tareas de representación y evaluación de texto, evaluados sobre benchmarks estandarizados, proporcionando un ranking actualizado y confiable. Estos modelos, filtrados por aquellos con licencia de uso pública, han sido ordenados y seleccionados los 100 mejores según su desempeño medio en los siguientes benchmarks\footnote{La tabla de resultados ha sido descargada a día 1 de Diciembre de 2025. Se puede consultar la tabla completa con sus valores medios en las métricas en el Apéndice A.}\todo{Referenciar correctamente la tabla de resultados del apendice al pie de pagina.}:
 
 \begin{itemize}
     \item BELEBELE Retrieval
@@ -90,3 +90,25 @@ Una vez limpiados de la lista los modelos que no cumplían los requisitos de mem
 \end{figure}
 
 \section{Selección de modelos y entrenamiento}
+
+Podemos observar en la tabla \ref{tab:top_10_zero_shot} los 10 mejores modelos obtenidos en la evaluación Zero-Shot. %Podemos observar, gracias a su variación en el número de parámetros, que se trata de modelos con arquitecturas y tamaños muy diversos.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Modelo}                                             & \textbf{MAP} \\ \hline
+        Lajavaness/bilingual-embedding-large                        & 0.4493       \\ \hline
+        jinaai/jina-embeddings-v3                                   & 0.4453       \\ \hline
+        chienpham/sts-multilingual-mpnet-base-v2                    & 0.4436       \\ \hline
+        intfloat/multilingual-e5-large-instruct                     & 0.4426       \\ \hline
+        AIDA-UPM/mstsb-paraphrase-multilingual-mpnet-base-v2        & 0.4287       \\ \hline
+        shtilev/medical\_embedded\_v4                               & 0.4265       \\ \hline
+        sentence-transformers/paraphrase-multilingual-mpnet-base-v2 & 0.4169       \\ \hline
+        Alibaba-NLP/gte-multilingual-base                           & 0.4155       \\ \hline
+        shtilev/medical\_embedded\_v5                               & 0.4117       \\ \hline
+    \end{tabular}
+    \caption{Top 10 modelos preentrenados en evaluación Zero-Shot ordenados por su métrica MAP.}
+    \label{tab:top_10_zero_shot}
+\end{table}
+
