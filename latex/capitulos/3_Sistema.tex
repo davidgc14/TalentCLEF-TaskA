@@ -48,7 +48,8 @@ Para aumentar la robustez del sistema, se entrenarán tres modelos distintos que
 
 La fuente principal de obtención de modelos será el repositorio de Hugging Face \cite{huggingface}, priorizando aquellos que hayan demostrado buen rendimiento en tareas de recuperación de información multilingüe o en español.
 
-\subsection{Rank Fusion}
+\subsection{Ranking Fusion}
+\label{sec:Rank_Fusion}\todo{Tengo que incluir el MNZ y el WSum}
 
 Dado que cada modelo bi-encoder puede destacar en diferentes tipos de consultas (e.g., uno maneja mejor anglicismos y otro mejor la terminología local), combinarlos se espera que mejore el rendimiento general. Se empleará el algoritmo \gls{RRF} \cite{cormack2009reciprocal} para fusionar los tres rankings individuales generados en la etapa de recuperación.
 
@@ -75,12 +76,13 @@ La implementación del sistema se apoya en un conjunto de tecnologías y funcion
 El desarrollo se llevará a cabo utilizando el lenguaje Python, apoyándose en el ecosistema de \textbf{Hugging Face} y la librería \textbf{SentenceTransformers} \cite{reimers2019sentence}, que facilita el entrenamiento de los modelos bi-encoders que necesitamos. Para la gestión de tensores y el entrenamiento en GPU, se utilizará \textbf{PyTorch}. 
 
 \subsection{Funciones de Pérdida (Loss Functions)}
+\label{sec:Funciones_de_perdida}
 
 El entrenamiento de los modelos de recuperación es crítico. Se utilizarán estrategias de aprendizaje contrastivo para optimizar el espacio vectorial:
 
 \begin{itemize}
     \item \textbf{Retrieval:} \gls{MNRL} será la función de pérdida principal utilizada para el entrenamiento de los modelos bi-encoder. \gls{MNRL} trata cada par (query, candidato) como un ejemplo positivo y considera todos los demás documentos del lote como negativos. Esto permite un entrenamiento altamente eficiente sin necesidad de definir negativos explícitos, aprovechando una gran cantidad de negativos en cada iteración y mejorando la discriminación en el espacio de representación.
-    \item \textbf{GISTEmbedLoss:} Para la etapa de \textit{re-ranking}, se empleará una función de pérdida de clasificación binaria (\textit{BCEWithLogitsLoss}), tratando el problema como uno de decisión sobre pares (relacionado / no relacionado).
+    \item \textbf{Re-Ranknig:} Para la etapa de \textit{re-ranking}, se empleará una función de pérdida de clasificación binaria (\textit{BCEWithLogitsLoss}), tratando el problema como uno de decisión sobre pares (relacionado / no relacionado).
 \end{itemize}
 
 \subsection{Función de evaluación}
