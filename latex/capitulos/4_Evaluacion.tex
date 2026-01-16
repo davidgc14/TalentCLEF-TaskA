@@ -52,7 +52,7 @@ Debido a las limitaciones de memoria y tiempo de ejecución impuestas por Google
 
 Para esta primera etapa se han evaluado una serie de modelos preentrenados que no han sido sometidos a ningún tipo de alteración o ajuste mediante datos externos. Estos modelos han sido obtenidos a través de la plataforma Hugging Face \cite{huggingface} mediante el uso de la librería Transformers. Esta lista se ha obtenido principalmente de dos fuentes de datos.
 
-La primera fuente, y que ocupa más de la mitad de la lista, ha sido a través del repositorio del MTEB Leaderboard \cite{mteb-leaderboard}, que recopila una gran variedad de modelos preentrenados para tareas de representación y evaluación de texto, evaluados sobre benchmarks estandarizados, proporcionando un ranking actualizado y confiable. Estos modelos, filtrados por aquellos con licencia de uso pública, han sido ordenados y seleccionados los 100 mejores según su desempeño medio en los siguientes benchmarks\footnote{La tabla de resultados ha sido descargada a día 1 de Diciembre de 2025. Se puede consultar la tabla completa con sus valores medios en las métricas en el Apéndice A.}\todo{Referenciar correctamente la tabla de resultados del apendice al pie de pagina.}:
+La primera fuente, y que ocupa más de la mitad de la lista, ha sido a través del repositorio del MTEB Leaderboard \cite{mteb-leaderboard}, que recopila una gran variedad de modelos preentrenados para tareas de representación y evaluación de texto, evaluados sobre benchmarks estandarizados, proporcionando un ranking actualizado y confiable. Estos modelos, filtrados por aquellos con licencia de uso pública, han sido ordenados y seleccionados los 100 mejores según su desempeño medio en los siguientes benchmarks\footnote{La tabla de resultados ha sido descargada a día 1 de Diciembre de 2025. Se pueden consultar sus valores medios en las métricas en la tabla \ref{tab:resultados_completos_modelos_mteb_retrieval}.}:
 
 \begin{itemize}
     \item BELEBELE Retrieval
@@ -89,9 +89,11 @@ Una vez limpiados de la lista los modelos que no cumplían los requisitos de mem
     \label{fig:zero_shot_map}
 \end{figure}
 
+Podemos observar una clara predominancia de los modelos multilingües frente a los monolingües, a pesar que el conjunto de validación sobre el que han sido evaluados es integramente en español. Esto indica que los modelos multilingües han sido capaces de capturar representaciones efectivas para el idioma español, a pesar de no estar específicamente entrenados para él.
+
 \section{Selección de modelos y entrenamiento}
 
-Podemos observar en la tabla \ref{tab:top_10_zero_shot} los 10 mejores modelos obtenidos en la evaluación Zero-Shot. %Podemos observar, gracias a su variación en el número de parámetros, que se trata de modelos con arquitecturas y tamaños muy diversos.
+Podemos observar en la tabla \ref{tab:top_10_zero_shot} los 10 mejores modelos obtenidos en la evaluación Zero-Shot\footnote{Podemos observar en la tabla \ref{tab:resultados_completos_modelos_zero_shot} el número de parámetros asociado a cada modelo, pudiendo constatar que se trata de modelos con arquitecturas y tamaños muy diversos.}. Cabe destacar que ninguno de ellos es monolingüe, sino que todos son modelos multilingües o bilingües que incluyen el español entre los idiomas con los que han sido entrenados, alineado con los resultados observados en la figura \ref{fig:zero_shot_map}.
 
 \begin{table}[H]
     \centering
@@ -112,3 +114,87 @@ Podemos observar en la tabla \ref{tab:top_10_zero_shot} los 10 mejores modelos o
     \label{tab:top_10_zero_shot}
 \end{table}
 
+Para mayor legibilidad, de aquí en adelante nos referiremos a los modelos por su nombre, omitiendo el prefijo del autor/plataforma. Así, por ejemplo, el modelo \textit{Lajavaness/bilingual-embedding-large} será referido simplemente como \textit{bilingual-embedding-large}.
+
+Se han considerado estos 10 modelos para su posterior ajuste fino mediante entrenamiento supervisado, utilizando el conjunto de datos de entrenamiento descrito en la sección \ref{sec:Conjuntos_de_datos}\todo{buscar o establecer definición de las fuentes de datos, ejemplos...}. Los modelos han sido entrenados durante una única época para evitar el sobreajuste, utilizando una tasa de aprendizaje de 5e-6 y un tamaño de batch de 16 muestras. Se ha utilizado la función de pérdida \gls{MNRL} descrita en la sección \ref{sec:Funciones_de_perdida}.
+
+
+En la figura \ref{fig:finetuned_loss} se pueden observar las curvas de pérdida durante el entrenamiento de algunos de los modelos, descartando el entrenamiento en épocas adicionales debido al sobreajuste observado.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{imagenes/training/shtilev-medical_embedded_v4.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{imagenes/training/intfloat-multilingual-e5-large-instruct.png}
+    \end{minipage}
+    \caption{Curvas de pérdida durante el entrenamiento de los modelos \textit{medical\_embedded\_v4} (izquierda) y \textit{multilingual-e5-large-instruct} (derecha) desde el comienzo del entrenamiento hasta la cuarta época. Se puede observar claramente el crecimiento en la pérdida de validación a partir de la primera época, indicando sobreajuste.}
+    \label{fig:finetuned_loss}
+\end{figure}
+
+Los resultados obtenidos tras el entrenamiento de los modelos se pueden observar en la tabla \ref{tab:finetuned_results}. Se puede observar que los dos peores modelos, \textit{jina-embeddings-v3} y \textit{Linq-Embed-Mistral}, no han mejorado sus resultados, lo cual es debido a que no recibieron entrenamiento. Esto ha sucedido así debido a la configuración de ambos modelos, estando optimizados y cerrados para su uso en inferencia, lo que impide su ajuste mediante entrenamiento supervisado.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{rlrr}
+        \hline
+           & model\_name                                 & previous\_map & finetuned\_map \\
+        \hline
+        1  & bilingual-embedding-large                   & 0.4493        & 0.4902         \\
+        2  & multilingual-e5-large-instruct              & 0.4426        & 0.4902         \\
+        3  & gte-multilingual-base                       & 0.4155        & 0.4693         \\
+        4  & paraphrase-multilingual-mpnet-base-v2       & 0.4169        & 0.4602         \\
+        5  & mstsb-paraphrase-multilingual-mpnet-base-v2 & 0.4287        & 0.4589         \\
+        6  & medical\_embedded\_v4                       & 0.4265        & 0.4580         \\
+        7  & medical\_embedded\_v5                       & 0.4117        & 0.4568         \\
+        8  & sts-multilingual-mpnet-base-v2              & 0.4436        & 0.4516         \\
+        9  & jina-embeddings-v3                          & 0.4453        & 0.4453         \\
+        10 & Linq-Embed-Mistral                          & 0.4095        & 0.4095         \\
+        \hline
+    \end{tabular}
+    \caption{Resultados obtenidos tras el ajuste fino de los 10 mejores modelos preentrenados en evaluación Zero-Shot. Se muestran los valores de la métrica MAP antes y después del entrenamiento supervisado.}
+    \label{tab:finetuned_results}
+\end{table}
+
+Se puede observar que la media de mejora tras el ajuste fino de los modelos ha sido de 3 puntos porcentuales en la métrica \gls{MAP}, lo que representa una mejora significativa en el desempeño de los modelos para la tarea que nos concierne.
+
+
+\section{Ranking Fusion}
+
+Una vez obtenidos los resultados de los modelos ajustados, se ha procedido a realizar una fusión de los rankings generados por los tres mejores modelos, que son \textit{bilingual-embedding-large}, \textit{multilingual-e5-large-instruct} y \textit{gte-multilingual-base}. La fusión de rankings se ha llevado a cabo mediante un análisis exhaustivo de técnicas y optimización de parámetros.
+
+\subsection{Análisis de técnicas de fusión}
+
+\subsubsection{Reciprocal Rank Fusion (RRF)}
+
+Se ha utilizado la técnica de \gls{RRF} descrita en la sección \ref{sec:Rank_Fusion}, que ha demostrado ser efectiva en la combinación de múltiples rankings para mejorar la precisión de los resultados. Tras un análisis exhaustivo, se ha determinado que el valor óptimo para el parámetro $k$ es 5, lo que ha permitido maximizar la métrica \gls{MAP} obtenida tras la fusión. Se puede observar en la figura \ref{fig:rrf_k_analysis} el análisis realizado para la selección del valor óptimo de $k$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{imagenes/curva_optimizacion_k_fusion.png}
+    \caption{Análisis del parámetro $k$ en la técnica de \gls{RRF} para la fusión de rankings. Se observa que el valor óptimo es 5, que maximiza la métrica \gls{MAP}.}
+    \label{fig:rrf_k_analysis}
+\end{figure}
+
+Esta técnica ha supuesto una mejora en los resultados obtenidos, alcanzando un valor de \gls{MAP} de 0.49717, superando a los mejores modelos individuales tras el ajuste fino. 
+
+\subsubsection{Mean Normalized Z-score}
+%0.49896
+Se ha explorado también la técnica de \gls{MNZ} para la fusión de rankings, que normaliza las puntuaciones de los documentos antes de combinarlas. Tras una normalización min-max, se ha aplicado la fórmula del \gls{MNZ} para combinar los rankings de los tres mejores modelos. Esta técnica ha permitido alcanzar un valor de \gls{MAP} de 0.49896, ligeramente superior al obtenido con \gls{RRF}.
+
+\subsubsection{Weighted Sum}
+
+Por último, se ha evaluado la técnica de \gls{WSum}, que asigna pesos específicos a cada modelo en función de su desempeño individual. Tras un análisis exhaustivo, se han asignado los siguientes pesos: 0.35 a \textit{bilingual-embedding-large}, 0.38 a \textit{multilingual-e5-large-instruct} y 0.27 a \textit{gte-multilingual-base}.
+
+Esta técnica ha permitido alcanzar un valor de \gls{MAP} de 0.49953, siendo la mejor técnica de fusión evaluada.
+
+\subsection{Arquitectura seleccionada}
+
+Tras evaluar las tres técnicas de fusión de rankings, se ha seleccionado la técnica de \gls{WSum} como la más efectiva para nuestro caso de estudio, debido a que ha proporcionado el mejor desempeño en términos de la métrica \gls{MAP}. La asignación de pesos específicos a cada modelo ha permitido aprovechar sus fortalezas individuales, resultando en una mejora significativa en la precisión de los resultados obtenidos tras la fusión.
+
+
+\section{Re-Ranking}
