@@ -7,59 +7,155 @@
 \label{ch:Arquitectura_del_sistema}
 
 
-% En este capítulo se detalla la propuesta metodológica diseñada para abordar la resolución de la \gls{Tarea}. Basándonos en el análisis previo, donde se identificó la eficacia de los modelos basados en Transformers y la necesidad de estrategias robustas de entrenamiento contrastivo, se propone una arquitectura modular en cascada.
+% % En este capítulo se detalla la propuesta metodológica diseñada para abordar la resolución de la \gls{Tarea}. Basándonos en el análisis previo, donde se identificó la eficacia de los modelos basados en Transformers y la necesidad de estrategias robustas de entrenamiento contrastivo, se propone una arquitectura modular en cascada.
 
-% Esta arquitectura combina la eficiencia de los modelos de recuperación densa con la precisión de los modelos de reranking, integrando una etapa intermedia de fusión de rankings para maximizar la diversidad y la cobertura de los resultados recuperados.
+% % Esta arquitectura combina la eficiencia de los modelos de recuperación densa con la precisión de los modelos de reranking, integrando una etapa intermedia de fusión de rankings para maximizar la diversidad y la cobertura de los resultados recuperados.
 
-\section{Arquitectura general}
+% \section{Arquitectura general}
 
-El flujo de procesamiento de una query (título de una oferta de empleo) hasta la obtención del ranking final de candidatos se ha estructurado en tres etapas secuenciales:
+% El flujo de procesamiento de una query (título de una oferta de empleo) hasta la obtención del ranking final de candidatos se ha estructurado en tres etapas secuenciales:
+
+% \begin{enumerate}
+%   \item \textbf{Retrieval:} Utilización de tres modelos bi-encoder independientes, a los que se les ha aplicado \textit{fine-tuning} con los datos de entrenamiento para la tarea, proyectando tanto las consultas como los candidatos en un espacio vectorial común. Cada modelo genera un ranking preliminar de los candidatos más similares.
+%   \item \textbf{Rank Fusion:} Agregación de los resultados de los tres modelos de recuperación mediante algoritmos de rank fusion, generando una lista unificada y más robusta que mitiga los sesgos individuales de cada modelo.
+%   \item \textbf{Re-ranking:} Refinamiento de la lista fusionada mediante un modelo cross-encoder, que evalúa la interacción semántica profunda entre la consulta y los candidatos seleccionados para producir el ranking final.
+% \end{enumerate}
+
+% La Figura \ref{fig:arquitectura_diagrama} ilustra el flujo de datos a través de estos módulos.
+
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics[width=\textwidth]{imagenes/arquitectura-diagrama.png}
+%   \caption{Diagrama de la arquitectura del sistema propuesto: Retrieval, Fusión y Re-ranking.}
+%   \label{fig:arquitectura_diagrama}
+% \end{figure}
+
+% \section{Módulos del sistema}
+
+% A continuación, se describen en detalle los componentes técnicos de cada una de las etapas mencionadas.
+
+% \subsection{Retrieval}
+
+% El objetivo de esta fase es reducir el sesgo que cada uno de los modelos por separado pueda tener para reducir la varianza en los resultados. Para ello, se emplean modelos \textit{Sentence Transformers} bajo una red siamesa de modelos bi-encoders \cite{reimers2019sentence}.
+
+% Dada una consulta $q$ y un candidato $d$, el bi-encoder procesa cada texto de forma independiente para generar sus representaciones vectoriales $u$ y $v$. La similitud se calcula mediante la similitud coseno:
+
+% \begin{equation}
+%   sim(q, d) = \cos(u, v) = \frac{u \cdot v}{\|u\| \|v\|}
+% \end{equation}
+
+% Para aumentar la robustez del sistema, se entrenarán tres modelos distintos que aporten diversidad al conjunto. Esta búsqueda de modelos estará guiada por los resultados obtenidos sobre una evaluación en los datos de validación, que serán realizadas tanto antes del fine-tuning (zero-shot) como posterior al mismo. Los resultados obtenidos se ordenarán según la métrica MAP detallada en la sección \ref{sec:MAP}.
+
+% La fuente principal de obtención de modelos será el repositorio de Hugging Face \cite{huggingface}, priorizando aquellos que hayan demostrado buen rendimiento en tareas de recuperación de información multilingüe o en español.
+
+En el presente capítulo se detalla la propuesta metodológica y técnica diseñada para abordar la resolución de la \gls{Tarea}. Basándonos en la literatura reciente sobre sistemas de recuperación de información, se propone una arquitectura modular en cascada.
+
+Este diseño arquitectónico busca equilibrar el compromiso entre eficiencia computacional y precisión semántica. Para ello, combina la velocidad de los modelos de recuperación densa en una primera etapa, con la capacidad de generalización de las técnicas de fusión de rankings, y finaliza con la alta precisión de los modelos de cross-encoders en la etapa de re-ranking.
+
+\section{Visión general del flujo de trabajo}
+\label{sec:Arquitectura_General}
+
+El flujo de procesamiento, desde la recepción de la query hasta la generación del ranking final de candidatos, se estructura en tres etapas secuenciales claramente diferenciadas:
 
 \begin{enumerate}
-    \item \textbf{Retrieval:} Utilización de tres modelos bi-encoder independientes, a los que se les ha aplicado \textit{fine-tuning} con los datos de entrenamiento para la tarea, proyectando tanto las consultas como los candidatos en un espacio vectorial común. Cada modelo genera un ranking preliminar de los candidatos más similares.
-    \item \textbf{Rank Fusion:} Agregación de los resultados de los tres modelos de recuperación mediante algoritmos de rank fusion, generando una lista unificada y más robusta que mitiga los sesgos individuales de cada modelo.
-    \item \textbf{Re-ranking:} Refinamiento de la lista fusionada mediante un modelo cross-encoder, que evalúa la interacción semántica profunda entre la consulta y los candidatos seleccionados para producir el ranking final.
+    \item \textbf{Fase de Recuperación:} Etapa de generación de candidatos (\textit{candidate generation}). Se emplean tres modelos bi-encoder independientes, previamente ajustados al dominio de la tarea. Su función es proyectar tanto las consultas como los documentos en un espacio vectorial común y recuperar eficientemente los documentos más similares para cada modelo.
+          
+    \item \textbf{Fase de Fusión:} Los rankings preliminares generados por los tres modelos de recuperación se combinan mediante algoritmos de fusión. El objetivo es mitigar los sesgos inductivos individuales de cada modelo y generar una lista unificada de candidatos con mayor exhaustividad.
+          
+    \item \textbf{Fase de Re-ranking:} La lista fusionada es procesada por un modelo cross-encoder, el cual evalúa la interacción semántica profunda entre la consulta y cada candidato seleccionado, produciendo la puntuación y el ordenamiento definitivo.
 \end{enumerate}
 
-La Figura \ref{fig:arquitectura_diagrama} ilustra el flujo de datos a través de estos módulos.
+La Figura \ref{fig:arquitectura_diagrama} ilustra el diagrama de bloques de la arquitectura propuesta y el flujo de datos a través de los distintos módulos.
 
-\begin{figure}[ht]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{imagenes/arquitectura-diagrama.png}
-    \caption{Diagrama de la arquitectura del sistema propuesto: Retrieval, Fusión y Re-ranking.}
+    \caption{Esquema de la arquitectura en cascada del sistema propuesto: Recuperación multi-modelo, Fusión de rankings y Re-ranking semántico.}
     \label{fig:arquitectura_diagrama}
 \end{figure}
 
-\section{Módulos del sistema}
+\section{Descripción detallada de los módulos}
 
-A continuación, se describen en detalle los componentes técnicos de cada una de las etapas mencionadas.
+A continuación, se describen las especificaciones técnicas y los fundamentos teóricos de cada uno de los componentes que integran el sistema.
 
 \subsection{Retrieval}
+\label{sec:Modulo_Retrieval}
 
-El objetivo de esta fase es reducir el sesgo que cada uno de los modelos por separado pueda tener para reducir la varianza en los resultados. Para ello, se emplean modelos \textit{Sentence Transformers} bajo una red siamesa de modelos bi-encoders \cite{reimers2019sentence}.
+El objetivo de esta fase inicial es recuperar un subconjunto relevante de documentos del corpus total con una alta eficiencia computacional. Para maximizar la robustez del sistema y reducir la varianza asociada a una única arquitectura, se ha optado por una estrategia de \textit{ensemble} basada en modelos de Sentence Transformers \cite{reimers2019sentence}.
 
-Dada una consulta $q$ y un candidato $d$, el bi-encoder procesa cada texto de forma independiente para generar sus representaciones vectoriales $u$ y $v$. La similitud se calcula mediante la similitud coseno:
+\subsubsection{Fundamento teórico: Bi-Encoders}
+
+La arquitectura base empleada es la red siamesa de bi-encoders. En este esquema, dada una consulta $q$ y un documento candidato $d$, se utilizan dos instancias del mismo modelo preentrenado (con pesos compartidos) para procesar cada entrada de forma independiente y generar sus representaciones vectoriales densas, denotadas como $u$ y $v$ respectivamente.
+
+La similitud semántica $sim(q, d)$ se calcula mediante la función de similitud coseno entre ambos vectores, lo que permite una recuperación eficiente mediante búsqueda por proximidad:
 
 \begin{equation}
     sim(q, d) = \cos(u, v) = \frac{u \cdot v}{\|u\| \|v\|}
 \end{equation}
 
-Para aumentar la robustez del sistema, se entrenarán tres modelos distintos que aporten diversidad al conjunto. Esta búsqueda de modelos estará guiada por los resultados obtenidos sobre una evaluación en los datos de validación, que serán realizadas tanto antes del fine-tuning (zero-shot) como posterior al mismo. Los resultados obtenidos se ordenarán según la métrica MAP detallada en la sección \ref{sec:MAP}.
+\subsubsection{Estrategia de selección de modelos}
 
-La fuente principal de obtención de modelos será el repositorio de Hugging Face \cite{huggingface}, priorizando aquellos que hayan demostrado buen rendimiento en tareas de recuperación de información multilingüe o en español.
+Para dotar de diversidad al sistema de recuperación, la arquitectura integra tres modelos bi-encoder distintos. La hipótesis de trabajo es que la combinación de modelos con diferentes arquitecturas base y preentrenamientos capturará matices semánticos complementarios.
+
+La selección de estos tres modelos se realiza mediante un proceso riguroso de evaluación en dos etapas:
+\begin{itemize}
+    \item \textbf{Evaluación Zero-Shot:} Selección preliminar sobre modelos del estado del arte disponibles en repositorios abiertos como Hugging Face \cite{huggingface}, priorizando aquellos con alto desempeño en benchmarks multilingües.
+    \item \textbf{Evaluación Post-Training:} Validación tras el ajuste fino con datos de validación.
+\end{itemize}
+
+Los modelos finales son seleccionados basándose en la maximización de la métrica \gls{MAP}, detallada en la Sección \ref{sec:MAP}, sobre el conjunto de validación.
 
 \subsection{Ranking Fusion}
-\label{sec:Rank_Fusion}\todo{Tengo que incluir el MNZ y el WSum}
+\label{sec:Rank_Fusion}
 
-Dado que cada modelo bi-encoder puede destacar en diferentes tipos de consultas (e.g., uno maneja mejor anglicismos y otro mejor la terminología local), combinarlos se espera que mejore el rendimiento general. Se empleará el algoritmo \gls{RRF} \cite{cormack2009reciprocal} para fusionar los tres rankings individuales generados en la etapa de recuperación.
+La recuperación de información basada en un único modelo bi-encoder puede presentar limitaciones propias de la arquitectura o de los datos de entrenamiento específicos de dicho modelo. La hipótesis subyacente en la arquitectura propuesta es que diferentes modelos capturan matices semánticos distintos; por ejemplo, un modelo puede ser más robusto ante anglicismos técnicos, mientras que otro puede capturar mejor la sinonimia en el español.
 
-RRF asigna una puntuación a cada candidato del corpus $c$ basándose en su posición en los rankings individuales, penalizando aquellos que aparecen en posiciones bajas y premiando el consenso entre modelos. La fórmula utilizada es la siguiente:
+Para mitigar estas limitaciones y mejorar la robustez del sistema, se implementa un módulo de fusión de rankings. Este módulo agrega las listas de documentos candidatos generadas por los 3 mejores modelos sobre nuestra tarea para producir un ranking unificado y reordenado. Se describen a continuación las tres estrategias de fusión consideradas.
+
+\subsubsection{Reciprocal Rank Fusion (RRF)}
+
+El algoritmo \gls{RRF} \cite{cormack2009reciprocal} es una técnica de fusión basada exclusivamente en la posición (rango) de los documentos, ignorando las puntuaciones de similitud originales. Esto lo hace especialmente robusto frente a modelos que devuelven puntuaciones en escalas no calibradas o dispares.
+
+Este algoritmo asigna una puntuación a cada documento candidato $d$ basándose en la inversa de su rango en cada una de las listas recuperadas. La fórmula de agregación es la siguiente:
 
 \begin{equation}
-    RRFscore(c \in C) = \sum_{r \in R} \frac{1}{k_{rrf} + r(c)}
+    Score_{RRF}(d) = \sum_{r \in R} \frac{1}{k_{rrf} + r(d)}
 \end{equation}
 
-Donde $C$ es el conjunto de candidatos, $R$ es el conjunto de rankings provenientes de los tres bi-encoders, $r(c)$ es el rango del documento en un ranking específico, y $k_{rrf}$ es una constante de suavizado que mitiga la influencia de documentos con rangos muy altos, para evitar así la presencia de outliers.
+Donde:
+\begin{itemize}
+    \item $R$ es el conjunto de rankings provenientes de los distintos modelos.
+    \item $r(d)$ es la posición ordinal del documento $d$ en el ranking $r$ (siendo 1 la mejor posición).
+    \item $k_{rrf}$ es una constante de suavizado que evita que los documentos en las primeras posiciones dominen excesivamente la puntuación final, mitigando el impacto de los outliers.
+\end{itemize}
+
+\subsubsection{Mean Normalized Z-score (MNZ)}
+
+A diferencia de \gls{RRF}, las técnicas basadas en puntuación intentan preservar la información sobre la intensidad de la similitud que el modelo ha asignado a cada documento. Sin embargo, dado que distintos modelos de embedding pueden operar en espacios vectoriales con distribuciones de similitud diferentes, es necesaria una normalización previa.
+
+La estrategia \gls{MNZ} (analizada en detalle en \cite{wu2006evaluating}) estandariza las puntuaciones de cada ranking individual antes de la fusión. Para cada documento $d$ en un ranking $i$, la puntuación original $S_{i}(d)$ se transforma:
+
+\begin{equation}
+    Z_{i}(d) = \frac{S_{i}(d) - \mu_i}{\sigma_i}
+\end{equation}
+
+Donde $\mu_i$ y $\sigma_i$ son la media y la desviación estándar de las puntuaciones del ranking $i$. La puntuación final de fusión se calcula como el promedio de las puntuaciones normalizadas, premiando aquellos documentos que destacan estadísticamente en sus respectivas listas:
+
+\begin{equation}
+    Score_{MNZ}(d) = \frac{1}{|R|} \sum_{i=1}^{|R|} Z_{i}(d)
+\end{equation}
+
+\subsubsection{Weighted Sum (WSum)}
+
+Mientras que \gls{RRF} y \gls{MNZ} tratan a todos los modelos que participan de forma igualitaria (asumiendo una fiabilidad similar), la técnica de \gls{WSum} introduce un sesgo explícito basado en la confianza que se tiene en cada modelo. Esta técnica es ideal cuando se conoce a priori que ciertos modelos tienen un desempeño superior en la tarea objetivo.
+
+La puntuación final se obtiene mediante una combinación lineal de las similitudes normalizadas, donde cada modelo $i$ tiene asociado un peso $w_i$:
+
+\begin{equation}
+    Score_{WSum}(d) = \sum_{i=1}^{|R|} w_i \cdot S'_{i}(d)
+\end{equation}
+
+Sujeto a la restricción $\sum w_i = 1$. La determinación de los pesos óptimos $w_i$ se realizará mediante búsqueda en rejilla sobre el conjunto de validación, permitiendo potenciar la influencia de los modelos más precisos en la decisión final.
 
 \subsection{Re-ranking}
 
