@@ -21,7 +21,7 @@
 
 Antes de profundizar en las particularidades del dominio que nos ocupa, resulta necesario establecer un marco teórico que analice la trayectoria histórica de la disciplina. Esta evolución no es lineal, sino que representa una transformación de paradigmas: desde los primeros sistemas basados en reglas deterministas y coincidencias exactas, hacia arquitecturas híbridas contemporáneas que integran inferencia estadística y aprendizaje profundo. Comprender este tránsito es fundamental para contextualizar las limitaciones de los enfoques tradicionales y justificar la necesidad de modelos de ranking avanzados.
 
-\subsection{Del Determinismo a la Similitud Estadística}
+\subsubsection{Del Determinismo a la Similitud Estadística}
 
 El orígen de los sistemas de \gls{IR} se encuentra en los modelos booleanos, predominantes durante las primeras décadas de la computación comercial. Estos sistemas operaban bajo una lógica de conjuntos estricta, fundamentada en el álgebra booleana, donde la satisfacción de una consulta dependía exclusivamente de la presencia o ausencia binaria de términos indexados. En este esquema, un documento era considerado relevante si, y solo si, cumplía con las condiciones exactas de la consulta. Aunque este enfoque ofrecía una alta predictibilidad y una eficiencia computacional presentaba una incapacidad para establecer una jerarquía de relevancia, además de ser vulnerable a la ambigüedad propia del lenguaje natural.
 
@@ -41,7 +41,7 @@ Sin embargo, a pesar de la solidez matemática de estos métodos tradicionales, 
 
 % La irrupción del \gls{DL} y los modelos basados en \textit{Transformers} han redefinido la \gls{IR} contemporánea. El cambio fundamental reside en el paso de la recuperación dispersa, basada en palabras clave, a la recuperación densa, basada en embeddings \cite{karpukhin2020dense}. Mediante el uso de modelos de lenguaje, es posible proyectar consultas y documentos en un espacio vectorial continuo donde la cercanía geométrica representa similitud semántica, permitiendo capturar conceptos incluso en ausencia de coincidencias léxicas exactas.
 
-\subsection{El Papel del Aprendizaje Automático}
+\subsubsection{El Papel del Aprendizaje Automático}
 
 La evolución de la \gls{IR} alcanzó un punto de inflexión con la integración de técnicas de \gls{ML}, dando lugar al marco de trabajo conocido como \gls{LTR} \cite{liu2009learning}. Esta transición marcó el abandono de las funciones de relevancia estáticas y predefinidas en favor de modelos supervisados capaces de aprender funciones de ranking óptimas a partir de datos de entrenamiento. %En este escenario, la relevancia deja de ser una métrica aislada para convertirse en el resultado de una combinación compleja de múltiples señales, que incluyen desde indicadores léxicos y metadatos estructurales hasta señales de comportamiento de usuario y medidas de popularidad.
 
@@ -57,7 +57,7 @@ La literatura académica clasifica tradicionalmente las aproximaciones de \gls{L
 
 A pesar de que el \gls{LTR} supuso un avance sustancial en la precisión de los sistemas de búsqueda, estos modelos dependían en gran medida de un ajuste de características manual y costoso. Esta dependencia limitaba su capacidad de generalización, especialmente en dominios caracterizados por una alta variabilidad lingüística o una semántica ambigua, donde las señales léxicas superficiales resultaban insuficientes para capturar la verdadera intención del usuario.
 
-\subsection{Recuperación Neuronal y Representaciones Densas}
+\subsubsection{Recuperación Neuronal y Representaciones Densas}
 
 La reciente irrupción del \gls{DL} y, de manera más específica, la consolidación de las arquitecturas basadas en Transformers, han redefinido por completo los cimientos de la \gls{IR} contemporánea. Este nuevo paradigma, denominado Recuperación Neuronal, propone una transición fundamental: el paso de la recuperación dispersa hacia la recuperación densa \cite{karpukhin2020dense}. Mientras que los métodos tradicionales representan documentos como vectores de alta dimensionalidad pero escasamente poblados (basados en términos exactos), los modelos neuronales proyectan tanto consultas como documentos en un espacio vectorial continuo de baja dimensionalidad, denominado espacio de embeddings.
 
@@ -97,47 +97,49 @@ La motivación subyacente a la fusión es el principio de robustez: la agregaci�
 
 %Entre las diversas técnicas existentes, el algoritmo \gls{RRF} propuesto por \cite{cormack2009reciprocal} se ha consolidado como un estándar de facto. Su popularidad radica en su capacidad para integrar fuentes heterogéneas basándose únicamente en la posición relativa de los documentos, eliminando la necesidad de normalizar puntuaciones de similitud que a menudo son incomparables entre distintos modelos. Esto dota al sistema de una mayor estabilidad y generalización ante consultas variadas.
 
-\subsection{El Paradigma de las Arquitecturas Híbridas}
+\subsubsection{El Paradigma de las Arquitecturas Híbridas}
 
 En el panorama actual del estado del arte, la excelencia en tareas de recuperación no se define por la capacidad individual de una única técnica aislada, sino por la organización inteligente de múltiples capas de procesamiento. Se ha producido una transición clara hacia sistemas que integran la recuperación inicial híbrida (léxica y semántica) con fases posteriores de refinamiento mediante re-ranking y consolidación a través de fusión de listas.
 
 Este enfoque modular ha demostrado ser la estrategia más eficaz para abordar la complejidad de las necesidades de información modernas\footnote{Este hecho se ve reflejado en las propuestas de solución planteadas por los distintos participantes en la competición de TalentCLEF, como se detallará más en detalle en la sección \ref{sec:TalentCLEFOverview}.}. Históricamente se ha observado que la unión de diversas metodologías genera sistemas significativamente más resilientes que sus componentes individuales. Este marco de trabajo híbrido constituye el fundamento sobre el que se construyen las soluciones de alta precisión actuales, permitiendo una adaptación flexible y robusta a dominios específicos, tal y como se requiere para la resolución de la tarea que nos ocupa.
+
+
 
 \section{Historia y Evolución del Emparejamiento de Titulaciones}
 \label{sec:JobTitleMatching}
 
 \noindent Dentro de este marco, el \gls{JTM} se presenta como una aplicación especializada de estos principios dentro del ámbito de la gestión del talento y la \gls{HCM}. En su forma básica, el problema consiste en determinar la equivalencia o el grado de compatibilidad entre títulos de puestos de trabajo, a pesar de la enorme variabilidad léxica, la polisemia y las convenciones internas de las organizaciones. Esta variabilidad hace que una misma ocupación pueda aparecer bajo campos muy distintos y, a su vez, que títulos idénticos traduzcan responsabilidades distintas según el contexto organizativo, sectorial o geográfico.
 
-\subsection{Métodos tradicionales y enfoques económicos}
+\subsubsection{Métodos tradicionales y enfoques económicos}
 
-Históricamente, las investigaciones sobre \gls{JTM} han adoptado perspectivas tanto técnicas como económicas. En el campo de la economía laboral española, por ejemplo, existe una persistencia en el proceso de emparejamiento que muestra cómo las fricciones de mercado y la heterogeneidad ocupacional condicionan los resultados del matching laboral \cite{de2008funcion}. Estos estudios clásicos proporcionan un marco para interpretar por qué la normalización de titulaciones no es sólo un problema lingüístico, sino también institucional y estructural: la misma denominación puede implicar distintas funciones y niveles de especialización en diferentes segmentos del mercado laboral \cite{de2017quien}.
+Las investigaciones sobre \gls{JTM} han adoptado perspectivas tanto técnicas como económicas. En el campo de la economía laboral española, por ejemplo, existe una persistencia en el proceso de emparejamiento que muestra cómo las fricciones de mercado y la heterogeneidad ocupacional condicionan los resultados del matching laboral \cite{de2008funcion}. Estos estudios proporcionan un marco para interpretar por qué la normalización de titulaciones no es sólo un problema lingüístico, sino también institucional y estructural: la misma denominación puede implicar distintas funciones y niveles de especialización en diferentes segmentos del mercado laboral \cite{de2017quien}.
 
-Desde el punto de vista computacional, los primeros abordajes aplicados al dominio laboral siguieron estructuras generales de recuperación de información y clasificación de texto, basadas principalmente en normalización de cadenas y reglas heurísticas. Aunque estas técnicas (y los sistemas basados en reglas) pueden ser útiles en entornos controlados, su coste de mantenimiento y su fragilidad frente a sinónimos, abreviaturas y errores hacen que resulten insuficientes para datos del mundo real \cite{jirjees2025machine}.
+Desde el punto de vista computacional, los primeros abordajes aplicados al dominio laboral siguieron estructuras generales de recuperación de información y clasificación de texto, basadas principalmente en normalización de cadenas y reglas heurísticas. Aunque estas técnicas (y los sistemas basados en reglas) pueden ser útiles en entornos controlados, su coste de mantenimiento y su fragilidad frente a variaciones léxicas, abreviaturas y errores hacen que resulten insuficientes para datos del mundo real \cite{jirjees2025machine}.
 
-\subsection{Transición hacia técnicas de aprendizaje automático}
+\subsubsection{Transición hacia técnicas de aprendizaje automático}
 
 La llegada y consolidación del \gls{ML} transformó la investigación y la práctica en \gls{JTM}. Durante los últimos años, la literatura documenta un amplio abanico de técnicas: desde modelos supervisados clásicos hasta arquitecturas neuronales que aprenden representaciones textuales más ricas y robustas frente al ruido y la variabilidad \cite{jirjees2025machine}. Han comenzado a surgir soluciones no supervisadas y semi-supervisadas para detectar patrones, agrupar titulaciones y reducir la dependencia de grandes volúmenes de anotación manual \cite{mamani2022machine,mamani2022proceso}.
 
 Específicamente en entornos hispanohablantes, trabajos recientes han explorado procesos de clustering y pipelines de \gls{ML} no supervisado para identificar la demanda social de puestos y determinar similitudes entre títulos profesionales de sectores específicos. Estas contribuciones muestran que, aunque las técnicas de clustering capturan agrupaciones útiles, su sensibilidad a la representación textual y su capacidad de generalización condiciona fuertemente la calidad del emparejamiento.
 
-En cuanto a los análisis bibliométricos sobre investigación en esta tarea, estos revelan un crecimiento sostenido del interés científico en la intersección entre \gls{AI} y reclutamiento por parte de la \gls{HCM}, con aplicaciones que abarcan desde selección automatizada hasta orientación profesional y análisis de brechas de competencias \cite{rojas2022bibliometric}. Dichos trabajos también evidencian que, aunque existen esfuerzos notables en sectores como la salud o la tecnología, persiste una desproporción entre la disponibilidad de recursos en inglés y en otras lenguas, lo que limita la comparabilidad y la replicabilidad de soluciones en contextos locales.
+En cuanto a los análisis bibliométricos sobre investigación en esta tarea, estos revelan un crecimiento sostenido del interés científico en la intersección entre \gls{AI} y reclutamiento por parte de la \gls{HCM}, con aplicaciones que abarcan desde selección automatizada hasta orientación profesional y análisis de brechas de competencias \cite{rojas2022bibliometric}. Estas investigaciones también evidencian que, aunque existen esfuerzos notables en sectores como la salud o la tecnología, persiste una desproporción entre la disponibilidad de recursos en inglés y en otras lenguas, lo que limita la comparabilidad y la replicabilidad de soluciones en contextos locales.
 
-\subsection{Del problema de clasificación a la tarea de \emph{matching} en entornos reales}
+\subsubsection{Del problema de clasificación a la tarea de \emph{matching} en entornos reales}
 
-Una distinción clave que ha emergido en la literatura reciente es la diferencia entre (i) la clasificación contra una taxonomía canónica y (ii) el matching o ranking entre pares de textos libres (oferta vs. perfil solicitante). Mientras la clasificación se beneficia de puntos de referencia estables, el matching real debe lidiar con ruido, abreviaturas, títulos internos y asimetrías informativas que no aparecen en las taxonomías que se encuentran disponibles. En consecuencia, las soluciones más robustas tienden a combinar representaciones semánticas aprendidas con estrategias de evaluación y depuración específicas del dominio, integrando tanto medidas globales de similitud como señales estructurales extraídas del mercado laboral \cite{gasco2025brief}.
+Una distinción clave que ha emergido en la literatura reciente es la diferencia entre (i) la clasificación contra una taxonomía canónica y (ii) el matching o ranking entre pares de textos libres. Mientras la clasificación se beneficia de puntos de referencia estables, el matching real debe lidiar con ruido, abreviaturas, títulos internos y asimetrías informativas que no aparecen en las taxonomías que se encuentran disponibles. En consecuencia, las soluciones más robustas tienden a combinar representaciones semánticas aprendidas con estrategias de evaluación y depuración específicas del dominio, integrando tanto medidas globales de similitud como señales estructurales extraídas del mercado laboral \cite{gasco2025brief}.
 
 %%
 
 \section{Enfoques abordados en TalentCLEF}
 \label{sec:TalentCLEFOverview}
 
-La \gls{Tarea} de TalentCLEF 2025, centrada en el Multilingual \gls{JTM}, atrajo una variedad de enfoques que buscaron resolver el desafío de alinear semánticamente títulos de trabajo en inglés, español, alemán y, opcionalmente, chino. El análisis de las soluciones presentadas por los participantes revela una fuerte tendencia hacia el uso de modelos de lenguaje basados en Transformers, aunque las estrategias de implementación, entrenamiento y uso de recursos externos variaron significativamente.
+La \gls{Tarea} de TalentCLEF 2025 surge de forma natural ante la creciente evolución del \gls{JTM} en entornos multilingües. Gracias a ello, mutlitud de equipos se sintieron atraídos aportando una alta variedad de enfoques, buscando resolver el desafío de alinear semánticamente títulos de trabajo en inglés, español, alemán y, opcionalmente, chino. El análisis de las soluciones presentadas por los participantes revela una fuerte tendencia hacia el uso de modelos de lenguaje basados en Transformers, aunque las estrategias de implementación, entrenamiento y uso de recursos externos variaron significativamente.
 
 \subsection{Estrategias Dominantes}
 
 La mayoría de las soluciones giraron en torno a modelos de \textit{Sentence Transformers} multilingües preentrenados, como MPNet \cite{brikman2025multilingual}, JobBERT \cite{decorte2025multilingual} o variantes de SBERT \cite{nizami2025enhancing,bhangale2025fine}. El objetivo común fue la generación de embeddings en un espacio semántico compartido, donde títulos de trabajo equivalentes en diferentes idiomas tuvieran una alta similitud\footnote{La similitud medida en los espacios vectoriales generados fue la similitud coseno, elegida de forma unánime entre todas las propuestas de solución al problema.}.
 
-Un hallazgo clave, destacado por el equipo NLPnorth \cite{zhang2025nlpnorth}, fue la comparación directa de tres métodos de ajuste fino:
+Un hallazgo clave, propuesto por el equipo NLPnorth \cite{zhang2025nlpnorth}, fue la comparación directa de tres métodos de ajuste fino de cara a la resolución del problema:
 \begin{itemize}
     \item \textbf{Discriminativo (Clasificación):} Reformular la tarea como una clasificación binaria (si dos títulos coinciden o no), generando para ello pares negativos.
     \item \textbf{Contrastivo:} Entrenar el modelo para acercar las representaciones de pares positivos y alejar las de pares negativos.
