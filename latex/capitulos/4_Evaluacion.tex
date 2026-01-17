@@ -86,7 +86,7 @@ Tomando como base los 10 modelos más prometedores identificados en la fase ante
 
 \subsection{Configuración del entrenamiento}
 
-El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento descrito en la Sección \ref{sec:Conjuntos_de_datos}, empleando la función de pérdida \gls{MNRL} (ver Sección \ref{sec:Funciones_de_perdida}). Para mitigar el riesgo de sobreajuste, dada la naturaleza de los datos y el tamaño de los modelos, se limitó el entrenamiento a una única época, con una tasa de aprendizaje de $5e^{-6}$ y un tamaño de lote de 16.
+El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento descrito en la Sección \ref{sec:DefinicionDelProblema}, empleando la función de pérdida \gls{MNRL} (ver Sección \ref{sec:Funciones_de_perdida}). Para mitigar el riesgo de sobreajuste, dada la naturaleza de los datos y el tamaño de los modelos, se limitó el entrenamiento a una única época, con una tasa de aprendizaje de $5e^{-6}$ y un tamaño de lote de 16.
 
 Como evidencia del rápido sobreajuste observado al extender el entrenamiento, la Figura \ref{fig:finetuned_loss} muestra las curvas de pérdida de validación para dos de los modelos, donde se aprecia una degradación del rendimiento a partir de la primera época.
 
