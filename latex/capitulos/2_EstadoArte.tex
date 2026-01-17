@@ -130,88 +130,190 @@ Una distinción clave que ha emergido en la literatura reciente es la diferencia
 
 %%
 
-\section{Enfoques abordados en TalentCLEF}
+% \section{Enfoques abordados en TalentCLEF}
+% \label{sec:TalentCLEFOverview}
+
+% La \gls{Tarea} de TalentCLEF 2025 surge de forma natural ante la creciente evolución del \gls{JTM} en entornos multilingües. Gracias a ello, mutlitud de equipos se sintieron atraídos aportando una alta variedad de enfoques, buscando resolver el desafío de alinear semánticamente títulos de trabajo en inglés, español, alemán y, opcionalmente, chino. El análisis de las soluciones presentadas por los participantes revela una fuerte tendencia hacia el uso de modelos de lenguaje basados en Transformers, aunque las estrategias de implementación, entrenamiento y uso de recursos externos variaron significativamente.
+
+% \subsection{Estrategias Dominantes}
+
+% La mayoría de las soluciones giraron en torno a modelos de \textit{Sentence Transformers} multilingües preentrenados, como MPNet \cite{brikman2025multilingual}, JobBERT \cite{decorte2025multilingual} o variantes de SBERT \cite{nizami2025enhancing,bhangale2025fine}. El objetivo común fue la generación de embeddings en un espacio semántico compartido, donde títulos de trabajo equivalentes en diferentes idiomas tuvieran una alta similitud\footnote{La similitud medida en los espacios vectoriales generados fue la similitud coseno, elegida de forma unánime entre todas las propuestas de solución al problema.}.
+
+% Un hallazgo clave, propuesto por el equipo NLPnorth \cite{zhang2025nlpnorth}, fue la comparación directa de tres métodos de ajuste fino de cara a la resolución del problema:
+% \begin{itemize}
+%     \item \textbf{Discriminativo (Clasificación):} Reformular la tarea como una clasificación binaria (si dos títulos coinciden o no), generando para ello pares negativos.
+%     \item \textbf{Contrastivo:} Entrenar el modelo para acercar las representaciones de pares positivos y alejar las de pares negativos.
+%     \item \textbf{Basado en Prompts:} Utilizar LLMs para evaluar la similitud.
+% \end{itemize}
+% Los resultados de NLPnorth sugirieron que el aprendizaje contrastivo fue su estrategia más efectiva.
+
+% Otros equipos, como UDII-UPM \cite{rodriguez2025udii}, exploraron el rendimiento de modelos preentrenados sin ajuste fino, aplicando un enfoque \textit{zero-shot}, proponiendo una fusión de representaciones semánticas de diferentes modelos para robustecer el matching. 
+
+% Por otro lado, el equipo Pjmathematician utilizó embeddings GIST e incorporó datos generados mediante LLMs \cite{vachharajani2025pjmathematician}.
+
+% \subsection{El Rol Crítico de Recursos Externos}
+
+% % El uso de la taxonomía \gls{ESCO} fue un diferenciador clave para varias de las soluciones de mayor rendimiento.
+
+% \subsubsection{Uso de ESCO}
+% La taxonomía \gls{ESCO} no solo sirvió como base de conocimiento, sino también como fuente de datos de entrenamiento. El equipo VerbaNex \cite{novoa2025verbanex} utilizó las relaciones jerárquicas de \gls{ESCO} para generar automáticamente pares adicionales positivos y negativos, ajustando su modelo para crear un espacio semántico alineado con la taxonomía. De manera similar, NLPnorth \cite{zhang2025nlpnorth} también extrajo datos adicionales de \gls{ESCO} para su entrenamiento\footnote{Cabe destacar que el conjunto de datos de entrenamiento ya habían sido generado por la organización y se encontraba a disposición de los participantes. Sin embargo, conociendo la procedencia y método de producción de este set de datos, algunos participantes decidieron aumentar dicho set para una mejor generalización de los modelos en el aprendizaje.}.
+
+% Otros equipos adoptaron un enfoque híbrido. El sistema de dos etapas de TechWolf \cite{rodriguez2025two} utilizó tanto \gls{ESCO} como \gls{ISCO} en un primer sistema de recuperación de candidatos, para luego refinar la lista de candidatos mediante un LLM en una etapa de \textit{re-ranking}.
+
+% \subsubsection{Uso de LLMs}
+% Además del \textit{re-ranking} mencionado, varios equipos utilizaron algún \gls{LLM} para la generación de datos. El equipo NT \cite{nga2025nt} propuso un sistema basado en la generación de descripciones de trabajo mediante \gls{LLM}s, seguida de un sistema de \gls{IR}. Sin embargo, su rendimiento fue bastante limitado en comparación con otros enfoques basados en Transformers.
+
+% \subsection{Gestión de Escenarios Multilingües y Cross-Lingües}
+
+% El desafío principal de la tarea era la correcta alineación semántica entre idiomas.
+% \begin{itemize}
+%     \item \textbf{Espacio Semántico Compartido:} La estrategia dominante fue el uso de codificadores multilingües (SBERT, MPNet) ajustados para proyectar todos los idiomas en un único espacio vectorial \cite{brikman2025multilingual,nizami2025enhancing,novoa2025verbanex}.
+%     \item \textbf{Inglés como Lengua Pivote:} El equipo de TechWolf \cite{rodriguez2025two} investigó explícitamente el uso del inglés como idioma pivote, traduciendo los títulos de otros idiomas al inglés antes de la comparación, una estrategia que demostró mejorar el rendimiento en algunos escenarios cross-lingües.
+%     \item \textbf{Recuperación Híbrida:} El equipo AlexU-NLP \cite{barakat2025alexu} propuso un sistema de recuperación híbrido con un enfoque de \textit{curriculum learning}, diseñado para gestionar la dificultad progresiva de los pares multilingües.
+% \end{itemize}
+
+% \subsection{Consideraciones Específicas: Chino y Sesgo de Género}
+
+% Aunque la mayoría de los participantes se centraron en inglés, español y alemán, la tarea incluía dos consideraciones importantes: el idioma chino y la evaluación del sesgo de género.
+
+% \subsubsection{El Caso del Chino}
+% El idioma chino (en pares \textit{zh-zh} y \textit{en-zh}) fue una subtarea voluntaria dentro de la \gls{Tarea}. Sin embargo, la mayoría de los trabajos centraron sus esfuerzos en los idiomas europeos, debido a que el chino no se encontraba dentro de los datos de entrenamiento, sino únicamente en validación y testeo. Este enfoque fue tomado por la organización con la intención de evaluar la capacidad multilingue de las distintas propuestas. 
+
+% \subsubsection{Evaluación del Sesgo de Género}
+% Una componente clave de la tarea fue la medición del sesgo de género. En idiomas como el español y el alemán, donde los títulos de trabajo pueden tener marcas explícitas de género, se evaluó cómo las distintas soluciones manejaban estas diferencias,  para evaluar si los sistemas perpetuaban o mitigaban sesgos de género en sus predicciones. Los datos de la competición incluían anotaciones ocultas de género y expresiones con marcas de género para permitir este análisis. La organización proponía buscar un sistema que minimizara las diferencias de rendimiento entre títulos de trabajo asociados a diferentes grupos de género.
+
+% A pesar de que esta evaluación fue central, pocos trabajos de los participantes detallaron explícitamente las técnicas de mitigación del sesgo que aplicaron. La mayoría de los sistemas se centraron en la precisión del matching semántico. Los trabajos de NLPnorth y de Ixa evaluaron este tema con detenimiento, consiguiendo una puntuación perfecta en la métrica de \gls{RBO}.
+
+% %%
+
+\section{Enfoques y Metodologías en TalentCLEF}
 \label{sec:TalentCLEFOverview}
 
-La \gls{Tarea} de TalentCLEF 2025 surge de forma natural ante la creciente evolución del \gls{JTM} en entornos multilingües. Gracias a ello, mutlitud de equipos se sintieron atraídos aportando una alta variedad de enfoques, buscando resolver el desafío de alinear semánticamente títulos de trabajo en inglés, español, alemán y, opcionalmente, chino. El análisis de las soluciones presentadas por los participantes revela una fuerte tendencia hacia el uso de modelos de lenguaje basados en Transformers, aunque las estrategias de implementación, entrenamiento y uso de recursos externos variaron significativamente.
+La \gls{Tarea} propuesta en TalentCLEF 2025 surge como una respuesta necesaria ante la compleja evolución del \gls{JTM} en ecosistemas globales y multilingües. Este escenario atrajo la atención de numerosos equipos de investigación, cuyo objetivo común fue resolver el desafío de la alineación semántica de títulos profesionales entre inglés, español, alemán y, como reto adicional, chino. Si bien la diversidad de enfoques fue notable, el análisis transversal de las memorias presentadas evidencia una hegemonía tecnológica clara: el uso de modelos de lenguaje basados en la arquitectura Transformer. No obstante, la diferenciación entre las propuestas ganadoras radicó en las sutilezas de sus estrategias de implementación, los regímenes de entrenamiento y la integración inteligente de recursos externos.
 
-\subsection{Estrategias Dominantes}
+\subsection{Arquitecturas y Espacios Semánticos Compartidos}
 
 La mayoría de las soluciones giraron en torno a modelos de \textit{Sentence Transformers} multilingües preentrenados, como MPNet \cite{brikman2025multilingual}, JobBERT \cite{decorte2025multilingual} o variantes de SBERT \cite{nizami2025enhancing,bhangale2025fine}. El objetivo común fue la generación de embeddings en un espacio semántico compartido, donde títulos de trabajo equivalentes en diferentes idiomas tuvieran una alta similitud\footnote{La similitud medida en los espacios vectoriales generados fue la similitud coseno, elegida de forma unánime entre todas las propuestas de solución al problema.}.
 
-Un hallazgo clave, propuesto por el equipo NLPnorth \cite{zhang2025nlpnorth}, fue la comparación directa de tres métodos de ajuste fino de cara a la resolución del problema:
+Frente a la tendencia del fine-tuning, algunos equipos optaron por evaluar la capacidad de generalización innata de los modelos. En este sentido, UDII-UPM \cite{rodriguez2025udii} exploró un enfoque zero-shot, proponiendo una arquitectura que fusionaba representaciones semánticas provenientes de distintos modelos preentrenados para aumentar la robustez del matching sin necesidad de reentrenamiento específico. Por su parte, el equipo Pjmathematician innovó al incorporar embeddings GIST combinados con datos sintéticos \cite{vachharajani2025pjmathematician}.
+
+\subsection{Paradigmas de Entrenamiento y Ajuste Fino}
+
+Más allá de la elección del modelo base, la metodología de entrenamiento resultó ser un factor determinante en el rendimiento. El equipo NLPnorth \cite{zhang2025nlpnorth} aportó uno de los análisis comparativos más valiosos de la competición al contrastar tres paradigmas de entrenamiento:
+
 \begin{itemize}
-    \item \textbf{Discriminativo (Clasificación):} Reformular la tarea como una clasificación binaria (si dos títulos coinciden o no), generando para ello pares negativos.
-    \item \textbf{Contrastivo:} Entrenar el modelo para acercar las representaciones de pares positivos y alejar las de pares negativos.
-    \item \textbf{Basado en Prompts:} Utilizar LLMs para evaluar la similitud.
-\end{itemize}
-Los resultados de NLPnorth sugirieron que el aprendizaje contrastivo fue su estrategia más efectiva.
-
-Otros equipos, como UDII-UPM \cite{rodriguez2025udii}, exploraron el rendimiento de modelos preentrenados sin ajuste fino, aplicando un enfoque \textit{zero-shot}, proponiendo una fusión de representaciones semánticas de diferentes modelos para robustecer el matching. 
-
-Por otro lado, el equipo Pjmathematician utilizó embeddings GIST e incorporó datos generados mediante LLMs \cite{vachharajani2025pjmathematician}.
-
-\subsection{El Rol Crítico de Recursos Externos}
-
-% El uso de la taxonomía \gls{ESCO} fue un diferenciador clave para varias de las soluciones de mayor rendimiento.
-
-\subsubsection{Uso de ESCO}
-La taxonomía \gls{ESCO} no solo sirvió como base de conocimiento, sino también como fuente de datos de entrenamiento. El equipo VerbaNex \cite{novoa2025verbanex} utilizó las relaciones jerárquicas de \gls{ESCO} para generar automáticamente pares adicionales positivos y negativos, ajustando su modelo para crear un espacio semántico alineado con la taxonomía. De manera similar, NLPnorth \cite{zhang2025nlpnorth} también extrajo datos adicionales de \gls{ESCO} para su entrenamiento\footnote{Cabe destacar que el conjunto de datos de entrenamiento ya habían sido generado por la organización y se encontraba a disposición de los participantes. Sin embargo, conociendo la procedencia y método de producción de este set de datos, algunos participantes decidieron aumentar dicho set para una mejor generalización de los modelos en el aprendizaje.}.
-
-Otros equipos adoptaron un enfoque híbrido. El sistema de dos etapas de TechWolf \cite{rodriguez2025two} utilizó tanto \gls{ESCO} como \gls{ISCO} en un primer sistema de recuperación de candidatos, para luego refinar la lista de candidatos mediante un LLM en una etapa de \textit{re-ranking}.
-
-\subsubsection{Uso de LLMs}
-Además del \textit{re-ranking} mencionado, varios equipos utilizaron algún \gls{LLM} para la generación de datos. El equipo NT \cite{nga2025nt} propuso un sistema basado en la generación de descripciones de trabajo mediante \gls{LLM}s, seguida de un sistema de \gls{IR}. Sin embargo, su rendimiento fue bastante limitado en comparación con otros enfoques basados en Transformers.
-
-\subsection{Gestión de Escenarios Multilingües y Cross-Lingües}
-
-El desafío principal de la tarea era la correcta alineación semántica entre idiomas.
-\begin{itemize}
-    \item \textbf{Espacio Semántico Compartido:} La estrategia dominante fue el uso de codificadores multilingües (SBERT, MPNet) ajustados para proyectar todos los idiomas en un único espacio vectorial \cite{brikman2025multilingual,nizami2025enhancing,novoa2025verbanex}.
-    \item \textbf{Inglés como Lengua Pivote:} El equipo de TechWolf \cite{rodriguez2025two} investigó explícitamente el uso del inglés como idioma pivote, traduciendo los títulos de otros idiomas al inglés antes de la comparación, una estrategia que demostró mejorar el rendimiento en algunos escenarios cross-lingües.
-    \item \textbf{Recuperación Híbrida:} El equipo AlexU-NLP \cite{barakat2025alexu} propuso un sistema de recuperación híbrido con un enfoque de \textit{curriculum learning}, diseñado para gestionar la dificultad progresiva de los pares multilingües.
+    \item \textbf{Enfoque Discriminativo:} Reformulación del problema como una tarea de clasificación binaria, determinando si dos títulos coinciden o no mediante la generación de pares negativos estrictos.
+    \item \textbf{Aprendizaje Contrastivo:} Entrenamiento orientado a optimizar la estructura del espacio latente, minimizando la distancia entre pares positivos (sinónimos) y maximizándola entre pares negativos.
+    \item \textbf{Evaluación basada en Prompts:} Utilización de \gls{LLM} para inferir la similitud directamente mediante instrucciones en lenguaje natural.
 \end{itemize}
 
-\subsection{Consideraciones Específicas: Chino y Sesgo de Género}
+Los resultados empíricos presentados por NLPnorth sugirieron que el aprendizaje contrastivo ofrece la mayor eficacia para este tipo de tareas, superando a los enfoques de clasificación pura y a los métodos basados en prompts directos.
 
-Aunque la mayoría de los participantes se centraron en inglés, español y alemán, la tarea incluía dos consideraciones importantes: el idioma chino y la evaluación del sesgo de género.
+\subsection{Ingeniería de Datos y Recursos Externos}
 
-\subsubsection{El Caso del Chino}
-El idioma chino (en pares \textit{zh-zh} y \textit{en-zh}) fue una subtarea voluntaria dentro de la \gls{Tarea}. Sin embargo, la mayoría de los trabajos centraron sus esfuerzos en los idiomas europeos, debido a que el chino no se encontraba dentro de los datos de entrenamiento, sino únicamente en validación y testeo. Este enfoque fue tomado por la organización con la intención de evaluar la capacidad multilingue de las distintas propuestas. 
+La calidad y cantidad de los datos de entrenamiento jugaron un rol crítico, llevando a muchos participantes a mirar más allá del set de datos proporcionado por la organización.
 
-\subsubsection{Evaluación del Sesgo de Género}
-Una componente clave de la tarea fue la medición del sesgo de género. En idiomas como el español y el alemán, donde los títulos de trabajo pueden tener marcas explícitas de género, se evaluó cómo las distintas soluciones manejaban estas diferencias,  para evaluar si los sistemas perpetuaban o mitigaban sesgos de género en sus predicciones. Los datos de la competición incluían anotaciones ocultas de género y expresiones con marcas de género para permitir este análisis. La organización proponía buscar un sistema que minimizara las diferencias de rendimiento entre títulos de trabajo asociados a diferentes grupos de género.
+\subsubsection{Explotación de Taxonomías}
 
-A pesar de que esta evaluación fue central, pocos trabajos de los participantes detallaron explícitamente las técnicas de mitigación del sesgo que aplicaron. La mayoría de los sistemas se centraron en la precisión del matching semántico. Los trabajos de NLPnorth y de Ixa evaluaron este tema con detenimiento, consiguiendo una puntuación perfecta en la métrica de \gls{RBO}.
+La taxonomía \gls{ESCO} trascendió su función habitual de base de conocimiento para convertirse en un motor de generación de datos. El equipo VerbaNex \cite{novoa2025verbanex} aprovechó la estructura jerárquica de \gls{ESCO} para inferir relaciones y generar automáticamente pares positivos y negativos adicionales, refinando así el espacio semántico del modelo. Paralelamente, NLPnorth \cite{zhang2025nlpnorth} también integró datos extraídos de \gls{ESCO} para enriquecer el entrenamiento\footnote{Aunque la organización puso a disposición de los participantes un conjunto de datos de entrenamiento completo, la naturaleza sintética y limitada de este motivó a los participantes a aumentar el corpus para mejorar la capacidad de generalización de los modelos ante ejemplos no vistos.}.
 
-%%
+Una estrategia alternativa fue la propuesta híbrida de TechWolf \cite{rodriguez2025two}, quienes implementaron un sistema de dos etapas retrieve-and-rerank. En la primera fase, utilizaron tanto \gls{ESCO} como \gls{ISCO} para una recuperación amplia de candidatos, refinando posteriormente la selección mediante el uso de \gls{LLM}s.
+
+\subsubsection{Generación Sintética con LLMs}
+
+El uso de \gls{LLM}s no se limitó al re-ranking. Varios equipos emplearon estos modelos para la generación de datos sintéticos que enriquecieran el contexto de los títulos cortos. El equipo NT \cite{nga2025nt} diseñó un sistema que generaba descripciones detalladas de trabajo a partir de los títulos utilizando \gls{LLM}s, para luego aplicar técnicas de \gls{IR}. Sin embargo, los resultados indicaron que este enfoque, aunque interesante, ofreció un rendimiento limitado en comparación con los modelos de embeddings densos optimizados.
+
+\subsection{Desafíos del Multilingüismo}
+
+La gestión de la barrera idiomática presentó retos específicos, abordados mediante distintas tácticas:
+
+\begin{itemize}
+    \item \textbf{Proyección Directa:} La mayoría de los trabajos confiaron en la capacidad de los codificadores multilingües (SBERT, MPNet) para alinear idiomas implícitamente en el espacio vectorial \cite{brikman2025multilingual,nizami2025enhancing,novoa2025verbanex}.
+    \item \textbf{Estrategia de Pivote:} TechWolf \cite{rodriguez2025two} investigó explícitamente el uso del inglés como lengua franca, traduciendo los títulos de origen antes de realizar el emparejamiento. Esta técnica demostró ser beneficiosa en ciertos escenarios donde la alineación directa entre idiomas con pocos recursos (o distantes entre sí) era deficiente.
+    \item \textbf{Curriculum Learning:} El equipo AlexU-NLP \cite{barakat2025alexu} introdujo un sistema de recuperación híbrido basado en \textit{curriculum learning}, entrenando al modelo con pares de dificultad progresiva para mejorar su adaptación a las complejidades multilingües.
+\end{itemize}
+
+Mención aparte merece el caso del idioma chino. Al tratarse de una subtarea voluntaria y ciega (sin datos de entrenamiento en chino, solo presentes en validación y test), se configuró como una prueba de fuego para la capacidad zero-shot multilingüe de los sistemas. La mayoría de los equipos centraron sus esfuerzos en las lenguas europeas, dejando el chino como un indicador de la robustez arquitectónica frente a idiomas no vistos durante el ajuste fino.
+
+\subsection{Ética y Mitigación del Sesgo de Género}
+
+Finalmente, la \gls{Tarea} incorporó una dimensión ética crucial: la evaluación del sesgo de género. En idiomas con marca gramatical de género (como español y alemán), existía el riesgo de que los modelos perpetuaran estereotipos o fallaran en la alineación de títulos equivalentes con distinto género gramatical.
+
+Para medir esto, la organización incluyó anotaciones ocultas y pares diseñados específicamente para testear la neutralidad de las predicciones. El objetivo era minimizar la disparidad de rendimiento entre grupos de género. A pesar de la importancia de esta métrica, pocos participantes detallaron técnicas explícitas de mitigación de sesgos, priorizando la precisión semántica pura. No obstante, los trabajos de NLPnorth y del grupo Ixa destacaron en este apartado, logrando puntuaciones perfectas en la métrica de \gls{RBO}, demostrando que es posible alcanzar un alto rendimiento técnico sin sacrificar la igualdad de género.
+
+
+
+% \section{Transformers para Semejanza Semántica}
+% \label{sec:Transformers}
+
+% Los transformers han sido la palanca tecnológica dominante en las tareas de comprensión y comparación semántica de textos desde su aparición. En el contexto de la tarea, su adopción no sólo ha permitido avances significativos en calidad de ranking, sino que ha generado un conjunto diverso de arquitecturas y estrategias de uso que conviene desglosar.
+
+% \subsection{Definición y características}
+% Un transformer es una arquitectura de red neuronal basada principalmente en mecanismos de atención que procesan secuencias sin recurrir a operaciones recurrentes o convolucionales. La atención permite que cada posición de entrada sintetice información de todas las demás posiciones mediante pesos aprendidos; esto facilita la captura de relaciones de largo alcance, la paralelización durante el entrenamiento y la construcción de representaciones contextualizadas de tokens y oraciones \cite{vaswani2017attention}. Aunque el diseño original incluye bloques de encoder y decoder, la práctica moderna para tareas de recuperación y matching usa variantes sólo-encoder (para embeddings), encoder-decoder y modelos sólo-decoder (para \gls{LLM}) según el uso concreto.
+
+% \subsection{Su utilización en la tarea}
+% En la práctica aparecen tres patrones arquitectónicos generales, con variantes muy interesantes:
+
+% \subsubsection{Bi-encoders} % (sentence-transformers / dual encoders)
+% Cada query se codifica por separado con el mismo encoder para producir vectores en un espacio semántico compartido, y usa la similitud entre vectores para ordenar candidatos. Este esquema es ideal cuando se requiere recuperar a escala, porque la indexación de vectores y la búsqueda aproximada permiten latencias bajas. Su principal fortaleza es la eficiencia en la fase de inferencia; su principal limitación es que la interacción entre consulta y candidato es sólo implícita en el espacio vectorial, por lo que puede fallar a la hora de resolver matices finos.
+
+% \subsubsection{Cross-encoders} % (re-rankers y matchers de interacción)
+% Un cross-encoder toma la pareja \texttt{(consulta, candidato)} y las procesa juntas, produciendo una puntuación que refleja la compatibilidad tras un proceso de atención en ambas direcciones. Proporciona decisiones más precisas porque permite interacciones finas entre las dos secuencias, capturando coincidencias léxicas localizadas, supresiones y dependencias sintácticas que un bi-encoder puede pasar por alto. Sin embargo, el coste computacional es mucho más alto. Con esta técnica no es viable aplicar cross-encoders exhaustivamente sobre grandes conjuntos sin una fase previa de filtrado. Por ello se emplean habitualmente como re-rankers sobre un conjunto reducido (top-k) obtenido con otros métodos menos costosos. La práctica de combinar un retrieval rápido y re-ranking posterior ha quedado consolidada como patrón de diseño en sistemas de \gls{IR} modernos \cite{sbertRetrieveamp,xu2025survey}.
+
+% \subsubsection{Modelos autoregresivos} %  y LLMs para generación y scoring
+% Los modelos autoregresivos se han usado de forma complementaria: para generar descripciones adicionales de un título, traducir o normalizar textos, crear negativos/positivos sintéticos, o para puntuar directamente parejas mediante prompting. Ofrecen flexibilidad y poder de razonamiento, pero también son muy propensos a la generación de ruido. Requieren de un control cuidadoso y suelen tener costes computacionales y de infraestructura elevados.
+
+% \subsection{Técnicas de entrenamiento específicas para mejorar la calidad del ranking}
+% El rendimiento de los transformers depende tanto de la arquitectura como de la estrategia de entrenamiento y de la calidad de los datos usados. En la tarea se observan varias técnicas que marcan la diferencia:
+
+% \begin{itemize}
+%     \item \textbf{Entrenamiento contrastivo:} las técnicas contrastivas, como por ejemplo \gls{InfoNCE}, acercan los pares positivos de vectores y separan los negativos. Una selección inteligente de negativos mejora la discriminación del espacio semántico y reduce falsos positivos en los rankings. Técnicas recientes que centran su foco en la selección de negativos han mostrado ganancias notables en el fine-tuning de embeddings \cite{solatorio2024gistembed}.
+%     \item \textbf{Variantes de las técnicas contrastivas:} existen algunas modificaciones, como focal-\gls{InfoNCE}, que tratan de penalizar más los errores en ejemplos difíciles y estabilizar el aprendizaje cuando existe un desbalance fuerte entre positivos y negativos. Con ello consiguen mejorar la capacidad de priorizar los verdaderos positivos en los primeros puestos del ranking \cite{hou2023improving}.
+%     \item \textbf{Curriculum learning:} comenzar con negativos fáciles y evolucionar hacia negativos más difíciles (o introducir negativos guiados por similitud léxica/semántica) puede estabilizar el entrenamiento y evitar que el modelo colapse ante una distribución ``long-tail'' de títulos.
+%     \item \textbf{Fine-tuning multilingüe:} ajustar modelos multilingües con datos balanceados por idioma puede ayudar a alinear representaciones cross-lingües y a reducir la fragmentación de la representación del embedding. Algunos métodos modernos de entrenamiento masivo multilingüe han demostrado que el aprendizaje dirigido para varios idiomas simultáneamente mejora la transferencia entre pares idiomáticos \cite{mao2024ems}.
+% \end{itemize}
 
 \section{Transformers para Semejanza Semántica}
 \label{sec:Transformers}
 
-Los transformers han sido la palanca tecnológica dominante en las tareas de comprensión y comparación semántica de textos desde su aparición. En el contexto de la tarea, su adopción no sólo ha permitido avances significativos en calidad de ranking, sino que ha generado un conjunto diverso de arquitecturas y estrategias de uso que conviene desglosar.
+Si\todo{Revisar esta nueva version} en la sección anterior se analizaron los enfoques generales de la competición, es imprescindible profundizar en la palanca tecnológica que ha hecho posibles dichos avances: la arquitectura Transformer. Desde su irrupción, los Transformers se han consolidado como el estándar indiscutible para tareas de comprensión del lenguaje natural, y en el contexto de TalentCLEF 2025, su adopción ha sido universal. Su capacidad para modelar dependencias complejas ha permitido no solo mejoras cuantitativas en la calidad del ranking, sino también el florecimiento de una diversidad de arquitecturas y estrategias de alineación semántica que detallamos a continuación.
 
-\subsection{Definición y características}
-Un transformer es una arquitectura de red neuronal basada principalmente en mecanismos de atención que procesan secuencias sin recurrir a operaciones recurrentes o convolucionales. La atención permite que cada posición de entrada sintetice información de todas las demás posiciones mediante pesos aprendidos; esto facilita la captura de relaciones de largo alcance, la paralelización durante el entrenamiento y la construcción de representaciones contextualizadas de tokens y oraciones \cite{vaswani2017attention}. Aunque el diseño original incluye bloques de encoder y decoder, la práctica moderna para tareas de recuperación y matching usa variantes sólo-encoder (para embeddings), encoder-decoder y modelos sólo-decoder (para \gls{LLM}) según el uso concreto.
+\subsection{Fundamentos de la Arquitectura Transformer}
 
-\subsection{Su utilización en la tarea}
-En la práctica aparecen tres patrones arquitectónicos generales, con variantes muy interesantes:
+En esencia, un Transformer es una arquitectura de red neuronal que rompe con la tradición secuencial de las redes recurrentes (RNNs) y la localidad de las convolucionales (CNNs), fundamentándose íntegramente en mecanismos de atención. Esta innovación permite que cada token de una secuencia procese información del resto de la secuencia simultáneamente, ponderando la relevancia de cada elemento mediante pesos aprendidos. Como establecen \cite{vaswani2017attention}, esto facilita la captura de relaciones de largo alcance y dependencias contextuales profundas, características críticas para desambiguar títulos de trabajo breves pero semánticamente densos (e.g., distinguir "Java Developer" de "Java Architect").
 
-\subsubsection{Bi-encoders} % (sentence-transformers / dual encoders)
-Cada query se codifica por separado con el mismo encoder para producir vectores en un espacio semántico compartido, y usa la similitud entre vectores para ordenar candidatos. Este esquema es ideal cuando se requiere recuperar a escala, porque la indexación de vectores y la búsqueda aproximada permiten latencias bajas. Su principal fortaleza es la eficiencia en la fase de inferencia; su principal limitación es que la interacción entre consulta y candidato es sólo implícita en el espacio vectorial, por lo que puede fallar a la hora de resolver matices finos.
+Aunque el diseño original propuesto por Vaswani et al. consiste en una estructura de \textit{encoder-decoder}, la práctica moderna en tareas de \textit{matching} y recuperación ha derivado en la especialización de la arquitectura: modelos \textit{encoder-only} (como BERT) para la generación de representaciones vectoriales densas, y modelos \textit{decoder-only} (como la familia GPT) para tareas generativas asociadas a los \gls{LLM}.
 
-\subsubsection{Cross-encoders} % (re-rankers y matchers de interacción)
-Un cross-encoder toma la pareja \texttt{(consulta, candidato)} y las procesa juntas, produciendo una puntuación que refleja la compatibilidad tras un proceso de atención en ambas direcciones. Proporciona decisiones más precisas porque permite interacciones finas entre las dos secuencias, capturando coincidencias léxicas localizadas, supresiones y dependencias sintácticas que un bi-encoder puede pasar por alto. Sin embargo, el coste computacional es mucho más alto. Con esta técnica no es viable aplicar cross-encoders exhaustivamente sobre grandes conjuntos sin una fase previa de filtrado. Por ello se emplean habitualmente como re-rankers sobre un conjunto reducido (top-k) obtenido con otros métodos menos costosos. La práctica de combinar un retrieval rápido y re-ranking posterior ha quedado consolidada como patrón de diseño en sistemas de \gls{IR} modernos \cite{sbertRetrieveamp,xu2025survey}.
+\subsection{Paradigmas Arquitectónicos en la Recuperación de Información}
 
-\subsubsection{Modelos autoregresivos} %  y LLMs para generación y scoring
-Los modelos autoregresivos se han usado de forma complementaria: para generar descripciones adicionales de un título, traducir o normalizar textos, crear negativos/positivos sintéticos, o para puntuar directamente parejas mediante prompting. Ofrecen flexibilidad y poder de razonamiento, pero también son muy propensos a la generación de ruido. Requieren de un control cuidadoso y suelen tener costes computacionales y de infraestructura elevados.
+El análisis de las soluciones presentadas en la tarea revela tres patrones de diseño predominantes, cada uno con un compromiso distinto entre precisión semántica y eficiencia computacional:
 
-\subsection{Técnicas de entrenamiento específicas para mejorar la calidad del ranking}
-El rendimiento de los transformers depende tanto de la arquitectura como de la estrategia de entrenamiento y de la calidad de los datos usados. En la tarea se observan varias técnicas que marcan la diferencia:
+\subsubsection{Bi-encoders y Espacios Vectoriales}
+Conocidos también como \textit{Sentence Transformers} o redes siamesas, esta arquitectura procesa la consulta (query) y el candidato (target) de forma independiente a través del mismo codificador. El objetivo es proyectar ambos textos en un espacio semántico compartido donde la similitud se calcula mediante una métrica de distancia vectorial (usualmente coseno). 
+\begin{itemize}
+    \item \textbf{Ventaja:} Su principal fortaleza reside en la escalabilidad. Al pre-calcular e indexar los vectores de los candidatos, la recuperación se reduce a una búsqueda de vecinos cercanos, permitiendo latencias extremadamente bajas en inferencia.
+    \item \textbf{Limitación:} La interacción entre los textos es meramente implícita ("late interaction"). Esto puede ocasionar una pérdida de matices finos al intentar comprimir toda la información semántica en un único vector de tamaño fijo.
+\end{itemize}
+
+\subsubsection{Cross-encoders y Modelado de Interacción}
+A diferencia de los anteriores, un \textit{cross-encoder} recibe como entrada el par concatenado \texttt{(consulta, candidato)}, permitiendo que el mecanismo de auto-atención cruce información entre ambas secuencias en todas las capas de la red. Esto habilita una comprensión profunda de la relación entre los términos, capturando negaciones, sinónimos contextuales y matices sintácticos que un bi-encoder podría ignorar.
+\begin{itemize}
+    \item \textbf{El patrón Retrieve-and-Rerank:} Dado su elevado coste computacional (es necesario procesar cada par posible), es inviable utilizarlos para la búsqueda sobre grandes colecciones. Por ello, se ha consolidado el patrón de diseño \textit{Retrieve-and-Rerank} \cite{sbertRetrieveamp,xu2025survey}: utilizar un bi-encoder para recuperar un conjunto candidato (top-k) y refinar el ordenamiento final mediante un cross-encoder de alta precisión.
+\end{itemize}
+
+\subsubsection{Modelos Autoregresivos y Generativos}
+Los \gls{LLM}s (modelos autoregresivos) han introducido un tercer paradigma: el uso de la capacidad de razonamiento para puntuar pares mediante \textit{prompting} o para tareas auxiliares como la generación de descripciones sintéticas, traducción o normalización de títulos. Aunque ofrecen una flexibilidad sin precedentes, su uso introduce desafíos de latencia, costes de infraestructura y el riesgo de alucinaciones o ruido en la generación.
+
+\subsection{Estrategias Avanzadas de Entrenamiento}
+
+La arquitectura por sí sola no garantiza el éxito; la estrategia de ajuste fino (\textit{fine-tuning}) y la construcción de la función de pérdida son determinantes para la calidad del ranking final. En TalentCLEF se identificaron varias técnicas clave para optimizar estos modelos:
 
 \begin{itemize}
-    \item \textbf{Entrenamiento contrastivo:} las técnicas contrastivas, como por ejemplo \gls{InfoNCE}, acercan los pares positivos de vectores y separan los negativos. Una selección inteligente de negativos mejora la discriminación del espacio semántico y reduce falsos positivos en los rankings. Técnicas recientes que centran su foco en la selección de negativos han mostrado ganancias notables en el fine-tuning de embeddings \cite{solatorio2024gistembed}.
-    \item \textbf{Variantes de las técnicas contrastivas:} existen algunas modificaciones, como focal-\gls{InfoNCE}, que tratan de penalizar más los errores en ejemplos difíciles y estabilizar el aprendizaje cuando existe un desbalance fuerte entre positivos y negativos. Con ello consiguen mejorar la capacidad de priorizar los verdaderos positivos en los primeros puestos del ranking \cite{hou2023improving}.
-    \item \textbf{Curriculum learning:} comenzar con negativos fáciles y evolucionar hacia negativos más difíciles (o introducir negativos guiados por similitud léxica/semántica) puede estabilizar el entrenamiento y evitar que el modelo colapse ante una distribución ``long-tail'' de títulos.
-    \item \textbf{Fine-tuning multilingüe:} ajustar modelos multilingües con datos balanceados por idioma puede ayudar a alinear representaciones cross-lingües y a reducir la fragmentación de la representación del embedding. Algunos métodos modernos de entrenamiento masivo multilingüe han demostrado que el aprendizaje dirigido para varios idiomas simultáneamente mejora la transferencia entre pares idiomáticos \cite{mao2024ems}.
+    \item \textbf{Aprendizaje Contrastivo y Selección de Negativos:} El uso de funciones de pérdida contrastivas, como \gls{InfoNCE}, busca estructurar el espacio vectorial acercando los pares positivos y alejando los negativos. La literatura reciente \cite{solatorio2024gistembed} demuestra que la clave del éxito en este enfoque no es solo la función de pérdida, sino la minería de "negativos difíciles" (ejemplos semánticamente cercanos pero no equivalentes) para forzar al modelo a discriminar matices finos.
+          
+    \item \textbf{Funciones de Pérdida Robustas:} Para mitigar problemas de convergencia en datasets desbalanceados, variantes como focal-\gls{InfoNCE} \cite{hou2023improving} han ganado tracción. Estas funciones penalizan dinámicamente los errores en ejemplos difíciles, permitiendo que el modelo priorice el aprendizaje de los casos frontera y mejore la posición de los verdaderos positivos en la cima del ranking.
+          
+    \item \textbf{Curriculum Learning:} Ante la distribución de "larga cola" (\textit{long-tail}) típica de los títulos de trabajo, estrategias de aprendizaje curricular —comenzando el entrenamiento con ejemplos sencillos y aumentando progresivamente la dificultad de los pares negativos— demostraron ser eficaces para estabilizar el entrenamiento y evitar el colapso del modelo.
+          
+    \item \textbf{Alineación Multilingüe:} Finalmente, para abordar la naturaleza multilingüe de la tarea, se aplicaron técnicas de entrenamiento que balancean la carga por idioma o que utilizan objetivos de aprendizaje cruzado. Investigaciones recientes \cite{mao2024ems} sugieren que el entrenamiento simultáneo masivo mejora la transferencia de conocimiento entre pares de idiomas (e.g., mejorando el matching alemán-inglés gracias al aprendizaje en español-inglés), reduciendo la fragmentación del espacio de embeddings.
 \end{itemize}
