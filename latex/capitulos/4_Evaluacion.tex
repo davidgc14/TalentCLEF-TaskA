@@ -15,7 +15,7 @@ La totalidad de los experimentos presentados se han ejecutado en un entorno virt
 
 Es importante destacar que las restricciones de memoria y los límites de tiempo de ejecución impuestas por la plataforma condicionaron la selección de los modelos. Se priorizaron aquellas arquitecturas capaces de realizar inferencia y entrenamiento dentro de estos márgenes, descartando modelos con un número de parámetros excesivo que comprometieran la ejecución del sistema propuesto.
 
-\begin{table}[h!]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -50,7 +50,7 @@ Tras un proceso de limpieza para descartar configuraciones erróneas y modelos i
 
 La Figura \ref{fig:zero_shot_map} ilustra el desempeño de los 190 modelos evaluados sobre el conjunto de validación utilizando la métrica \gls{MAP}.
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.9\textwidth]{imagenes/zero-shot-evaluation-plot.png}
     \caption{Dispersión del rendimiento (\gls{MAP}) en evaluación Zero-Shot. El eje X representa el tamaño del modelo (número de parámetros) en escala logarítmica.}
@@ -61,7 +61,7 @@ El análisis de estos resultados revela una predominancia significativa de los m
 
 La Tabla \ref{tab:top_10_zero_shot} presenta los 10 modelos con mejor rendimiento en esta fase. Cabe resaltar que en la totalidad de esta lista no se encuentra ningún modelo monolingüe español, lo que subraya la eficacia de los modelos multilingües en la tarea planteada.
 
-\begin{table}[h!]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -90,7 +90,7 @@ El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento de
 
 Como evidencia del rápido sobreajuste observado al extender el entrenamiento, la Figura \ref{fig:finetuned_loss} muestra las curvas de pérdida de validación para dos de los modelos, donde se aprecia una degradación del rendimiento a partir de la primera época.
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
