@@ -10,15 +10,15 @@
 \section{Motivación}
 \label{sec:Motivacion}
 
-\noindent El panorama del mercado laboral actual está experimentando una gran transformación impulsada principalmente por la rápida evolución tecnológica y la incorporación de la \gls{AI} en nuestras vidas. Estudios recientes indicaban que para finales de 2025, aproximadamente 90 millones de puestos de trabajo habrán sido automatizados, y una cantidad similar de ocupaciones que no existían a principios de siglo aparecerán en escena \cite{maslej2025artificial}. Esta dinámica de cambio constante, lejos de ser un fenómeno aislado, es consecuencia directa del desarrollo tecnológico, el cual no solo ha automatizado tareas rutinarias y creado roles completamente nuevos, sino que también ha redefinido la naturaleza misma de los puestos de trabajo existentes.
+\noindent El panorama del mercado laboral actual está experimentando una gran transformación impulsada principalmente por la rápida evolución tecnológica y la incorporación de la \gls{AI} en nuestras vidas. Estudios recientes indicaban que para finales de 2025, aproximadamente 90 millones de puestos de trabajo habrían sido automatizados, y una cantidad similar de ocupaciones que no existían a principios de siglo aparecerían en escena \cite{maslej2025artificial}. Esta dinámica de cambio constante, lejos de ser un fenómeno aislado, es consecuencia directa del desarrollo tecnológico, el cual no solo ha automatizado tareas rutinarias y creado roles completamente nuevos, sino que también ha redefinido la naturaleza misma de los puestos de trabajo existentes.
 
 En este contexto de transición, la adaptabilidad se convierte en un factor clave tanto para los profesionales, que enfrentan una incertidumbre creciente sobre las competencias que serán relevantes a corto plazo, como para las organizaciones, que se ven obligadas a identificar talento con estas capacidades emergentes \cite{ordonez2008competencies}. Esta necesidad ha fomentado la adopción de tecnologías de \gls{NLP} en la \gls{HCM}, con el objetivo de optimizar procesos de adquisición de talento, crear programas de formación personalizados y permitir una planificación estratégica basada en competencias.
 
-Sin embargo, el desarrollo de estos sistemas inteligentes se enfrenta a importantes desafíos que limitan su eficacia, equidad y generalización. Es precisamente en este punto donde se sitúa la motivación principal de este trabajo, centrado en la Tarea A del TalentCLEF 2025, la cual pretende abordar el problema del emparejamiento de titulaciones profesionales \cite{gasco2025brief}. Además, si bien el desafío original presenta un escenario multilingüe, existe una necesidad palpable de desarrollar y evaluar soluciones específicamente optimizadas para el español, un idioma con una gran relevancia geográfica y demográfica a nivel global que, no obstante, a menudo no recibe una atención adecuada en el desarrollo de modelos.
+Sin embargo, el desarrollo de estos sistemas inteligentes se enfrenta a limitaciones en su eficacia, equidad y generalización. Es precisamente en este punto donde se sitúa la motivación principal de este trabajo, centrado en la Tarea A del TalentCLEF 2025, la cual pretende abordar el problema del emparejamiento de titulaciones profesionales \cite{gasco2025brief}. Además, si bien el desafío original presenta un escenario multilingüe, existe una necesidad palpable de desarrollar y evaluar soluciones específicamente optimizadas para el español, un idioma con una gran relevancia geográfica y demográfica a nivel global que, no obstante, a menudo no recibe una atención adecuada en el desarrollo de modelos de vanguardia.
 
-Muchos de los modelos multilingües de propósito general, aunque incluyen el español en su entrenamiento, suelen estar optimizados primordialmente para el inglés\footnote{Cabe destacar que, en cuanto a presencia en la web, el inglés es el que más presencia tiene, con un 49\%, y el segundo es el español, con un 6\% \cite{w3techs2023usage}. Como consecuencia, la mayoría de los modelos de \gls{NLP} están optimizados para el inglés \cite{guo2025large}.}, lo que suele resultar en un rendimiento menor para otras lenguas menos predominantes. Este proyecto se centra en una aproximación especializada, que contemple las particularidades del español y busque mejorar su rendimiento en la tarea en cuestión. Sin embargo, la complejidad añadida de los marcadores de género en los títulos profesionales representa un desafío técnico particular que, aunque no será abordado en profundidad en este trabajo, sí se estudiarán las propuestas existentes por parte del resto de participantes de la tarea.
+Muchos de los modelos multilingües de propósito general, aunque incluyen el español en su entrenamiento, suelen estar optimizados primordialmente para el inglés, lo que suele resultar en un rendimiento menor para otras lenguas menos predominantes\footnote{Cabe destacar que, en cuanto a presencia en la web, el inglés es el que más presencia tiene con un 49\%. El segundo puesto lo ocupa el español, con un 6\% \cite{w3techs2023usage}. Como consecuencia, la mayoría de los modelos de \gls{NLP} acaban estando optimizados para el inglés \cite{guo2025large}.}. Este proyecto se centra en una aproximación especializada, que contemple las particularidades del español y busque mejorar su rendimiento en la tarea en cuestión. Sin embargo, la complejidad añadida de los marcadores de género en las titulaciones profesionales representa un desafío técnico particular que, aunque no será abordado en profundidad en este trabajo, sí se estudiarán las propuestas existentes por parte del resto de participantes de la tarea en la sección \ref{sec:TalentCLEFOverview}.
 
-Además, la disponibilidad del benchmark público de TalentCLEF, que incluye un corpus en español anotado a partir de datos reales \cite{gasco2025overview}, ofrece una oportunidad única para investigar este problema de forma rigurosa y reproducible. Así, este trabajo no solo busca contribuir al avance de la tecnología en el ámbito de la \gls{HCM}, sino también ofrecer soluciones prácticas que puedan ser implementadas en entornos reales, facilitando así la adaptación de profesionales y organizaciones a un mercado laboral en constante evolución.\todo{Me suena rara la conexión entre el benchmark y la conclusión de la sección. Tengo que pulirla.}
+Además, la disponibilidad del benchmark público de TalentCLEF, que incluye un corpus en español anotado a partir de datos reales \cite{gasco2025overview}, ofrece una oportunidad única para investigar este problema de forma rigurosa y reproducible. Así, este trabajo no solo busca contribuir al avance de la tecnología en el ámbito de la \gls{HCM}, sino también ofrecer soluciones prácticas que puedan ser implementadas en entornos reales, facilitando así la adaptación de profesionales y organizaciones a un mercado laboral en constante evolución.
 
 %%%
 
@@ -35,12 +35,12 @@ La evaluación oficial de la \gls{Tarea} se estructura en cuatro escenarios dist
 
 \begin{itemize}
     \item Una evaluación monolingüe para inglés, español y alemán.
-    \item Una evaluación multilingüe, con consultas en inglés contra corpus en español y alemán.
+    \item Una evaluación croslingüe, con queries en inglés contra corpus en español y alemán.
     \item Una sub-tarea voluntaria para el idioma chino, para el cual no se proporcionaron datos de entrenamiento.
     \item Una evaluación específica del sesgo de género para español y alemán, también voluntaria.
 \end{itemize}
 
-La métrica de evaluación principal para la clasificación es la \gls{MAP}, mientras que para la evaluación del sesgo se utiliza la \gls{RBO}. \todo{Incluir aquí información sobre Codabench y los métodos oficiales de evaluación}
+La métrica de evaluación principal para la clasificación es la \glsfirst{MAP}, mientras que para la evaluación del sesgo se utiliza la \gls{RBO}. La organización de la campaña proporciona una plataforma en Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}} para la presentación y evaluación automática de las soluciones desarrolladas por los participantes. En ella, los sistemas son evaluados en el conjunto de testeo oculto, y los resultados se publican en un ranking público basado en la métrica \gls{MAP}, incluyendo desgloses por idioma y escenario.
 
 Si bien el desafío abarca múltiples idiomas, este trabajo se enfoca particularmente en el desarrollo y evaluación de soluciones optimizadas para el español, aprovechando la disponibilidad del corpus anotado y el benchmark público que ofrece la competición.
 
@@ -49,7 +49,7 @@ Si bien el desafío abarca múltiples idiomas, este trabajo se enfoca particular
 \section{Propuesta y objetivos}
 \label{sec:PropuestaYObjetivos}
 
-\noindent Este trabajo está centrado en el desarrollo y evaluación de un sistema optimizado para el emparejamiento de titulaciones profesionales en español dentro del marco establecido por la \gls{Tarea} de TalentCLEF 2025. La propuesta principal consiste en la búsqueda, adaptación y evaluación exhaustiva de modelos transformer que maximicen el rendimiento en la tarea de recuperación de información definida, con especial énfasis en el escenario monolingüe del español.
+\noindent Este trabajo está centrado en el desarrollo y evaluación de un sistema optimizado para el emparejamiento de titulaciones profesionales en español dentro del marco establecido por la \gls{Tarea} de TalentCLEF 2025. Este desarrollo estará centrado en la búsqueda, adaptación y evaluación exhaustiva de modelos con arquitectura Transformer que maximicen el rendimiento en la tarea de recuperación de información definida, con especial énfasis en el escenario monolingüe del español.
 
 Los objetivos específicos que se persiguen son los siguientes:
 
@@ -58,16 +58,13 @@ Los objetivos específicos que se persiguen son los siguientes:
 
     \item \textbf{Selección y adaptación de modelos:} Identificar y seleccionar modelos transformer pre-entrenados multilingües con demostrada eficacia en español, para su posterior adaptación mediante técnicas de fine-tuning específicas para la tarea de ranking definida.
 
-    \item \textbf{Diseño de estrategias de entrenamiento:} Implementar y comparar diferentes estrategias de aprendizaje, con especial atención a las técnicas de aprendizaje contrastivo, que ha demostrado ser particularmente efectivo en tareas de similitud semántica según los resultados reportados en TalentCLEF 2025.
+    \item \textbf{Diseño de estrategias de entrenamiento:} Implementar y comparar diferentes estrategias de aprendizaje, con especial atención a las técnicas de \gls{CL}, que ha demostrado ser particularmente efectivo en tareas de similitud semántica según los resultados reportados en TalentCLEF 2025.
 
     \item \textbf{Evaluación exhaustiva:} Realizar una evaluación rigurosa tanto en el conjunto de desarrollo local como en la plataforma Codabench, empleando la métrica MAP como indicador principal de rendimiento, y estableciendo comparativas con los sistemas participantes en la competición original.
 
     \item \textbf{Análisis de especialización para español:} Evaluar específicamente la efectividad de las soluciones desarrolladas en el contexto del idioma español, analizando si un enfoque especializado permite superar el rendimiento de aproximaciones multilingües generalistas.
 \end{itemize}
 
-Resumen de resultados.
-
-%%
 
 \section{Estructura del documento}
 \label{sec:EstructuraDelDocumento}
@@ -76,8 +73,8 @@ Resumen de resultados.
 
     \item \textbf{Capítulo 1. Introducción.} Este capítulo introduce los principales motivos que han llevado a la realización de este trabajo, así como la problemática y los objetivos planteados para abordar el problema en cuestión.
     \item \textbf{Capítulo 2. Estado del arte.} Este capítulo describe en mayor detalle la disciplina que nos ocupa, presentando su origen y su historia hasta el presente. Se muestran las técnicas actuales más utilizadas para resolver las tareas más relevantes del tema abordado.
-    \item \textbf{Capítulo 3. Sistema/Método/Caso de Estudio propuesto.}  ---
-    \item \textbf{Capítulo 4. Evaluación.} ---
-    \item \textbf{Capítulo 5. Discusión.} ---
-    \item \textbf{Capítulo 6. Conclusiones y trabajo futuro.} ---
+    \item \textbf{Capítulo 3. Arquitectura del sistema propuesto.} En este capítulo se detalla la arquitectura del sistema desarrollado, describiendo las decisiones tomadas en cuanto a modelos, técnicas de entrenamiento y demás aspectos relevantes para la implementación del sistema.
+    \item \textbf{Capítulo 4. Evaluación.} Este capítulo presenta los resultados obtenidos tras la evaluación del sistema propuesto, incluyendo análisis detallados del rendimiento alcanzado.
+    \item \textbf{Capítulo 5. Discusión.} En este capítulo se discuten los resultados obtenidos en el capítulo anterior, comparándolos con los de otros sistemas y analizando las fortalezas y debilidades del enfoque propuesto.
+    \item \textbf{Capítulo 6. Conclusiones y trabajo futuro.} Finalmente, este capítulo resume las principales conclusiones extraídas del trabajo realizado y propone posibles líneas de investigación futura que podrían derivarse de este proyecto.
 \end{description}
