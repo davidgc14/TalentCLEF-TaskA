@@ -11,7 +11,7 @@ En el presente capítulo se detalla la metodología empleada para la validación
 \section{Entorno de desarrollo y especificaciones}
 \label{sec:Entorno}
 
-La totalidad de los experimentos presentados se han ejecutado en un entorno virtualizado proporcionado por Google Colab \cite{googlecolab}. Las características técnicas del hardware empleado se detallan en la Tabla \ref{tab:especificaciones_sistema}.
+La totalidad de los experimentos presentados se han ejecutado en un entorno virtualizado proporcionado por Google Colab\footnote{\url{https://colab.research.google.com/}}. Las características técnicas del hardware empleado se detallan en la Tabla \ref{tab:especificaciones_sistema}.
 
 Es importante destacar que las restricciones de memoria y los límites de tiempo de ejecución impuestas por la plataforma condicionaron la selección de los modelos. Se priorizaron aquellas arquitecturas capaces de realizar inferencia y entrenamiento dentro de estos márgenes, descartando modelos con un número de parámetros excesivo que comprometieran la ejecución del sistema propuesto.
 
@@ -36,7 +36,7 @@ El objetivo de esta primera fase fue identificar, dentro del vasto estado del ar
 
 \subsection{Selección y filtrado de modelos base}
 
-Para la conformación del conjunto de candidatos, se evaluaron modelos obtenidos a través de la librería \textit{Transformers} de Hugging Face \cite{huggingface}, provenientes de dos fuentes de selección principales:
+Para la conformación del conjunto de candidatos, se evaluaron modelos obtenidos a través de la librería \texttt{SentenceTransformers} de Hugging Face\footnote{\url{https://huggingface.co/}}, provenientes de dos fuentes de selección principales:
 
 \begin{enumerate}
     \item \textbf{MTEB Leaderboard} \cite{mteb-leaderboard}: Se seleccionaron los 100 mejores modelos con licencia pública basándose en su desempeño medio en un total de 13 benchmarks de recuperación de información (Retrieval) y similitud semántica\footnote{Datos tomados a fecha 1 de diciembre de 2025. Los valores medios de referencia se detallan en la Tabla \ref{tab:resultados_completos_modelos_mteb_retrieval}.}. Entre las tareas de referencia se incluyen \textit{BELEBELE}, \textit{MIRACL Retrieval Hard Negatives}, \textit{TREC COVID} y \textit{Wikipedia Retrieval Multilingual}, entre otras\footnote{El conjunto total de benchmarks asociados a la tarea de recuperación de información pueden ser consultados directamente en su repositorio: \url{https://huggingface.co/spaces/mteb/leaderboard}.}.
@@ -53,13 +53,13 @@ La Figura \ref{fig:zero_shot_map} ilustra el desempeño de los 190 modelos evalu
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.9\textwidth]{imagenes/zero-shot-evaluation-plot.png}
-    \caption{Dispersión del rendimiento (\gls{MAP}) en evaluación Zero-Shot. El eje X representa el tamaño del modelo (número de parámetros) en escala logarítmica.}
+    \caption{Dispersión del rendimiento (\gls{MAP}) en evaluación Zero-Shot. El eje horizontal representa el tamaño del modelo (número de parámetros) en escala logarítmica.}
     \label{fig:zero_shot_map}
 \end{figure}
 
-El análisis de estos resultados revela una predominancia significativa de los modelos multilingües sobre los monolingües. A pesar de que el corpus de evaluación es exclusivamente en español, los modelos multilingües demostraron una mayor capacidad de generalización y captura de matices semánticos, superando sistemáticamente a las arquitecturas entrenadas únicamente en español.
+% El análisis de estos resultados revela una predominancia significativa de los modelos multilingües sobre los monolingües. A pesar de que el corpus de evaluación es exclusivamente en español, los modelos multilingües demostraron una mayor capacidad de generalización y captura de matices semánticos, superando sistemáticamente a las arquitecturas entrenadas únicamente en español.\footnote{Esto creo que lo tengo que poner más bien en el análisis.}
 
-La Tabla \ref{tab:top_10_zero_shot} presenta los 10 modelos con mejor rendimiento en esta fase. Cabe resaltar que en la totalidad de esta lista no se encuentra ningún modelo monolingüe español, lo que subraya la eficacia de los modelos multilingües en la tarea planteada.
+La Tabla \ref{tab:top_10_zero_shot} presenta los 10 modelos con mejor rendimiento en esta fase. Cabe mencionar que en la totalidad de esta lista no se encuentra ningún modelo monolingüe español, lo que subraya la eficacia de los modelos multilingües en la tarea planteada.
 
 \begin{table}[!ht]
     \centering
@@ -86,7 +86,7 @@ Tomando como base los 10 modelos más prometedores identificados en la fase ante
 
 \subsection{Configuración del entrenamiento}
 
-El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento descrito en la Sección \ref{sec:DefinicionDelProblema}, empleando la función de pérdida \gls{MNRL} (ver Sección \ref{sec:Funciones_de_perdida}). Para mitigar el riesgo de sobreajuste, dada la naturaleza de los datos y el tamaño de los modelos, se limitó el entrenamiento a una única época, con una tasa de aprendizaje de $5e^{-6}$ y un tamaño de lote de 16.
+El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento descrito en la Sección \ref{sec:DefinicionDelProblema}, empleando la función de pérdida \gls{MNRL} descrita en la Sección \ref{sec:Funciones_de_perdida}. Para mitigar el riesgo de sobreajuste, dada la naturaleza de los datos y el tamaño de los modelos, se limitó el entrenamiento a una única época, con una tasa de aprendizaje de $5\times 10^{-6}$ y un tamaño de lote de 16.
 
 Como evidencia del rápido sobreajuste observado al extender el entrenamiento, la Figura \ref{fig:finetuned_loss} muestra las curvas de pérdida de validación para dos de los modelos, donde se aprecia una degradación del rendimiento a partir de la primera época.
 
@@ -107,7 +107,7 @@ Como evidencia del rápido sobreajuste observado al extender el entrenamiento, l
 
 \subsection{Resultados tras el entrenamiento}
 
-La Tabla \ref{tab:finetuned_results} compara el desempeño de los modelos antes y después del proceso de ajuste fino. Se observa una mejora media aproximada de 3 puntos porcentuales en la métrica \gls{MAP} para la mayoría de los candidatos, validando la eficacia del entrenamiento supervisado en el dominio específico de la tarea.
+La Tabla \ref{tab:finetuned_results} compara el desempeño de los modelos antes y después del proceso de ajuste fino, ordenados de mayor a menor \gls{MAP} tras el entrenamiento. Se observa una mejora media aproximada de 3 puntos porcentuales en la métrica \gls{MAP} para la mayoría de los candidatos, validando la eficacia del entrenamiento supervisado en el dominio específico de la tarea.
 
 Es necesario puntualizar el caso de los modelos \textit{jina-embeddings-v3} y \textit{Linq-Embed-Mistral}, cuyos valores permanecen inalterados. Esto se debe a que dichas arquitecturas están optimizadas para inferencia y encapsuladas de tal forma que no permiten un reentrenamiento directo bajo las condiciones experimentales establecidas.
 
@@ -135,7 +135,7 @@ Es necesario puntualizar el caso de los modelos \textit{jina-embeddings-v3} y \t
 
 \section{Fase 3: Ranking Fusion}
 
-Con el objetivo de explotar la complementariedad entre las diferentes representaciones aprendidas, se seleccionaron los tres modelos con mejor desempeño post-entrenamiento (\textit{bilingual-embedding-large}, \textit{multilingual-e5-large-instruct} y \textit{gte-multilingual-base}) para constituir un sistema de ensamblado mediante fusión de rankings. Se evaluaron tres estrategias distintas.
+Con el objetivo de explotar la complementariedad entre las diferentes representaciones aprendidas, se seleccionaron los tres modelos con mejor desempeño tras el entrenamiento (\textit{bilingual-embedding-large}, \textit{multilingual-e5-large-instruct} y \textit{gte-multilingual-base}) para constituir un sistema de ensamblado mediante fusión de rankings. Se evaluaron las tres estrategias anteriormente mencionadas.
 
 \subsection{Análisis comparativo de técnicas de fusión}
 
@@ -153,7 +153,7 @@ Mediante un barrido de parámetros (Figura \ref{fig:rrf_k_analysis}), se determi
 Tras aplicar una normalización min-max, la fusión mediante \gls{MNZ} devolvió un \gls{MAP} de \textbf{0.49896}, mostrando una ligera superioridad frente a \gls{RRF}.
 
 \subsubsection{Weighted Sum (WSum)}
-Finalmente, se evaluó la técnica de \gls{WSum}, asignando pesos específicos a cada modelo basándose en heurísticas derivadas de su rendimiento individual. La combinación de pesos óptima encontrada fue:
+Finalmente, se evaluó la técnica de \gls{WSum}, asignando pesos específicos a cada modelo basándose en valores obtenidos tras una búsqueda de parámetros derivadas de su rendimiento individual. La combinación de pesos óptima encontrada fue:
 \begin{itemize}
     \item \textit{bilingual-embedding-large}: 0.35
     \item \textit{multilingual-e5-large-instruct}: 0.38
@@ -164,7 +164,17 @@ Esta configuración permitió alcanzar un \gls{MAP} de \textbf{0.49953}, constit
 
 \subsection{Selección final de arquitectura}
 
-Basándonos en los resultados expuestos, se ha seleccionado la técnica de \gls{WSum} como estrategia de fusión definitiva para el sistema propuesto. Con ello obtenemos un sistema que maximiza la métrica \gls{MAP} mediante la combinación ponderada de las fortalezas individuales de los modelos base.
+Basándonos en los resultados expuestos, a pesar de que todas ellas han mejoreado los desempeños individuales de cada uno de los modelos, se ha seleccionado la técnica de \gls{WSum} como estrategia de fusión definitiva para el sistema propuesto. En la Figura \ref{fig:fusion_results} se muestran los resultados obtenidos con cada una de las técnicas evaluadas.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{imagenes/comparacion_fusion_ranking.png}
+    \caption{Comparativa de las técnicas de fusión evaluadas en términos de \gls{MAP} con respecto al valor máximo individual alcalzado por los modelos.}
+    \label{fig:fusion_results}
+\end{figure}
+
+
+Con ello obtenemos un sistema que maximiza la métrica \gls{MAP} mediante la combinación ponderada de las fortalezas individuales de los modelos base.
 
 \section{Re-Ranking}
 % Pendiente de redacción.
