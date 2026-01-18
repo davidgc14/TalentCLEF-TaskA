@@ -58,7 +58,7 @@ Este diseño arquitectónico busca equilibrar el compromiso entre eficiencia com
 El flujo de procesamiento, desde la recepción de la query hasta la generación del ranking final de candidatos, se estructura en tres etapas secuenciales claramente diferenciadas:
 
 \begin{enumerate}
-    \item \textbf{Fase de Recuperación:} Etapa de generación de candidatos (\textit{candidate generation}). Se emplean tres modelos bi-encoder independientes, previamente ajustados al dominio de la tarea. Su función es proyectar tanto las consultas como los documentos en un espacio vectorial común y recuperar eficientemente los documentos más similares para cada modelo.
+    \item \textbf{Fase de Retrieval:} Etapa de generación de candidatos. Se emplean tres modelos bi-encoder independientes, previamente ajustados al dominio de la tarea. Su función es proyectar tanto las consultas como los candidatos en un espacio vectorial común y recuperar eficientemente los candidatos más similares para cada modelo y para cada consulta.
           
     \item \textbf{Fase de Fusión:} Los rankings preliminares generados por los tres modelos de recuperación se combinan mediante algoritmos de fusión. El objetivo es mitigar los sesgos inductivos individuales de cada modelo y generar una lista unificada de candidatos con mayor exhaustividad.
           
@@ -95,11 +95,10 @@ La similitud semántica $sim(q, d)$ se calcula mediante la función de similitud
 
 \subsubsection{Estrategia de selección de modelos}
 
-Para dotar de diversidad al sistema de recuperación, la arquitectura integra tres modelos bi-encoder distintos. La hipótesis de trabajo es que la combinación de modelos con diferentes arquitecturas base y preentrenamientos capturará matices semánticos complementarios.
+Para dotar de diversidad al sistema de recuperación, la arquitectura integra tres modelos bi-encoder distintos. La selección de estos tres modelos se realiza mediante un proceso riguroso de evaluación en dos etapas:
 
-La selección de estos tres modelos se realiza mediante un proceso riguroso de evaluación en dos etapas:
 \begin{itemize}
-    \item \textbf{Evaluación Zero-Shot:} Selección preliminar sobre modelos del estado del arte disponibles en repositorios abiertos como Hugging Face \cite{huggingface}, priorizando aquellos con alto desempeño en benchmarks multilingües.
+    \item \textbf{Evaluación Zero-Shot:} Selección preliminar sobre modelos del estado del arte disponibles en repositorios abiertos como Hugging Face\footnote{\url{https://huggingface.co/}}, priorizando aquellos con alto desempeño en benchmarks multilingües.
     \item \textbf{Evaluación Post-Training:} Validación tras el ajuste fino con datos de validación.
 \end{itemize}
 
@@ -108,15 +107,15 @@ Los modelos finales son seleccionados basándose en la maximización de la métr
 \subsection{Ranking Fusion}
 \label{sec:Rank_Fusion}
 
-La recuperación de información basada en un único modelo bi-encoder puede presentar limitaciones propias de la arquitectura o de los datos de entrenamiento específicos de dicho modelo. La hipótesis subyacente en la arquitectura propuesta es que diferentes modelos capturan matices semánticos distintos; por ejemplo, un modelo puede ser más robusto ante anglicismos técnicos, mientras que otro puede capturar mejor la sinonimia en el español.
+La recuperación de información basada en un único modelo bi-encoder puede presentar limitaciones propias de la arquitectura o de los datos de entrenamiento específicos de dicho modelo. La hipótesis subyacente en la arquitectura propuesta es que diferentes modelos capturan matices semánticos distintos, y que la combinación de sus resultados puede conducir a una mejora significativa en la calidad del ranking final.
 
 Para mitigar estas limitaciones y mejorar la robustez del sistema, se implementa un módulo de fusión de rankings. Este módulo agrega las listas de documentos candidatos generadas por los 3 mejores modelos sobre nuestra tarea para producir un ranking unificado y reordenado. Se describen a continuación las tres estrategias de fusión consideradas.
 
 \subsubsection{Reciprocal Rank Fusion (RRF)}
 
-El algoritmo \gls{RRF} \cite{cormack2009reciprocal} es una técnica de fusión basada exclusivamente en la posición (rango) de los documentos, ignorando las puntuaciones de similitud originales. Esto lo hace especialmente robusto frente a modelos que devuelven puntuaciones en escalas no calibradas o dispares.
+El algoritmo \gls{RRF} \cite{cormack2009reciprocal} es una técnica de fusión basada exclusivamente en la posición de los candidatos en el ranking, ignorando las puntuaciones de similitud originales. Esto lo hace especialmente robusto frente a modelos que devuelven puntuaciones en escalas no calibradas o dispares.
 
-Este algoritmo asigna una puntuación a cada documento candidato $d$ basándose en la inversa de su rango en cada una de las listas recuperadas. La fórmula de agregación es la siguiente:
+Este algoritmo asigna una puntuación a cada candidato $d$ basándose en la inversa de su rango en cada una de las listas recuperadas. La fórmula de agregación es la siguiente:
 
 \begin{equation}
     Score_{RRF}(d) = \sum_{r \in R} \frac{1}{k_{rrf} + r(d)}
@@ -125,21 +124,21 @@ Este algoritmo asigna una puntuación a cada documento candidato $d$ basándose 
 Donde:
 \begin{itemize}
     \item $R$ es el conjunto de rankings provenientes de los distintos modelos.
-    \item $r(d)$ es la posición ordinal del documento $d$ en el ranking $r$ (siendo 1 la mejor posición).
-    \item $k_{rrf}$ es una constante de suavizado que evita que los documentos en las primeras posiciones dominen excesivamente la puntuación final, mitigando el impacto de los outliers.
+    \item $r(d)$ es la posición ordinal del candidato $d$ en el ranking $r$ (siendo 1 la mejor posición).
+    \item $k_{rrf}$ es una constante de suavizado que evita que los candidatos en las primeras posiciones dominen excesivamente la puntuación final, mitigando el impacto de los outliers.
 \end{itemize}
 
 \subsubsection{Mean Normalized Z-score (MNZ)}
 
 A diferencia de \gls{RRF}, las técnicas basadas en puntuación intentan preservar la información sobre la intensidad de la similitud que el modelo ha asignado a cada documento. Sin embargo, dado que distintos modelos de embedding pueden operar en espacios vectoriales con distribuciones de similitud diferentes, es necesaria una normalización previa.
 
-La estrategia \gls{MNZ} (analizada en detalle en \cite{wu2006evaluating}) estandariza las puntuaciones de cada ranking individual antes de la fusión. Para cada documento $d$ en un ranking $i$, la puntuación original $S_{i}(d)$ se transforma:
+La estrategia en el cálculo de la \gls{MNZ}\footnote{Una implementación interesante de esta técnica se puede leer en \cite{wu2006evaluating}.} estandariza las puntuaciones de cada ranking individual antes de la fusión. Para cada candidato $d$ en un ranking $i$, la puntuación original $S_{i}(d)$ se transforma:
 
 \begin{equation}
     Z_{i}(d) = \frac{S_{i}(d) - \mu_i}{\sigma_i}
 \end{equation}
 
-Donde $\mu_i$ y $\sigma_i$ son la media y la desviación estándar de las puntuaciones del ranking $i$. La puntuación final de fusión se calcula como el promedio de las puntuaciones normalizadas, premiando aquellos documentos que destacan estadísticamente en sus respectivas listas:
+Donde $\mu_i$ y $\sigma_i$ son la media y la desviación estándar de las puntuaciones del ranking $i$. La puntuación final de fusión se calcula como el promedio de las puntuaciones normalizadas, premiando aquellos candidatos que destacan estadísticamente en sus respectivas listas:
 
 \begin{equation}
     Score_{MNZ}(d) = \frac{1}{|R|} \sum_{i=1}^{|R|} Z_{i}(d)
@@ -147,7 +146,7 @@ Donde $\mu_i$ y $\sigma_i$ son la media y la desviación estándar de las puntua
 
 \subsubsection{Weighted Sum (WSum)}
 
-Mientras que \gls{RRF} y \gls{MNZ} tratan a todos los modelos que participan de forma igualitaria (asumiendo una fiabilidad similar), la técnica de \gls{WSum} introduce un sesgo explícito basado en la confianza que se tiene en cada modelo. Esta técnica es ideal cuando se conoce a priori que ciertos modelos tienen un desempeño superior en la tarea objetivo.
+Mientras que \gls{RRF} y \gls{MNZ} tratan a todos los modelos que participan de forma igualitaria (asumiendo una fiabilidad similar), la técnica de \gls{WSum} introduce un sesgo explícito basado en la confianza que se tiene en cada modelo. Esta técnica es ideal cuando se conoce a priori que ciertos modelos puedan tener un desempeño distinto en la tarea objetivo.
 
 La puntuación final se obtiene mediante una combinación lineal de las similitudes normalizadas, donde cada modelo $i$ tiene asociado un peso $w_i$:
 
@@ -159,9 +158,9 @@ Sujeto a la restricción $\sum w_i = 1$. La determinación de los pesos óptimos
 
 \subsection{Re-ranking}
 
-La lista unificada resultante de la fusión pasa a una etapa final de reordenamiento. A diferencia de los bi-encoders, el cross-encoder recibe como entrada el par concatenado $(q, c)$ y utiliza un mecanismo de \textit{full self-attention} sobre la secuencia conjunta.
+La lista unificada resultante de la fusión pasa a una etapa final de reordenamiento. A diferencia de los bi-encoders, el cross-encoder recibe como entrada el par concatenado $(q, d)$ y utiliza un mecanismo de autoatención sobre la secuencia conjunta.
 
-Esto permite que el modelo capture interacciones no lineales y dependencias sintácticas entre la consulta y el candidato que son imposibles de representar mediante estructuras computacionales más simples. Debido a su alto coste computacional, este proceso se aplica únicamente a los candidatos más prometedores resultantes de la etapa anterior. El modelo emitirá un \textit{logit} que representará la puntuación de relevancia final utilizada para ordenar la lista definitiva.
+Esto permite que el modelo capture interacciones no lineales y dependencias sintácticas entre la consulta y el candidato que son imposibles de representar mediante estructuras computacionales más simples. Debido a su alto coste computacional, este proceso se aplica únicamente a los candidatos más prometedores resultantes de la etapa anterior. %El modelo emitirá un \textit{logit} que representará la puntuación de relevancia final utilizada para ordenar la lista definitiva.
 
 \section{Tecnologías y Estrategias de Aprendizaje}
 
@@ -169,22 +168,22 @@ La implementación del sistema se apoya en un conjunto de tecnologías y funcion
 
 \subsection{Librerías y Entorno}
 
-El desarrollo se llevará a cabo utilizando el lenguaje Python, apoyándose en el ecosistema de \textbf{Hugging Face} y la librería \textbf{SentenceTransformers} \cite{reimers2019sentence}, que facilita el entrenamiento de los modelos bi-encoders que necesitamos. Para la gestión de tensores y el entrenamiento en GPU, se utilizará \textbf{PyTorch}. 
+El desarrollo se llevará a cabo utilizando el lenguaje Python, apoyándose en el ecosistema de Hugging Face y la librería \texttt{SentenceTransformers} \cite{reimers2019sentence}, que facilita el entrenamiento de los modelos bi-encoders que necesitamos. Para la gestión de tensores y el entrenamiento en GPU, se utilizará \textbf{PyTorch}. El entorno de desarrollo será Google Colab, aprovechando sus capacidades de cómputo en la nube y acceso a GPUs. 
 
 \subsection{Funciones de Pérdida (Loss Functions)}
 \label{sec:Funciones_de_perdida}
 
-El entrenamiento de los modelos de recuperación es crítico. Se utilizarán estrategias de aprendizaje contrastivo para optimizar el espacio vectorial:
+El entrenamiento de los modelos de recuperación es crítico. Se utilizarán estrategias de \gls{CL} para optimizar el espacio vectorial:
 
 \begin{itemize}
-    \item \textbf{Retrieval:} \gls{MNRL} será la función de pérdida principal utilizada para el entrenamiento de los modelos bi-encoder. \gls{MNRL} trata cada par (query, candidato) como un ejemplo positivo y considera todos los demás documentos del lote como negativos. Esto permite un entrenamiento altamente eficiente sin necesidad de definir negativos explícitos, aprovechando una gran cantidad de negativos en cada iteración y mejorando la discriminación en el espacio de representación.
-    \item \textbf{Re-Ranknig:} Para la etapa de \textit{re-ranking}, se empleará una función de pérdida de clasificación binaria (\textit{BCEWithLogitsLoss}), tratando el problema como uno de decisión sobre pares (relacionado / no relacionado).
+    \item \textbf{Retrieval:} \gls{MNRL} será la función de pérdida principal utilizada para el entrenamiento de los modelos bi-encoder. \gls{MNRL} trata cada par (query, candidato) como un ejemplo positivo y considera todos los demás candidatos del lote como negativos. Esto permite un entrenamiento altamente eficiente sin necesidad de definir negativos explícitos, aprovechando una gran cantidad de negativos en cada iteración y mejorando la discriminación en el espacio de representación.
+    \item \textbf{Re-Ranking:} Para la etapa de re-ranking, se empleará una \gls{BCEWithLogitsLoss}, tratando el problema como uno de decisión sobre pares (relacionado / no relacionado).
 \end{itemize}
 
 \subsection{Función de evaluación}
 \label{sec:MAP}
 
-Para monitorizar el rendimiento durante el entrenamiento y la validación, se utilizará la métrica \textbf{Mean Average Precision (MAP)}, la cual es la que propuso la organización para la evaluación de la \gls{Tarea}. A diferencia de métricas que solo contabilizan el volumen de aciertos, el \gls{MAP} penaliza que los documentos relevantes aparezcan en posiciones inferiores de la lista de resultados, otorgando mayor peso a los aciertos en las primeras posiciones.
+Para monitorizar el rendimiento durante el entrenamiento y la validación, se utilizará la métrica \glsfirst{MAP}, la cual fue propuesta por la organización para la evaluación de la \gls{Tarea}. A diferencia de métricas que solo contabilizan el volumen de aciertos, \gls{MAP} penaliza que los candidatos relevantes aparezcan en posiciones inferiores de la lista de resultados, otorgando mayor peso a los aciertos en las primeras posiciones.
 
 Sea una consulta \( q \) asociada a un conjunto de candidatos relevantes conocidos \( C_q \). La \gls{AP} se define formalmente como:
 
@@ -200,7 +199,7 @@ donde:
     \item \( \mathbb{I}(\cdot) \) es una función indicadora que toma el valor 1 si el documento en la posición \( k \) es relevante (\( \text{doc}_k \in C_q \)) y 0 en caso contrario.
 \end{itemize}
 
-Finalmente, el valor de \textbf{MAP} se obtiene promediando la \gls{AP} sobre la totalidad del conjunto de consultas \( Q \):
+Finalmente, el valor de \gls{MAP} se obtiene promediando la \gls{AP} sobre la totalidad del conjunto de consultas \( Q \):
 
 \[
     \mathrm{MAP} = \frac{1}{|Q|} \sum_{q \in Q} \mathrm{AP}(q).
@@ -220,7 +219,7 @@ Se procederá al fine-tuning de los 10 mejores modelos de recuperación utilizan
 En esta fase, se aplicará un Early Stopping basado en la función de pérdida \gls{MNRL} y se monitorizará el rendimiento en el conjunto de validación utilizando la métrica \gls{MAP}. Se experimentará con diferentes configuraciones de tasas de aprendizaje y de tamaños del lote, tratando de optimizar la convergencia y la generalización del modelo. 
 
 \subsection{Fase 3: Optimización de la Fusión}
-Una vez entrenados los modelos individuales, se experimentará con la estrategia de fusión. Se evaluará el impacto de diferentes combinaciones de modelos y se ajustará el parámetro $k$ del algoritmo \gls{RRF} para maximizar la métrica \gls{MAP} en el conjunto de validación.
+Una vez entrenados los modelos individuales, se experimentará con la estrategia de fusión. Se evaluará el impacto de diferentes combinaciones de modelos y se ajustará el parámetro $k$ del algoritmo \gls{RRF} para maximizar la métrica \gls{MAP} en el conjunto de validación, así como la búsqueda de pesos óptimos en la técnica de \gls{WSum}.
 
 \subsection{Fase 4: Implementación del Re-ranking}
 Finalmente, se integrará el cross-encoder. Se analizará el compromiso entre rendimiento y tiempo de cómputo variando la profundidad del re-ranking. El resultado de esta fase constituirá el sistema final a evaluar en la competición.
