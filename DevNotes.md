@@ -76,6 +76,8 @@ https://gemini.google.com/share/8b7e9005b845
 
 Se ha hecho, una vez aplicado el cross encoder, debido a que este devuelve logits, una normalizacion minimax entre los valores de similitud coseno previamente existentes en el ranking del fusion ranking para preservar su impacto en el modelo y no desordenar excesivamente los valores y como consecuencia el ranking.
 
+se ha descubierto que los modelos puede ser que no sean cross encoders. Hay que revisar la funete de mteb y ver si verdaderamente los que reportan son cross encoders o bi encoders
+
 ## Evaluacion
 
 Mostrar los resultados
