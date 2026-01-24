@@ -19,3 +19,4 @@ __init__.py
 temp.*
 
 models/finetuned models/*
+models/CrossEncoder*
