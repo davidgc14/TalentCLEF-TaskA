@@ -96,24 +96,37 @@ def generate_predictions(model, queries_texts, corpus_texts, queries_ids, corpus
 # ========================
 
 def logits_normalization(head, min_value, max_value=1):
-  values = [v for _, v in head]
+    values = [v for _, v in head]
 
-  v_min = min(values)
-  v_max = max(values)
+    v_min = min(values)
+    v_max = max(values)
 
-  normalized = [
-      (key, min_value + (max_value - min_value) * (value - v_min) / (v_max - v_min))
-      for key, value in head
-  ]
+    normalized = [
+        (key, min_value + (max_value - min_value) * (value - v_min) / (v_max - v_min))
+        for key, value in head
+    ]
 
-  return normalized
+    return normalized
 
 
-def apply_reranking_top_k(model, k, run_file, queries_dict, corpus_dict):
-
+def apply_reranking_top_k(model, k, run_dict, queries_dict, corpus_dict):
+    """
+    Apply reranking to top-k documents for each query.
+    
+    Args:
+        model: CrossEncoder model
+        k: Number of top documents to rerank
+        run_dict: Dictionary {query_id: {doc_id: score}}
+        queries_dict: Dictionary {query_id: query_text}
+        corpus_dict: Dictionary {doc_id: doc_text}
+    
+    Returns:
+        Reranked dictionary with same structure
+    """
+    print(f'\nApplying reranking to top-{k} documents...')
     reranked_run = {}
 
-    for q_id, docs_scores in run_file.items():
+    for q_id, docs_scores in run_dict.items():
         if q_id not in queries_dict:
             continue
 
@@ -124,12 +137,11 @@ def apply_reranking_top_k(model, k, run_file, queries_dict, corpus_dict):
         head_items = sorted_items[:k]
         tail_items = sorted_items[k:]
 
-        min_similarity = head_items[-1][1]
-
-
         if not head_items:
             reranked_run[q_id] = docs_scores
             continue
+
+        min_similarity = head_items[-1][1]
 
         pairs_to_predict = []
         valid_head_ids = []
@@ -139,17 +151,12 @@ def apply_reranking_top_k(model, k, run_file, queries_dict, corpus_dict):
                 doc_text = corpus_dict[doc_id]
                 pairs_to_predict.append([query_text, doc_text])
                 valid_head_ids.append(doc_id)
-            else:
-                pass
-
 
         if pairs_to_predict:
             new_scores = model.predict(
                 pairs_to_predict,
-                # batch_size=1,  # o 64, 128 según tu memoria GPU
-                # show_progress_bar=True,
                 convert_to_numpy=True
-                )
+            )
 
             if len(new_scores.shape) > 1:
                 new_scores = new_scores.flatten()
@@ -161,7 +168,6 @@ def apply_reranking_top_k(model, k, run_file, queries_dict, corpus_dict):
             new_head_items.sort(key=lambda x: x[1], reverse=True)
             new_head_items = logits_normalization(new_head_items, min_similarity)
 
-
             final_list = new_head_items + tail_items
             reranked_run[q_id] = dict(final_list)
         else:
@@ -170,9 +176,8 @@ def apply_reranking_top_k(model, k, run_file, queries_dict, corpus_dict):
     return reranked_run
 
 
-def fusion_ranking(predictions_list): # la entrada son listas de diccionarios
-
-    
+def fusion_ranking(predictions_list):
+    """Combine multiple prediction dictionaries using weighted fusion."""
     weights = [.35, .38, .27]
 
     runs = [Run.from_dict(preds) for preds in predictions_list]
@@ -185,19 +190,34 @@ def fusion_ranking(predictions_list): # la entrada son listas de diccionarios
 
     return fused_run.to_dict()
 
-def reranking(fused_dict, device, top_k=5, rr_model_name='Jsevisal/CrossEncoder-ModernBERT-base-qnli'):
+
+def reranking(fused_dict, queries_dict, corpus_dict, device, top_k=5, 
+              rr_model_name='Jsevisal/CrossEncoder-ModernBERT-base-qnli'):
+    """
+    Apply cross-encoder reranking to fused results.
     
+    Args:
+        fused_dict: Dictionary from fusion step
+        queries_dict: Dictionary {query_id: query_text}
+        corpus_dict: Dictionary {doc_id: doc_text}
+        device: Device to run the model on
+        top_k: Number of top documents to rerank per query
+        rr_model_name: Name/path of the cross-encoder model
+    
+    Returns:
+        Reranked dictionary
+    """
+    print(f'\nLoading cross-encoder model: {rr_model_name}')
     model = CrossEncoder(
         rr_model_name,
         device=device,
         trust_remote_code=True,
-        cache_dir=project_dir / 'models' / rr_model_name,
-        # automodel_args={"low_cpu_mem_usage": True}
+        cache_dir=project_dir / 'models' / rr_model_name.split('/')[-1],
     )
 
-    # reranking_dict = apply_reranking_top_k(model, top_k, fused_dict, queries_dict, corpus_dict)
+    reranked_dict = apply_reranking_top_k(model, top_k, fused_dict, queries_dict, corpus_dict)
 
-    # return reranking_dict
+    return reranked_dict
 
 # ========================
 # TREC FORMAT CONVERSION
@@ -311,6 +331,7 @@ def main():
         print('\nSkipping reranking step (--skip-reranking flag set)')
         final_dict = fused_dict
     else:
+        print('\nApplying Reranking...')
         final_dict = reranking(fused_dict, queries_dict, corpus_dict, 
                               args.device, top_k=args.top_k)
     
