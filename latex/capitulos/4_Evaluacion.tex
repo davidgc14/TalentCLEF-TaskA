@@ -107,11 +107,18 @@ Como evidencia del rápido sobreajuste observado al extender el entrenamiento, l
 
 \subsection{Resultados tras el entrenamiento}
 
-La Tabla \ref{tab:finetuned_results} compara el desempeño de los modelos antes y después del proceso de ajuste fino, ordenados de mayor a menor \gls{MAP} tras el entrenamiento. Se observa una mejora media aproximada de 3 puntos porcentuales en la métrica \gls{MAP} para la mayoría de los candidatos, validando la eficacia del entrenamiento supervisado en el dominio específico de la tarea.
+La Tabla \ref{tab:finetuned_results} compara el desempeño de los modelos antes y después del proceso de ajuste fino, ordenados de mayor a menor \gls{MAP} tras el entrenamiento. Se observa una mejora media aproximada de 3 puntos porcentuales en la métrica \gls{MAP} para la mayoría de los candidatos, validando la eficacia del entrenamiento supervisado en el dominio específico de la tarea. En la Figura \ref{fig:finetuned_comparison} se ilustra gráficamente esta mejora.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/training/comparacion_finetuning.png}
+    \caption{Comparativa del rendimiento (\gls{MAP}) de los 10 mejores modelos antes y después del ajuste fino.}
+    \label{fig:finetuned_comparison}
+\end{figure}
 
 Es necesario puntualizar el caso de los modelos \textit{jina-embeddings-v3} y \textit{Linq-Embed-Mistral}, cuyos valores permanecen inalterados. Esto se debe a que dichas arquitecturas están optimizadas para inferencia y encapsuladas de tal forma que no permiten un reentrenamiento directo bajo las condiciones experimentales establecidas.
 
-\begin{table}[H]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{rlrr}
         \hline
@@ -178,3 +185,6 @@ Con ello obtenemos un sistema que maximiza la métrica \gls{MAP} mediante la com
 
 \section{Re-Ranking}
 % Pendiente de redacción.
+
+\section{Evaluación sobre Test}
+% codabench
