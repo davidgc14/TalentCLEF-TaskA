@@ -18,7 +18,14 @@ def load_run(run_path):
     Loads the run file (TREC format: q_id, Q0, doc_id, rank, score, [tag])
     and converts it to a Run object.
     """
-    run_df = pd.read_csv(run_path, sep=r"\s+", header=None)
+    # Read first line to check if it's a header
+    with open(run_path, 'r') as f:
+        first_line = f.readline().strip()
+    
+    # Check if first line is a header
+    skip_rows = 1 if first_line.startswith('q_id') else 0
+    
+    run_df = pd.read_csv(run_path, sep=r"\s+", header=None, skiprows=skip_rows)
     
     # Assign column names based on the number of columns
     if run_df.shape[1] == 5:
@@ -28,8 +35,10 @@ def load_run(run_path):
     else:
         raise ValueError("The run file does not have the expected format.")
 
-    run_df["q_id"] = run_df.q_id.astype(str)
-    run_df["doc_id"] = run_df.doc_id.astype(str)
+    run_df["q_id"] = run_df["q_id"].astype(str)
+    run_df["doc_id"] = run_df["doc_id"].astype(str)
+    run_df["score"] = run_df["score"].astype(float)  # Ensure score is float
+    
     return Run.from_df(run_df, q_id_col="q_id", doc_id_col="doc_id", score_col="score")
 
 def main():
