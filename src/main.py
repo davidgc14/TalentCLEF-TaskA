@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-from sentence_transformers import SentenceTransformer, util
+from ranx import Run, fuse
+from sentence_transformers import CrossEncoder, SentenceTransformer, util
 from pathlib import Path
 from evaluation_file import evaluate_run
 import time
@@ -31,7 +32,7 @@ else:
 
 
 # ========================
-# DATA LOADING AND ENCODING
+# DATA LOADING
 # ========================
 
 def load_data(data_dir):
@@ -50,311 +51,329 @@ def load_data(data_dir):
     )
 
 
-def encode_data(model, queries_texts, corpus_texts, model_name, device):
-    """Encode queries and corpus using the model."""
-    print('Encoding data:', model_name, 'on device:', device)
-    query_embeddings = model.encode(queries_texts, convert_to_tensor=True, show_progress_bar=True, device=device)
-    corpus_embeddings = model.encode(corpus_texts, convert_to_tensor=True, show_progress_bar=True, device=device)
-    return query_embeddings, corpus_embeddings
+# ========================
+# MODEL INFERENCE
+# ========================
 
-
-def calculate_similarities_and_format_results(query_embeddings, corpus_embeddings, queries_ids, corpus_ids, model_name):
-    """Calculate cosine similarities and format results in TREC format."""
-    print('Calculating similarities and preparing results...')
+def generate_predictions(model, queries_texts, corpus_texts, queries_ids, corpus_ids, device, model_name):
+    """
+    Generate predictions as a dictionary mapping query_id -> {doc_id: score}.
+    
+    Args:
+        model: SentenceTransformer model
+        queries_texts: List of query texts
+        corpus_texts: List of corpus texts
+        queries_ids: List of query IDs
+        corpus_ids: List of corpus document IDs
+        device: Device to run inference on
+        model_name: Name of the model for logging
+    
+    Returns:
+        Dictionary with structure {query_id: {doc_id: score, ...}, ...}
+    """
+    print(f'\n[{model_name}] Encoding queries and corpus...')
+    query_embeddings = model.encode(queries_texts, convert_to_tensor=True, 
+                                    show_progress_bar=True, device=device)
+    corpus_embeddings = model.encode(corpus_texts, convert_to_tensor=True, 
+                                     show_progress_bar=True, device=device)
+    
+    print(f'[{model_name}] Calculating similarities...')
     similarities = util.cos_sim(query_embeddings, corpus_embeddings).cpu().numpy()
     
-    results = []
+    # Build dictionary
+    predictions_dict = {}
     for q_idx, q_id in enumerate(queries_ids):
-        sorted_indices = np.argsort(-similarities[q_idx])  # Orden descendente
-        for rank, c_idx in enumerate(sorted_indices):  
-            doc_id = corpus_ids[c_idx]
-            score = similarities[q_idx, c_idx]
-            results.append(f"{str(q_id)} Q0 {str(doc_id)} {rank+1} {score:.4f} {model_name}")
+        predictions_dict[str(q_id)] = {
+            str(corpus_ids[c_idx]): float(similarities[q_idx, c_idx])
+            for c_idx in range(len(corpus_ids))
+        }
+    
+    return predictions_dict
+
+
+# ========================
+# FUSION Y RERANKING
+# ========================
+
+def logits_normalization(head, min_value, max_value=1):
+    values = [v for _, v in head]
+
+    v_min = min(values)
+    v_max = max(values)
+
+    normalized = [
+        (key, min_value + (max_value - min_value) * (value - v_min) / (v_max - v_min))
+        for key, value in head
+    ]
+
+    return normalized
+
+
+def apply_reranking_top_k(model, k, run_dict, queries_dict, corpus_dict):
+    """
+    Apply reranking to top-k documents for each query.
+    
+    Args:
+        model: CrossEncoder model
+        k: Number of top documents to rerank
+        run_dict: Dictionary {query_id: {doc_id: score}}
+        queries_dict: Dictionary {query_id: query_text}
+        corpus_dict: Dictionary {doc_id: doc_text}
+    
+    Returns:
+        Reranked dictionary with same structure
+    """
+    print(f'\nApplying reranking to top-{k} documents...')
+    reranked_run = {}
+
+    for q_id, docs_scores in run_dict.items():
+        if q_id not in queries_dict:
+            continue
+
+        query_text = queries_dict[q_id]
+
+        sorted_items = sorted(docs_scores.items(), key=lambda x: x[1], reverse=True)
+
+        head_items = sorted_items[:k]
+        tail_items = sorted_items[k:]
+
+        if not head_items:
+            reranked_run[q_id] = docs_scores
+            continue
+
+        min_similarity = head_items[-1][1]
+
+        pairs_to_predict = []
+        valid_head_ids = []
+
+        for doc_id, original_score in head_items:
+            if doc_id in corpus_dict:
+                doc_text = corpus_dict[doc_id]
+                pairs_to_predict.append([query_text, doc_text])
+                valid_head_ids.append(doc_id)
+
+        if pairs_to_predict:
+            new_scores = model.predict(
+                pairs_to_predict,
+                convert_to_numpy=True
+            )
+
+            if len(new_scores.shape) > 1:
+                new_scores = new_scores.flatten()
+
+            new_head_items = []
+            for i, doc_id in enumerate(valid_head_ids):
+                new_head_items.append((doc_id, float(new_scores[i])))
+
+            new_head_items.sort(key=lambda x: x[1], reverse=True)
+            new_head_items = logits_normalization(new_head_items, min_similarity)
+
+            final_list = new_head_items + tail_items
+            reranked_run[q_id] = dict(final_list)
+        else:
+            reranked_run[q_id] = dict(sorted_items)
+
+    return reranked_run
+
+
+def fusion_ranking(predictions_list):
+    """Combine multiple prediction dictionaries using weighted fusion."""
+    weights = [.35, .38, .27]
+
+    runs = [Run.from_dict(preds) for preds in predictions_list]
+    fused_run = fuse(
+        runs=runs,
+        method="wsum",
+        params={"weights": weights},
+        norm="min-max"
+    )
+
+    return fused_run.to_dict()
+
+
+def reranking(fused_dict, queries_dict, corpus_dict, device, top_k=5, 
+              rr_model_name='Jsevisal/CrossEncoder-ModernBERT-base-qnli'):
+    """
+    Apply cross-encoder reranking to fused results.
+    
+    Args:
+        fused_dict: Dictionary from fusion step
+        queries_dict: Dictionary {query_id: query_text}
+        corpus_dict: Dictionary {doc_id: doc_text}
+        device: Device to run the model on
+        top_k: Number of top documents to rerank per query
+        rr_model_name: Name/path of the cross-encoder model
+    
+    Returns:
+        Reranked dictionary
+    """
+    print(f'\nLoading cross-encoder model: {rr_model_name}')
+    model = CrossEncoder(
+        rr_model_name,
+        device=device,
+        trust_remote_code=True,
+        cache_dir=project_dir / 'models' / rr_model_name.split('/')[-1],
+    )
+
+    reranked_dict = apply_reranking_top_k(model, top_k, fused_dict, queries_dict, corpus_dict)
+
+    return reranked_dict
+
+# ========================
+# TREC FORMAT CONVERSION
+# ========================
+
+def dict_to_trec_format(predictions_dict, run_name):
+    """
+    Convert predictions dictionary to TREC format.
+    
+    Args:
+        predictions_dict: Dictionary with structure {query_id: {doc_id: score, ...}, ...}
+        run_name: Name/tag for the run
+    
+    Returns:
+        List of strings in TREC format
+    """
+    print('\nConverting to TREC format...')
+    results = ["q_id Q0 doc_id rank score tag"]
+    
+    for q_id, doc_scores in predictions_dict.items():
+        # Sort documents by score (descending)
+        sorted_docs = sorted(doc_scores.items(), key=lambda x: x[1], reverse=True)
+        
+        for rank, (doc_id, score) in enumerate(sorted_docs, start=1):
+            results.append(f"{q_id} Q0 {doc_id} {rank} {score:.4f} {run_name}")
+    
     return results
 
 
 def write_run_file(results, run_file):
     """Write results to TREC format file."""
-    print('Writing results to:', run_file.name)
+    print('Writing results to:', run_file)
     with open(run_file, "w", encoding="utf-8") as f:
         f.write("\n".join(results))
 
 
-def run_evaluation(qrels_path, run_file):
-    """Run the evaluation script and return results as dict."""
-    print('Evaluating with evaluation_file.py...')
-    results = evaluate_run(qrels_path, run_file)
-    return results
-
-
-def get_model_name(model):
-    """Extract model name from the model object."""
-    model_name = model[0].auto_model.config._name_or_path 
-    return model_name.split("/")[-1]
-
-
 # ========================
-# EVALUATION FUNCTIONS
-# ========================
-
-def multilingual_evaluation(lang, model, device, source):
-    """Evaluate model performance on multilingual data."""
-    data_dir = project_dir / 'data' / source / lang_dict[lang]
-    qrels_path = data_dir / "qrels.tsv"
-    
-    print('Loading data for language:', lang)
-    queries_ids, queries_texts, corpus_ids, corpus_texts = load_data(data_dir)
-    model_name = get_model_name(model)
-    
-    query_embeddings, corpus_embeddings = encode_data(model, queries_texts, corpus_texts, model_name, device)
-    results = calculate_similarities_and_format_results(query_embeddings, corpus_embeddings, queries_ids, corpus_ids, model_name)
-    
-    run_file = output_dir / f"run_{lang}-{lang}_{model_name}.trec"
-    write_run_file(results, run_file)
-    
-    evaluation_results = run_evaluation(qrels_path, run_file)
-    print('Evaluation completed for language:', lang)
-    return evaluation_results
-
-
-def crosslingual_evaluation(lang, main_lang, model, device, source):
-    """Evaluate model performance on cross-lingual data."""
-    data_dir_main = project_dir / 'data' / source / lang_dict[main_lang]
-    data_dir_target = project_dir / 'data' / source / lang_dict[lang]
-    
-    print('Loading data for crosslingual evaluation:', main_lang, '->', lang)
-    
-    # Load queries from main language
-    queries = pd.read_csv(data_dir_main / "queries", sep="\t")
-    queries_ids = queries.q_id.to_list()
-    queries_texts = queries.jobtitle.to_list()
-    
-    # Load corpus from target language
-    corpus_elements = pd.read_csv(data_dir_target / "corpus_elements", sep="\t")
-    corpus_ids = corpus_elements.c_id.to_list()
-    corpus_texts = corpus_elements.jobtitle.to_list()
-    
-    model_name = get_model_name(model)
-    query_embeddings, corpus_embeddings = encode_data(model, queries_texts, corpus_texts, model_name, device)
-    results = calculate_similarities_and_format_results(query_embeddings, corpus_embeddings, queries_ids, corpus_ids, model_name)
-    
-    run_file = output_dir / f"run_{main_lang}-{lang}_{model_name}.trec"
-    write_run_file(results, run_file)
-    
-    print('Still not able to evaluate crosslingual runs. Skipping evaluation step.')
-    return {m: np.nan for m in ["map", "mrr", "ndcg", "precision@5", "precision@10", "precision@100"]}
-
-
-# ========================
-# SAVING RESULTS
-# ========================
-
-def save_multilingual_results(multilingual_results, model_name, nickname, source):
-    """Save multilingual evaluation results to a structured JSON file."""
-    print("multilingual evaluations completed. Saving results...")
-
-    json_path = output_dir / "results_multilingual.json"
-
-    results_data = {
-        "metadata": {
-            "type": "multilingual",
-            "model_name": model_name,
-            "nickname": nickname,
-            "source": source,
-            "timestamp": today
-        },
-        "results": multilingual_results
-    }
-
-    with open(json_path, "w", encoding="utf-8") as jf:
-        json.dump(results_data, jf, indent=2, ensure_ascii=False)
-
-    print(f"Saved multilingual results to {json_path}")
-
-
-def save_crosslingual_results(crosslingual_results, model_name, nickname, source):
-    """Save crosslingual evaluation results to a structured JSON file."""
-    print("crosslingual evaluations completed. Saving results...")
-
-    json_path = output_dir / "results_crosslingual.json"
-
-    results_data = {
-        "metadata": {
-            "type": "crosslingual",
-            "model_name": model_name,
-            "nickname": nickname,
-            "source": source,
-            "timestamp": today
-        },
-        "results": crosslingual_results
-    }
-
-    with open(json_path, "w", encoding="utf-8") as jf:
-        json.dump(results_data, jf, indent=2, ensure_ascii=False)
-
-    print(f"Saved crosslingual results to {json_path}")
-
-
-
-
-
-
-# ========================
-# RANKING
-# ========================
-
-def update_ranking(multilingual_results, crosslingual_results, model_name, nickname, source):
-    """Update ranking CSV file with current execution results."""
-    print("Updating ranking file...")
-    
-    ranking_file = project_dir / 'src' / 'output' / f"ranking_{source}.csv"
-    execution_id = output_dir.name
-    
-    new_record = {
-        'timestamp': today,
-        'execution_id': execution_id,
-        'model_name': model_name,
-        'model_alias': nickname,
-    }
-    
-    # MAP
-    for lang in ['en', 'es', 'de', 'zh']:
-        if lang in multilingual_results:
-            new_record[f'map_{lang}_{lang}'] = multilingual_results[lang].get('map', np.nan)
-        else:
-            new_record[f'map_{lang}_{lang}'] = np.nan
-
-    for key in crosslingual_results:
-        lang_pair = key.replace('-', '_')
-        new_record[f'map_{lang_pair}'] = crosslingual_results[key].get('map', np.nan)
-    
-    # avg_map - solo casos monolingües en, es, de (todos deben estar presentes)
-    map_values = [
-        new_record.get('map_en_en', np.nan),
-        new_record.get('map_es_es', np.nan),
-        new_record.get('map_de_de', np.nan)
-    ]
-    if any(np.isnan(v) for v in map_values):
-        new_record['avg_map'] = np.nan
-    else:
-        new_record['avg_map'] = sum(map_values) / len(map_values)
-    
-
-    if ranking_file.exists():
-        df = pd.read_csv(ranking_file)
-    else:
-        df = pd.DataFrame(columns=[
-            'timestamp', 'execution_id', 'model_name', 'model_alias', 'avg_map',
-            'map_en_en', 'map_es_es', 'map_de_de', 'map_zh_zh',
-            'map_en_es', 'map_en_de', 'map_en_zh'
-        ])
-    
-    # Double check for existing identical record
-    comparison_cols = ['model_name', 'model_alias', 'avg_map',
-                       'map_en_en', 'map_es_es', 'map_de_de', 'map_zh_zh',
-                       'map_en_es', 'map_en_de', 'map_en_zh']
-    
-    if not df.empty:
-        # Solo comparar las keys que existen en new_record
-        new_record_comparison = {k: new_record.get(k, np.nan) for k in comparison_cols}
-        existing_records = df[comparison_cols].to_dict('records')
-        
-        for existing in existing_records:
-            if all(abs(existing.get(k, np.nan) - new_record_comparison.get(k, np.nan)) < 1e-6 
-                   if isinstance(new_record_comparison.get(k), (float, int)) and not np.isnan(new_record_comparison.get(k, np.nan))
-                   else existing.get(k) == new_record_comparison.get(k) 
-                   for k in comparison_cols):
-                print("Ya existe un registro idéntico en el ranking. No se agregará el nuevo registro.")
-                return
-    
-
-    df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
-    df = df.sort_values('avg_map', ascending=False).reset_index(drop=True)
-    df.to_csv(ranking_file, index=False)
-    
-    print(f"Ranking actualizado en {ranking_file}")
-    
-
-
-# ========================
-# EVALUATION PIPELINES
-# ========================
-
-def all_lang_evaluation(model_name, nickname, main_lang, device, source):
-    """Run complete evaluation pipeline for all languages."""
-    model = SentenceTransformer(model_name, device=device)
-
-    multilingual_results = {
-        lang: multilingual_evaluation(lang, model, device, source)
-        for lang in lang_dict.keys()
-    }
-    save_multilingual_results(multilingual_results, model_name, nickname, source)
-
-    crosslingual_results = {
-        f"{main_lang}-{lang}": crosslingual_evaluation(lang, main_lang, model, device, source)
-        for lang in lang_dict.keys() if lang != main_lang
-    }
-    save_crosslingual_results(crosslingual_results, model_name, nickname, source)
-
-    update_ranking(multilingual_results, crosslingual_results, model_name, nickname, source)
-
-
-
-def run_multilingual_only(model_name, nickname, device, source):
-    model = SentenceTransformer(model_name, device=device)
-    multilingual_results = {
-        lang: multilingual_evaluation(lang, model, device, source)
-        for lang in lang_dict.keys()
-    }
-    save_multilingual_results(multilingual_results, model_name, nickname, source)
-    
-    crosslingual_results = {}
-    update_ranking(multilingual_results, crosslingual_results, model_name, nickname, source)
-
-
-
-def run_crosslingual_only(model_name, nickname, main_lang, device, source):
-    model = SentenceTransformer(model_name, device=device)
-    crosslingual_results = {
-        f"{main_lang}-{lang}": crosslingual_evaluation(lang, main_lang, model, device, source)
-        for lang in lang_dict.keys() if lang != main_lang
-    }
-    save_crosslingual_results(crosslingual_results, model_name, nickname, source)
-
-    multilingual_results = {}
-    update_ranking(multilingual_results, crosslingual_results, model_name, nickname, source)
-
-
-
-# ========================
-# MAIN
+# MAIN PIPELINE
 # ========================
 
 def main():
+    start_time = time.time()
+
     import argparse
-    parser = argparse.ArgumentParser(description='Evaluate sentence transformer models on crosslingual job title matching')
-    parser.add_argument('--model', type=str, default='paraphrase-multilingual-MiniLM-L12-v2',
-                        help='Model name from HuggingFace or local path')
+    parser = argparse.ArgumentParser(description='Evaluate ensemble of models on TalentCLEF task')
+    parser.add_argument('--model1', type=str, default='models/finetuned models/bilingual-embedding-large',
+                        help='Path to first model')
+    parser.add_argument('--model2', type=str, default='models/finetuned models/multilingual-e5-large-instruct',
+                        help='Path to second model')
+    parser.add_argument('--model3', type=str, default='models/finetuned models/gte-multilingual-base',
+                        help='Path to third model')
     parser.add_argument('--source', type=str, default='validation', choices=['validation', 'test'],
-                        help='Dataset source to use for evaluation')
-    parser.add_argument('--nickname', type=str, default='default', help='Alias for the model in results')
-    parser.add_argument('--main-lang', type=str, default='en', choices=['en', 'es', 'de', 'zh'],
-                        help='Main language for crosslingual evaluation')
+                        help='Dataset source to use')
+    parser.add_argument('--lang', type=str, default='es', choices=['en', 'es', 'de', 'zh'],
+                        help='Language to evaluate')
     parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'],
-                        help='Device to run the model on')
-    parser.add_argument('--mono-only', action='store_true', help='Run only multilingual evaluations')
-    parser.add_argument('--multi-only', action='store_true', help='Run only crosslingual evaluations')
+                        help='Device to run the models on')
+    parser.add_argument('--run-name', type=str, default='ensemble',
+                        help='Name for the ensemble run')
+    parser.add_argument('--top-k', type=int, default=5,
+                        help='Number of top documents to rerank')
+    parser.add_argument('--skip-reranking', action='store_true',
+                        help='Skip reranking step')
     args = parser.parse_args()
 
-    if args.mono_only and args.multi_only:
-        parser.error("Cannot use --mono-only and --multi-only together")
-
-    if args.mono_only:
-        run_multilingual_only(args.model, args.nickname, args.device, args.source)
-    elif args.multi_only:
-        run_crosslingual_only(args.model, args.nickname, args.main_lang, args.device, args.source)
+    model_paths = [args.model1, args.model2, args.model3]
+    
+    # Load data
+    data_dir = project_dir / 'data' / args.source / lang_dict[args.lang]
+    print(f'Loading data from {data_dir}...')
+    queries_ids, queries_texts, corpus_ids, corpus_texts = load_data(data_dir)
+    
+    # Create dictionaries for reranking
+    queries_dict = {str(q_id): q_text for q_id, q_text in zip(queries_ids, queries_texts)}
+    corpus_dict = {str(c_id): c_text for c_id, c_text in zip(corpus_ids, corpus_texts)}
+    
+    # Generate predictions for each model
+    predictions_list = []
+    
+    for i, model_path in enumerate(model_paths, 1):
+        print(f'\n{"="*60}')
+        print(f'Processing Model {i}/{len(model_paths)}: {model_path}')
+        print(f'{"="*60}')
+        
+        # Load model
+        print(f'Loading model from {model_path}...')
+        model = SentenceTransformer(model_path, device=args.device, cache_folder=model_path, trust_remote_code=True)
+        model_name = Path(model_path).stem
+        
+        # Generate predictions
+        predictions_dict = generate_predictions(
+            model, queries_texts, corpus_texts, 
+            queries_ids, corpus_ids, args.device, model_name
+        )
+        
+        predictions_list.append(predictions_dict)
+        
+        # Free memory
+        del model
+    
+    print(f'\n{"="*60}')
+    print(f'All {len(predictions_list)} models processed')
+    print(f'{"="*60}')
+    
+    # Fusion
+    print('\nApplying fusion...')
+    fused_dict = fusion_ranking(predictions_list)
+    
+    # Reranking (optional)
+    if args.skip_reranking:
+        print('\nSkipping reranking step (--skip-reranking flag set)')
+        final_dict = fused_dict
     else:
-        all_lang_evaluation(args.model, args.nickname, args.main_lang, args.device, args.source)
+        print('\nApplying Reranking...')
+        final_dict = reranking(fused_dict, queries_dict, corpus_dict, 
+                              args.device, top_k=args.top_k)
+    
+    # Convert to TREC format
+    trec_results = dict_to_trec_format(final_dict, args.run_name)
+    
+    # Write run file
+    run_file = output_dir / f"run_{args.lang}-{args.lang}_{args.run_name}.trec"
+    write_run_file(trec_results, run_file)
+    
+    # Evaluate if source is validation
+    if args.source == 'validation':
+        qrels_path = data_dir / "qrels.tsv"
+        print(f'\nEvaluating against qrels: {qrels_path}')
+        evaluation_results = evaluate_run(qrels_path, run_file)
+        
+        print("\n=== Evaluation Results ===")
+        for metric, score in evaluation_results.items():
+            print(f"{metric}: {score:.4f}")
+        
+        # Save evaluation results
+        results_file = output_dir / f"results_{args.lang}_{args.run_name}.json"
+        with open(results_file, "w", encoding="utf-8") as f:
+            json.dump({
+                'models': model_paths,
+                'run_name': args.run_name,
+                'lang': args.lang,
+                'source': args.source,
+                'reranking': not args.skip_reranking,
+                'top_k': args.top_k if not args.skip_reranking else None,
+                'timestamp': today,
+                'metrics': evaluation_results
+            }, f, indent=2)
+        print(f'\nResults saved to {results_file}')
+    else:
+        print('\nSource is "test" - skipping evaluation (no qrels available)')
+    
+    print(f'\nRun file saved to: {run_file}')
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f'\nTotal execution time: {elapsed_time/60:.2f} minutes')
 
 
 if __name__ == "__main__":
