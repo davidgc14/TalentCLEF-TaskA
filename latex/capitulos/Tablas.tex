@@ -368,3 +368,117 @@
     \caption{Muestra de los 75 mejores modelos extraídos del repositorio MTEB, ordenados por media de resultados obtenidos en los benchmarks asociados a la tarea de Retrieval.}
     \label{tab:resultados_completos_modelos_mteb_retrieval}
 \end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{table}[H]
+    \tiny
+    \centering
+    \begin{tabular}{lrrrrr}
+        \hline
+        Model Name                                                             & Size       & k=10   & k=25   & k=50   & k=100  \\
+        \hline
+        cross-encoder/ms-marco-TinyBERT-L2-v2                                  & 4386561    & 0.4935 & 0.4781 & 0.4506 & 0.4104 \\
+        cross-encoder/ms-marco-TinyBERT-L2                                     & 4386561    & 0.5064 & 0.4935 & 0.4687 & 0.4238 \\
+        cross-encoder/stsb-TinyBERT-L4                                         & 14351073   & 0.4964 & 0.4844 & 0.4628 & 0.4197 \\
+        cross-encoder/ms-marco-TinyBERT-L4                                     & 14351073   & 0.4962 & 0.4790 & 0.4495 & 0.4067 \\
+        cross-encoder/ms-marco-MiniLM-L2-v2                                    & 15616257   & 0.4930 & 0.4748 & 0.4479 & 0.4070 \\
+        cross-encoder/ms-marco-MiniLM-L4-v2                                    & 19165185   & 0.4962 & 0.4810 & 0.4582 & 0.4179 \\
+        hutuhehe/finretriever-cross-reranker                                   & 22713601   & 0.4916 & 0.4735 & 0.4435 & 0.3962 \\
+        Adarsh921/cross-encoder                                                & 22713601   & 0.5043 & 0.4906 & 0.4672 & 0.4279 \\
+        cross-encoder/ms-marco-MiniLM-L6-v2                                    & 22714113   & 0.5043 & 0.4906 & 0.4672 & 0.4279 \\
+        denis-gordeev/reranker\_dialog\_items\_crossencoder\_rubert-tiny-turbo & 29194081   & 0.5033 & 0.4391 & 0.3652 & 0.2623 \\
+        jinaai/jina-reranker-v1-tiny-en                                        & 33046273   & 0.4961 & 0.4808 & 0.4513 & 0.4089 \\
+        Pongsasit/mod-th-cross-encoder-minilm                                  & 33360385   & 0.5031 & 0.4813 & 0.4486 & 0.4012 \\
+        cross-encoder/ms-marco-MiniLM-L12-v2                                   & 33360897   & 0.4950 & 0.4803 & 0.4588 & 0.4202 \\
+        jinaai/jina-reranker-v1-turbo-en                                       & 37771777   & 0.4924 & 0.4747 & 0.4448 & 0.4017 \\
+        cross-encoder/ms-marco-TinyBERT-L6                                     & 66956289   & 0.4940 & 0.4786 & 0.4495 & 0.4102 \\
+        inthedarkness/klue-roberta-small-cross-encoder                         & 68091649   & 0.5026 & 0.4379 & 0.3526 & 0.2471 \\
+        mixedbread-ai/mxbai-rerank-xsmall-v1                                   & 70830337   & 0.4929 & 0.4685 & 0.4327 & 0.3773 \\
+        PotatoOff/mxbai-rerank-xsmall-v1-safetensors                           & 70830337   & 0.4929 & 0.4685 & 0.4327 & 0.3773 \\
+        Pongsasit/mod-th-cross-encoder                                         & 82119169   & 0.4916 & 0.4657 & 0.4321 & 0.3833 \\
+        cross-encoder/stsb-distilroberta-base                                  & 82119683   & 0.4936 & 0.4791 & 0.4565 & 0.4191 \\
+        cross-encoder/qnli-distilroberta-base                                  & 82119683   & 0.5341 & 0.4848 & 0.4212 & 0.3472 \\
+        cross-encoder/quora-distilroberta-base                                 & 82119683   & 0.4959 & 0.4789 & 0.4455 & 0.3873 \\
+        Turbo-AI/jina-reranker-v0-base-multilingual\_\_trimm\_vocab            & 99074305   & 0.4955 & 0.4806 & 0.4573 & 0.4222 \\
+        Turbo-AI/jina-reranker-v2-base-multilingual\_\_trim\_vocab             & 99074305   & 0.5063 & 0.4949 & 0.4760 & 0.4447 \\
+        cross-encoder/msmarco-MiniLM-L6-en-de-v1                               & 107007873  & 0.5092 & 0.4880 & 0.4493 & 0.3909 \\
+        compnet-renard/bert-base-cased-NER-reranker                            & 108312322  & 0.5323 & 0.4648 & 0.3852 & 0.2760 \\
+        cross-encoder/qnli-electra-base                                        & 109483521  & 0.5051 & 0.4306 & 0.3483 & 0.2447 \\
+        cross-encoder/ms-marco-electra-base                                    & 109483521  & 0.4958 & 0.4800 & 0.4493 & 0.4048 \\
+        cross-encoder/mmarco-mMiniLMv2-L12-H384-v1                             & 117641603  & 0.5296 & 0.5149 & 0.4892 & 0.4480 \\
+        cross-encoder/msmarco-MiniLM-L12-en-de-v1                              & 117654657  & 0.5106 & 0.4945 & 0.4685 & 0.4261 \\
+        NetherlandsForensicInstitute/robbert-2023-dutch-base-cross-encoder     & 124442881  & 0.4974 & 0.4801 & 0.4528 & 0.4045 \\
+        sdadas/polish-reranker-base-ranknet                                    & 124443649  & 0.5042 & 0.4892 & 0.4676 & 0.4266 \\
+        sdadas/polish-reranker-base-mse                                        & 124443649  & 0.5150 & 0.4997 & 0.4737 & 0.4266 \\
+        cross-encoder/quora-roberta-base                                       & 124646915  & 0.4942 & 0.4755 & 0.4459 & 0.3971 \\
+        cross-encoder/stsb-roberta-base                                        & 124646915  & 0.4972 & 0.4842 & 0.4684 & 0.4351 \\
+        NAMAA-Space/GATE-Reranker-V1                                           & 135194113  & 0.4983 & 0.4691 & 0.4179 & 0.3517 \\
+        NAMAA-Space/Namaa-Reranker-v1                                          & 135194113  & 0.4974 & 0.4684 & 0.4138 & 0.3506 \\
+        sdiazlor/modernbert-embed-base-crossencoder-human-rights               & 149605633  & 0.4848 & 0.4044 & 0.3124 & 0.1992 \\
+        Alibaba-NLP/gte-reranker-modernbert-base                               & 149605633  & 0.5038 & 0.4856 & 0.4569 & 0.4116 \\
+        ibm-granite/granite-embedding-reranker-english-r2                      & 149605633  & 0.4941 & 0.4820 & 0.4603 & 0.4283 \\
+        Jsevisal/CrossEncoder-ModernBERT-base-qnli                             & 149606402  & 0.5340 & 0.4818 & 0.4025 & 0.3081 \\
+        malaysia-ai/malaysian-llm2vec-reranker-191M-16384                      & 166160640  & 0.5283 & 0.4751 & 0.3912 & 0.2942 \\
+        DiTy/cross-encoder-russian-msmarco                                     & 177854209  & 0.5117 & 0.4963 & 0.4650 & 0.4132 \\
+        mixedbread-ai/mxbai-rerank-base-v1                                     & 184422913  & 0.4983 & 0.4807 & 0.4532 & 0.4042 \\
+        jinaai/jina-reranker-v2-base-multilingual                              & 278437633  & 0.4965 & 0.4818 & 0.4623 & 0.4310 \\
+        Alibaba-NLP/gte-multilingual-reranker-base                             & 305959681  & 0.4998 & 0.4792 & 0.4588 & 0.4306 \\
+        ByteDance/ListConRanker                                                & 325522432  & 0.4957 & 0.4796 & 0.4556 & 0.3970 \\
+        cross-encoder/quora-roberta-large                                      & 355361283  & 0.4967 & 0.4826 & 0.4557 & 0.4122 \\
+        cross-encoder/stsb-roberta-large                                       & 355361283  & 0.4965 & 0.4841 & 0.4671 & 0.4370 \\
+        qilowoq/bge-reranker-v2-m3-en-ru                                       & 374930433  & 0.4920 & 0.4684 & 0.4387 & 0.4002 \\
+        sdadas/polish-reranker-large-ranknet                                   & 434962433  & 0.5006 & 0.4882 & 0.4650 & 0.4215 \\
+        radlab/polish-cross-encoder                                            & 434962433  & 0.4947 & 0.4767 & 0.4491 & 0.4040 \\
+        sdadas/polish-reranker-roberta-v2                                      & 434962433  & 0.5008 & 0.4908 & 0.4700 & 0.4332 \\
+        sdadas/polish-reranker-large-mse                                       & 434962433  & 0.5148 & 0.5021 & 0.4750 & 0.4314 \\
+        mixedbread-ai/mxbai-rerank-large-v1                                    & 435062785  & 0.5070 & 0.4848 & 0.4596 & 0.4209 \\
+        GbrlOl/finetune-mxbai-cross-encoder-geotechnical-test-v5               & 435062785  & 0.5043 & 0.4827 & 0.4530 & 0.4073 \\
+        vicky4s4s/embedding-v1                                                 & 435062785  & 0.5070 & 0.4848 & 0.4596 & 0.4209 \\
+        sdadas/polish-reranker-roberta-v3                                      & 442891265  & 0.5052 & 0.4948 & 0.4736 & 0.4366 \\
+        michaelfeil/mxbai-rerank-base-v2-seq                                   & 494034560  & 0.5220 & 0.4756 & 0.3943 & 0.2982 \\
+        upskyy/ko-reranker                                                     & 559891457  & 0.4943 & 0.4756 & 0.4479 & 0.4156 \\
+        netandreus/bge-reranker-v2-m3                                          & 567755777  & 0.4922 & 0.4676 & 0.4379 & 0.4003 \\
+        NAMAA-Space/Namaa-ARA-Reranker-V1                                      & 567755777  & 0.4871 & 0.4474 & 0.4004 & 0.3435 \\
+        sdadas/polish-reranker-bge-v2                                          & 567755777  & 0.4922 & 0.4683 & 0.4414 & 0.4059 \\
+        upskyy/ko-reranker-8k                                                  & 567755777  & 0.4915 & 0.4715 & 0.4437 & 0.4072 \\
+        Omartificial-Intelligence-Space/ARA-Reranker-V1                        & 567755777  & 0.4871 & 0.4474 & 0.4004 & 0.3435 \\
+        kamilkaczmarek97/polish-reranker-prod                                  & 567755777  & 0.4922 & 0.4683 & 0.4414 & 0.4059 \\
+        noooop9527/Qwen3-Reranker-0.6B-seq-cls-STv6                            & 595777536  & 0.5190 & 0.4543 & 0.3628 & 0.2667 \\
+        XingTuLab/BinSeek-Reranker                                             & 595777536  & 0.5083 & 0.4542 & 0.3854 & 0.2943 \\
+        tomaarsen/Qwen3-Reranker-0.6B-seq-cls                                  & 595777536  & 0.5190 & 0.4543 & 0.3628 & 0.2667 \\
+        openbmb/MiniCPM-Reranker-Light                                         & 1360247808 & 0.5008 & 0.4695 & 0.4198 & 0.3392 \\
+        AhmedMostafa/bge-reranker-v2-gemma-saudi-achi10                        & 2506176512 & 0.5198 & 0.4497 & 0.3583 & 0.2607 \\
+        tomaarsen/Qwen3-Reranker-4B-seq-cls                                    & 4021787136 & 0.5109 & 0.4453 & 0.4368 & 0.3607 \\
+        \hline
+    \end{tabular}
+    \caption{Resultados completos de los modelos de reranking evaluados sobre la métrica \gls{MAP} para distintos órdenes de reordenación.}
+    \label{tab:cross_encoder_results}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{table}[H]
+    \tiny
+    \centering
+    \begin{tabular}{lrrrrr}
+        \hline
+        Model Name                                        & k=5      & k=10     & k=15     & k=20     & k=25     \\
+        \hline
+        cross-encoder/qnli-distilroberta-base             & 0.537850 & 0.534084 & 0.517852 & 0.499150 & 0.484769 \\
+        Jsevisal/CrossEncoder-ModernBERT-base-qnli        & 0.541862 & 0.533972 & 0.515450 & 0.496327 & 0.481821 \\
+        compnet-renard/bert-base-cased-NER-reranker       & 0.539573 & 0.532343 & 0.505345 & 0.484331 & 0.464817 \\
+        cross-encoder/mmarco-mMiniLMv2-L12-H384-v1        & 0.529290 & 0.529559 & 0.521539 & 0.518483 & 0.514911 \\
+        malaysia-ai/malaysian-llm2vec-reranker-191M-16384 & 0.537819 & 0.528334 & 0.509493 & 0.490568 & 0.475086 \\
+        michaelfeil/mxbai-rerank-base-v2-seq              & 0.531293 & 0.521993 & 0.505255 & 0.488043 & 0.475593 \\
+        AhmedMostafa/bge-reranker-v2-gemma-saudi-achi10   & 0.534460 & 0.519805 & 0.494083 & 0.468784 & 0.449699 \\
+        noooop9527/Qwen3-Reranker-0.6B-seq-cls-STv6       & 0.522598 & 0.519043 & 0.495333 & 0.473498 & 0.454282 \\
+        tomaarsen/Qwen3-Reranker-0.6B-seq-cls             & 0.522598 & 0.519043 & 0.495333 & 0.473498 & 0.454282 \\
+        sdadas/polish-reranker-base-mse                   & 0.517989 & 0.515049 & 0.509071 & 0.503298 & 0.499746 \\
+        \hline
+    \end{tabular}
+    \caption{Resultados completos de los 10 mejores modelos de reranking evaluados sobre la métrica \gls{MAP} para distintos órdenes de reordenación.}
+    \label{tab:cross_encoder_top10}
+\end{table}
