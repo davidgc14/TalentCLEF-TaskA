@@ -184,7 +184,67 @@ Basándonos en los resultados expuestos, a pesar de que todas ellas han mejoread
 Con ello obtenemos un sistema que maximiza la métrica \gls{MAP} mediante la combinación ponderada de las fortalezas individuales de los modelos base.
 
 \section{Re-Ranking}
-% Pendiente de redacción.
+
+Procedemos a continuación con la fase final de re-ranking, cuyo objetivo es refinar aún más el ordenamiento de los mejores candidatos recuperados para cada consulta. Para ello, es necesario seleccionar un modelo cross-encoder adecuado que permita evaluar la relevancia de los pares $(q, d)$ de manera más precisa.
+
+Se obtuvo una lista de 90 modelos cross-encoder multilingües desde la plataforma Hugging Face, de los cuales se pudieron evaluar 72 dentro de las restricciones de compatibilidad y recursos del entorno. Se evaluó la capacidad de estos modelos mediante la reordenación de los 10, 25, 50 y 100 mejores candidatos generados por el sistema de fusión \gls{WSum} previamente descrito\footnote{Una tabla completa con los resultados de esta evaluación se puede consultar en la Tabla \ref{tab:cross_encoder_results} del Apéndice \ref{ch:Tablas}.}. Las Figuras \ref{fig:distribucion_reranking_global} y \ref{fig:boxplot_reranking_global} muestran la distribución de los resultados obtenidos en términos de \gls{MAP} para los distintos tamaños de listas reordenadas.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{imagenes/reranking/distribucion.png}
+    \caption{Distribución de los resultados \gls{MAP} obtenidos tras el re-ranking con distintos tamaños de listas.}
+    \label{fig:distribucion_reranking_global}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{imagenes/reranking/boxplot.png}
+    \caption{Boxplot de los resultados \gls{MAP} obtenidos tras el re-ranking con distintos tamaños de listas.}
+    \label{fig:boxplot_reranking_global}
+\end{figure}
+
+Se puede observar que, frente a la asíntota marcada por los resultados obtenidos en la fase de fusión, los que han conseguido superar este han sido los modelos en la reordenación de las 10 y 25 mejores candidaturas. Por ello, tratando de buscar el valor óptimo de mejora, se seleccionaron los 10 mejores modelos en esta primera fase para realizar un análisis más detallado de su comportamiento. La Figura \ref{fig:boxplot_reranking_top10} muestra la distribución de los resultados obtenidos por estos modelos en función del tamaño de la lista reordenada. De forma individualizada también se puede observar en la Figura \ref{fig:top10_reranking_individual} la degradación del rendimiento al aumentar el tamaño de la lista a reordenar\footnote{Los datos numéricos pueden ser consultados en la Tabla \ref{tab:cross_encoder_top10}.}. 
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{imagenes/reranking/boxplot_top10.png}
+    \caption{Boxplot de los resultados \gls{MAP} obtenidos por los 10 mejores modelos tras el re-ranking con distintos tamaños de listas.}
+    \label{fig:boxplot_reranking_top10}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{imagenes/reranking/degradation_top10.png}
+    \caption{Rendimiento \gls{MAP} individual de los 10 mejores modelos tras el re-ranking con distintos tamaños de listas.}
+    \label{fig:top10_reranking_individual}
+\end{figure}
+
+Con la perspectiva de maximizar el rendimiento del sistema, se seleccionó el modelo \textit{Jsevisal/CrossEncoder-ModernBERT-base-qnli} para la fase final de re-ranking, ya que fue el que obtuvo el mejor desempeño al reordenar las 5 mejores candidaturas, alcanzando un \gls{MAP} de \textbf{0.541862}. Este resultado representa una mejora significativa respecto al mejor desempeño previo obtenido en la fase de fusión de rankings, mejorando su resultado en más de 4 puntos porcentuales.
+
 
 \section{Evaluación sobre Test}
-% codabench
+
+Finalmente, se procedió a evaluar el sistema completo, incluyendo todas las fases descritas, sobre el conjunto de datos de prueba. Para ello, el ranking producido por el sistema, compuesto por la fusión \gls{WSum} de los tres mejores modelos ajustados y el re-ranking mediante el modelo \textit{Jsevisal/CrossEncoder-ModernBERT-base-qnli}, fue enviado al sistema de evaluación sobre test de Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}} alcanzando un \gls{MAP} de \textbf{??}. 
+
+Este resultado, considerándolo como resultado final de la propuesta presentada en este trabajo, se posiciona en el \textbf{??}º puesto de la clasificación general de la \gls{Tarea}\footnote{Datos tomados a fecha 30 de Enero de 2026.}, para el caso monolingüe de español. Se observa en la Tabla \ref{tab:final_results_test} el ranking final proporcionado por la plataforma de evaluación.
+
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|l|c|}
+        \hline
+        \textbf{Posición} & \textbf{Participante} & \textbf{MAP (es-es)} \\ \hline
+        1                 & ranabarakat           & 0.527                \\ \hline
+        2                 & omokhtar              & 0.522                \\ \hline
+        3                 & ranabarakat           & 0.522                \\ \hline
+        4                 & ranabarakat           & 0.521                \\ \hline
+        5                 & jensjoris             & 0.519                \\ \hline
+        6                 & omokhtar              & 0.516                \\ \hline
+        7                 & pjmathematician       & 0.507                \\ \hline
+        8                 & NLPnorth              & 0.496                \\ \hline
+        9                 & pjmathematician       & 0.479                \\ \hline
+        ??                & \textbf{Propuesta}    & \textbf{??}          \\ \hline
+    \end{tabular}
+    \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} por parte de todos los participantes, inlcuida la propuesta aquí planteada.}
+    \label{tab:final_results_test}
+\end{table}
