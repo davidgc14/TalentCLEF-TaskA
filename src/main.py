@@ -225,7 +225,7 @@ def reranking(fused_dict, queries_dict, corpus_dict, device, top_k=5,
 
 def dict_to_trec_format(predictions_dict, run_name):
     """
-    Convert predictions dictionary to TREC format.
+    Convert predictions dictionary to TREC format (strict format).
     
     Args:
         predictions_dict: Dictionary with structure {query_id: {doc_id: score, ...}, ...}
@@ -235,14 +235,25 @@ def dict_to_trec_format(predictions_dict, run_name):
         List of strings in TREC format
     """
     print('\nConverting to TREC format...')
-    results = ["q_id Q0 doc_id rank score tag"]
+    results = []
     
     for q_id, doc_scores in predictions_dict.items():
+        # Ensure q_id is string and clean
+        q_id_str = str(q_id).strip()
+        
         # Sort documents by score (descending)
         sorted_docs = sorted(doc_scores.items(), key=lambda x: x[1], reverse=True)
         
         for rank, (doc_id, score) in enumerate(sorted_docs, start=1):
-            results.append(f"{q_id} Q0 {doc_id} {rank} {score:.4f} {run_name}")
+            # Ensure doc_id is string and clean
+            doc_id_str = str(doc_id).strip()
+            
+            # Ensure score is float
+            score_float = float(score)
+            
+            # TREC format: q_id Q0 doc_id rank score tag
+            # Sin espacios extra, con formato estricto
+            results.append(f"{q_id_str} Q0 {doc_id_str} {rank} {score_float:.4f} {run_name}")
     
     return results
 
@@ -339,7 +350,7 @@ def main():
     trec_results = dict_to_trec_format(final_dict, args.run_name)
     
     # Write run file
-    run_file = output_dir / f"run_{args.lang}-{args.lang}_uned-tfm-{args.source}.trec"
+    run_file = output_dir / f"run_{args.lang}-{args.lang}.trec"
     write_run_file(trec_results, run_file)
     
     # Evaluate if source is validation
