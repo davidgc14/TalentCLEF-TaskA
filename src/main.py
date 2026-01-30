@@ -6,6 +6,11 @@ from pathlib import Path
 from evaluation_file import evaluate_run
 import time
 import json
+import warnings
+from numba.core.errors import NumbaTypeSafetyWarning
+
+# Suprimir warnings de Numba
+warnings.filterwarnings('ignore', category=NumbaTypeSafetyWarning)
 
 
 lang_dict = {
@@ -212,7 +217,7 @@ def reranking(fused_dict, queries_dict, corpus_dict, device, top_k=5,
         rr_model_name,
         device=device,
         trust_remote_code=True,
-        cache_dir=project_dir / 'models' / rr_model_name.split('/')[-1],
+        cache_folder=project_dir / 'models' / rr_model_name.split('/')[-1],
     )
 
     reranked_dict = apply_reranking_top_k(model, top_k, fused_dict, queries_dict, corpus_dict)
@@ -280,8 +285,9 @@ def main():
                         help='Path to second model')
     parser.add_argument('--model3', type=str, default='models/finetuned models/gte-multilingual-base',
                         help='Path to third model')
-    parser.add_argument('--source', type=str, default='validation', choices=['validation', 'test'],
-                        help='Dataset source to use')
+    parser.add_argument('--sources', type=str, nargs='+', default=['validation', 'test'],
+                        choices=['validation', 'test'],
+                        help='Dataset sources to use (can specify multiple)')
     parser.add_argument('--lang', type=str, default='es', choices=['en', 'es', 'de', 'zh'],
                         help='Language to evaluate')
     parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'],
@@ -296,96 +302,129 @@ def main():
 
     model_paths = [args.model1, args.model2, args.model3]
     
-    # Load data
-    data_dir = project_dir / 'data' / args.source / lang_dict[args.lang]
-    print(f'Loading data from {data_dir}...')
-    queries_ids, queries_texts, corpus_ids, corpus_texts = load_data(data_dir)
+    # ========================================
+    # LOAD MODELS ONCE (REUSE FOR ALL SOURCES)
+    # ========================================
+    print(f'\n{"="*70}')
+    print(f'LOADING {len(model_paths)} MODELS (will be reused for all sources)')
+    print(f'{"="*70}')
     
-    # Create dictionaries for reranking
-    queries_dict = {str(q_id): q_text for q_id, q_text in zip(queries_ids, queries_texts)}
-    corpus_dict = {str(c_id): c_text for c_id, c_text in zip(corpus_ids, corpus_texts)}
-    
-    # Generate predictions for each model
-    predictions_list = []
-    
+    loaded_models = []
     for i, model_path in enumerate(model_paths, 1):
+        print(f'\n[{i}/{len(model_paths)}] Loading model: {model_path}')
+        model = SentenceTransformer(model_path, device=args.device, 
+                                   cache_folder=model_path, trust_remote_code=True)
+        model_name = Path(model_path).stem
+        loaded_models.append((model, model_name))
+        print(f'✓ Model {i} loaded successfully')
+    
+    print(f'\n{"="*70}')
+    print(f'All models loaded. Starting evaluation pipeline...')
+    print(f'{"="*70}')
+    
+    # ========================================
+    # PROCESS EACH SOURCE
+    # ========================================
+    for source in args.sources:
+        source_start_time = time.time()
+        
+        print(f'\n{"#"*70}')
+        print(f'### PROCESSING SOURCE: {source.upper()} ###')
+        print(f'{"#"*70}')
+        
+        # Load data for this source
+        data_dir = project_dir / 'data' / source / lang_dict[args.lang]
+        print(f'\nLoading data from {data_dir}...')
+        queries_ids, queries_texts, corpus_ids, corpus_texts = load_data(data_dir)
+        
+        # Create dictionaries for reranking
+        queries_dict = {str(q_id): q_text for q_id, q_text in zip(queries_ids, queries_texts)}
+        corpus_dict = {str(c_id): c_text for c_id, c_text in zip(corpus_ids, corpus_texts)}
+        
+        # Generate predictions using loaded models
+        predictions_list = []
+        
+        for i, (model, model_name) in enumerate(loaded_models, 1):
+            print(f'\n[{i}/{len(loaded_models)}] Generating predictions with: {model_name}')
+            
+            predictions_dict = generate_predictions(
+                model, queries_texts, corpus_texts, 
+                queries_ids, corpus_ids, args.device, model_name
+            )
+            
+            predictions_list.append(predictions_dict)
+        
         print(f'\n{"="*60}')
-        print(f'Processing Model {i}/{len(model_paths)}: {model_path}')
+        print(f'All predictions generated for {source}')
         print(f'{"="*60}')
         
-        # Load model
-        print(f'Loading model from {model_path}...')
-        model = SentenceTransformer(model_path, device=args.device, cache_folder=model_path, trust_remote_code=True)
-        model_name = Path(model_path).stem
+        # Fusion
+        print('\nApplying fusion...')
+        fused_dict = fusion_ranking(predictions_list)
         
-        # Generate predictions
-        predictions_dict = generate_predictions(
-            model, queries_texts, corpus_texts, 
-            queries_ids, corpus_ids, args.device, model_name
-        )
+        # Reranking (optional)
+        if args.skip_reranking:
+            print(f'\nSkipping reranking for {source} (--skip-reranking flag set)')
+            final_dict = fused_dict
+        else:
+            final_dict = reranking(fused_dict, queries_dict, corpus_dict, 
+                                  args.device, top_k=args.top_k)
         
-        predictions_list.append(predictions_dict)
+        # Convert to TREC format
+        trec_results = dict_to_trec_format(final_dict, args.run_name)
         
-        # Free memory
+        # Write run file
+        run_file = output_dir / f"run_{args.lang}-{args.lang}_{source}_{args.run_name}.trec"
+        write_run_file(trec_results, run_file)
+        
+        # Evaluate if source is validation
+        if source == 'validation':
+            qrels_path = data_dir / "qrels.tsv"
+            print(f'\nEvaluating against qrels: {qrels_path}')
+            evaluation_results = evaluate_run(qrels_path, run_file)
+            
+            print(f"\n=== Evaluation Results ({source}) ===")
+            for metric, score in evaluation_results.items():
+                print(f"{metric}: {score:.4f}")
+            
+            # Save evaluation results
+            results_file = output_dir / f"results_{args.lang}_{source}_{args.run_name}.json"
+            with open(results_file, "w", encoding="utf-8") as f:
+                json.dump({
+                    'models': model_paths,
+                    'run_name': args.run_name,
+                    'lang': args.lang,
+                    'source': source,
+                    'reranking': not args.skip_reranking,
+                    'top_k': args.top_k if not args.skip_reranking else None,
+                    'timestamp': today,
+                    'metrics': evaluation_results
+                }, f, indent=2)
+            print(f'\nResults saved to {results_file}')
+        else:
+            print(f'\nSource is "{source}" - skipping evaluation (no qrels available)')
+        
+        print(f'\n✓ Run file saved to: {run_file}')
+        
+        source_end_time = time.time()
+        source_elapsed = source_end_time - source_start_time
+        print(f'\n⏱ Time for {source}: {source_elapsed/60:.2f} minutes')
+    
+    # ========================================
+    # CLEANUP
+    # ========================================
+    print(f'\n{"="*70}')
+    print('Cleaning up loaded models...')
+    for model, _ in loaded_models:
         del model
+    print('✓ Models unloaded from memory')
     
-    print(f'\n{"="*60}')
-    print(f'All {len(predictions_list)} models processed')
-    print(f'{"="*60}')
-    
-    # Fusion
-    print('\nApplying fusion...')
-    fused_dict = fusion_ranking(predictions_list)
-    
-    # Reranking (optional)
-    if args.skip_reranking:
-        print('\nSkipping reranking step (--skip-reranking flag set)')
-        final_dict = fused_dict
-    else:
-        print('\nApplying Reranking...')
-        final_dict = reranking(fused_dict, queries_dict, corpus_dict, 
-                              args.device, top_k=args.top_k)
-    
-    # Convert to TREC format
-    trec_results = dict_to_trec_format(final_dict, args.run_name)
-    
-    # Write run file
-    run_file = output_dir / f"run_{args.lang}-{args.lang}.trec"
-    write_run_file(trec_results, run_file)
-    
-    # Evaluate if source is validation
-    if args.source == 'validation':
-        qrels_path = data_dir / "qrels.tsv"
-        print(f'\nEvaluating against qrels: {qrels_path}')
-        evaluation_results = evaluate_run(qrels_path, run_file)
-        
-        print("\n=== Evaluation Results ===")
-        for metric, score in evaluation_results.items():
-            print(f"{metric}: {score:.4f}")
-        
-        # Save evaluation results
-        results_file = output_dir / f"results_{args.lang}_{args.run_name}.json"
-        with open(results_file, "w", encoding="utf-8") as f:
-            json.dump({
-                'models': model_paths,
-                'run_name': args.run_name,
-                'lang': args.lang,
-                'source': args.source,
-                'reranking': not args.skip_reranking,
-                'top_k': args.top_k if not args.skip_reranking else None,
-                'timestamp': today,
-                'metrics': evaluation_results
-            }, f, indent=2)
-        print(f'\nResults saved to {results_file}')
-    else:
-        print('\nSource is "test" - skipping evaluation (no qrels available)')
-    
-    print(f'\nRun file saved to: {run_file}')
-
     end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f'\nTotal execution time: {elapsed_time/60:.2f} minutes')
-
+    total_elapsed = end_time - start_time
+    print(f'\n{"="*70}')
+    print(f'PIPELINE COMPLETED')
+    print(f'Total execution time: {total_elapsed/60:.2f} minutes')
+    print(f'{"="*70}')
 
 if __name__ == "__main__":
     main()
