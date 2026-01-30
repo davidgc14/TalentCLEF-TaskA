@@ -160,7 +160,7 @@ Sujeto a la restricción $\sum w_i = 1$. La determinación de los pesos óptimos
 
 La lista unificada resultante de la fusión pasa a una etapa final de reordenamiento. A diferencia de los bi-encoders, el cross-encoder recibe como entrada el par concatenado $(q, d)$ y utiliza un mecanismo de autoatención sobre la secuencia conjunta.
 
-Esto permite que el modelo capture interacciones no lineales y dependencias sintácticas entre la consulta y el candidato que son imposibles de representar mediante estructuras computacionales más simples. Debido a su alto coste computacional, este proceso se aplica únicamente a los candidatos más prometedores resultantes de la etapa anterior.\todo{Fundamento teorico y estrategia de seleccion?} %El modelo emitirá un \textit{logit} que representará la puntuación de relevancia final utilizada para ordenar la lista definitiva.
+Esto permite que el modelo capture interacciones no lineales y dependencias sintácticas entre la consulta y el candidato que son imposibles de representar mediante estructuras computacionales más simples. Debido a su alto coste computacional, este proceso se aplica únicamente a los candidatos más prometedores resultantes de la etapa anterior.\todo{Debo incluir aqui el fundamento teorico y estrategia de seleccion?} %El modelo emitirá un \textit{logit} que representará la puntuación de relevancia final utilizada para ordenar la lista definitiva.
 
 \section{Tecnologías y Estrategias de Aprendizaje}
 
