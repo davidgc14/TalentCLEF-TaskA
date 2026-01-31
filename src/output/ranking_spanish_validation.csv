@@ -1,8 +1,0 @@
-timestamp,execution_id,model_name,model_alias,map_es_es
-2025-11-24,1,/content/output/finetune/mpnet-base,mpnet-base-finetuned,0.45876894804058044
-2025-11-19,5,paraphrase-multilingual-mpnet-base-v2,mpnet-base,0.4167384709532458
-2025-11-19,3,paraphrase-multilingual-MiniLM-L12-v2,default,0.3766604787767891
-2025-11-20,4,Qwen/Qwen3-Embedding-0.6B,qwen-0.6b,0.3716841499180048
-2025-11-20,1,BAAI/bge-m3,bge-m3,0.3048126399388608
-2025-11-20,2,dccuchile/albert-base-spanish,albert-base-es,0.0786993259020572
-2025-11-20,3,jinaai/jina-embeddings-v2-base-es,jina-es,0.0239380735449971
