@@ -2,37 +2,66 @@
 %%% CONCLUSIONES Y TRABAJO FUTURO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% \chapter{Conclusiones y trabajo futuro}
+% \fancyhead[RE]{\textsc{CAPÍTULO} \thechapter. Conclusiones}
+% \label{ch:Conclusiones}
+
+% \noindent Este capítulo recopila las diferentes conclusiones extraídas del trabajo realizado, y propone algunas líneas de trabajo futuro. % Debe ser como el abstract, pero con resultados y lineas de trabajo futuras.
+
+% \section{Conclusiones}
+% \label{sec:Conclu}
+
+% \noindent Las contribuciones principales de este trabajo incluyen:
+% \begin{itemize}
+%     \item Una evaluación exhaustiva de cientos de modelos preentrenados de recuperación semántica (incluso multilingües) en el dominio académico en español, lo que permitió identificar los más prometedores para la tarea.
+%     \item El desarrollo de un proceso de ajuste fino supervisado que mejoró el desempeño de los modelos preentrenados de manera controlada, confirmando la utilidad del re-entrenamiento con datos de dominio específico.
+%     \item La implementación de una estrategia de fusión de rankings, demostrando que la combinación adecuada de modelos puede elevar el rendimiento.
+%     \item La integración de un modelo cross-encoder como última etapa de re-ranking, lo que proporcionó la mayor ganancia en precisión y evidenció la importancia de este tipo de modelos en sistemas de recuperación avanzados.
+% \end{itemize}
+
+% Como aportación general, este estudio muestra que los métodos híbridos (mezcla de bi-encoders y cross-encoders) son efectivos para la tarea de \gls{IR} en español, siempre que se gestionen adecuadamente las restricciones de datos y recursos. El sistema desarrollado puede servir como referencia o punto de partida para proyectos de del campo en español, lo cual es completamente necesario, aunque para su uso en producción sería necesario abordar aspectos prácticos de escalabilidad, latencia y actualización.
+
+% \section{Trabajo futuro}
+% \label{sec:Trab_Fut}
+
+% Entre las posibles líneas futuras de investigación se incluyen:
+% \begin{itemize}
+%     \item Ampliar la cobertura de modelos analizados, incorporando nuevas arquitecturas o versiones más recientes (por ejemplo, modelos entrenados explícitamente en español de mayor tamaño).
+%     \item Mejorar y diversificar los datos de entrenamiento, ya sea recopilando corpus adicionales de títulos académicos en español o generando datos sintéticos para reforzar la variedad temática.
+%     \item Realizar el entrenamiento con variabilidad de idiomas, para mejorar la capacidad de generalización del sistema.
+%     \item Investigar acerca de la posibilidad de utilizar modelos cross-encoder en español para la etapa de re-ranking, lo que podría aportar mejoras adicionales.
+%     \item Desarrollar estrategias de eficiencia computacional, para acelerar la inferencia y viabilizar implementaciones en tiempo real.
+%     \item Evaluar el sistema en otros dominios o tareas relacionadas para medir su generalización.
+%     \item Gracias a todo lo aprendido, poder participar en futuras ediciones de TalentCLEF o en otras competiciones similares, para seguir validando y mejorando el enfoque propuesto.
+% \end{itemize}
+
+% % Se ha presentado un prototipo robusto de sistema de recuperación semántica en español, cuyos resultados ayudan a guiar tanto la aplicación práctica (mediante la combinación de varios modelos de vanguardia) como futuras investigaciones (destacando el valor del re-ranking y la necesidad de recursos lingüísticos especializados). Se espera que las lecciones aprendidas sirvan de base para continuar avanzando en la mejora de sistemas de búsqueda y recuperación de información en contextos académicos y científicos.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% CONCLUSIONES Y TRABAJO FUTURO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \chapter{Conclusiones y trabajo futuro}
 \fancyhead[RE]{\textsc{CAPÍTULO} \thechapter. Conclusiones}
 \label{ch:Conclusiones}
 
-\noindent Este capítulo recopila las diferentes conclusiones extraídas del trabajo realizado, y propone algunas líneas de trabajo futuro. % Debe ser como el abstract, pero con resultados y lineas de trabajo futuras.
+\noindent Este capítulo final sintetiza los hallazgos principales derivados del desarrollo y evaluación del sistema propuesto para la tarea de \gls{JTM}, y delinea las líneas de investigación que quedan abiertas para futuras iteraciones del proyecto.
 
 \section{Conclusiones}
 \label{sec:Conclu}
 
-\noindent Las contribuciones principales de este trabajo incluyen:
-\begin{itemize}
-    \item Una evaluación exhaustiva de cientos de modelos preentrenados de recuperación semántica (incluso multilingües) en el dominio académico en español, lo que permitió identificar los más prometedores para la tarea.
-    \item El desarrollo de un proceso de ajuste fino supervisado que mejoró el desempeño de los modelos preentrenados de manera controlada, confirmando la utilidad del re-entrenamiento con datos de dominio específico.
-    \item La implementación de una estrategia de fusión de rankings, demostrando que la combinación adecuada de modelos puede elevar el rendimiento.
-    \item La integración de un modelo cross-encoder como última etapa de re-ranking, lo que proporcionó la mayor ganancia en precisión y evidenció la importancia de este tipo de modelos en sistemas de recuperación avanzados.
-\end{itemize}
+\noindent El desarrollo de este trabajo de investigación ha permitido validar la eficacia de una arquitectura modular en cascada para la normalización de titulaciones profesionales en español. La estrategia implementada, que transita desde una recuperación densa eficiente mediante bi-encoders hacia un refinamiento preciso con cross-encoders, ha demostrado ser altamente competitiva en el marco de la competición TalentCLEF 2025. Los resultados obtenidos, posicionando al sistema como la tercera mejor propuesta por equipos, confirman que los métodos híbridos son esenciales para equilibrar el compromiso entre exhaustividad y precisión semántica en tareas de \gls{IR} aplicadas al dominio de los recursos humanos.
 
-Como aportación general, este estudio muestra que los métodos híbridos (mezcla de bi-encoders y cross-encoders) son efectivos para la tarea de \gls{IR} en español, siempre que se gestionen adecuadamente las restricciones de datos y recursos. El sistema desarrollado puede servir como referencia o punto de partida para proyectos de del campo en español, lo cual es completamente necesario, aunque para su uso en producción sería necesario abordar aspectos prácticos de escalabilidad, latencia y actualización.
+Uno de los hallazgos más relevantes y contraintuitivos de este estudio ha sido la supremacía de los modelos multilingües sobre las aproximaciones monolingües. A pesar de la hipótesis inicial que sugería una ventaja para los modelos especializados en español, la evaluación experimental evidenció que arquitecturas entrenadas masivamente en múltiples idiomas generan representaciones latentes más ricas y robustas. Esto resulta crucial en el mercado laboral actual, donde la terminología técnica y los anglicismos permean las descripciones de puestos de trabajo, un matiz que los modelos estrictamente monolingües tienden a perder. Asimismo, se observó que la etapa de re-ranking mediante cross-encoders aportó la mayor ganancia neta en la métrica \gls{MAP}, aunque con una fuerte sensibilidad a la profundidad de la lista de candidatos; el intento de reordenar un número excesivo de documentos introdujo ruido, degradando la calidad del ranking final y subrayando la necesidad de una selección quirúrgica en las etapas previas.
+
+No obstante, el sistema también reveló limitaciones importantes relacionadas con la generalización. La discrepancia observada entre los resultados de validación y test sugiere un sobreajuste temprano, derivado de la naturaleza sintética y limitada de los datos de entrenamiento basados en \gls{ESCO}. Aunque la fusión de rankings mediante suma ponderada (\gls{WSum}) mitigó parcialmente los sesgos individuales, la ganancia fue marginal debido a la redundancia arquitectónica de los modelos base seleccionados. En definitiva, este estudio establece una referencia sólida sobre el estado del arte en \gls{HCM}, demostrando que es viable construir soluciones de alto rendimiento aprovechando modelos preentrenados, siempre que se gestionen adecuadamente las estrategias de adaptación al dominio y la calidad de los datos.
 
 \section{Trabajo futuro}
 \label{sec:Trab_Fut}
 
-Entre las posibles líneas futuras de investigación se incluyen:
-\begin{itemize}
-    \item Ampliar la cobertura de modelos analizados, incorporando nuevas arquitecturas o versiones más recientes (por ejemplo, modelos entrenados explícitamente en español de mayor tamaño).
-    \item Mejorar y diversificar los datos de entrenamiento, ya sea recopilando corpus adicionales de títulos académicos en español o generando datos sintéticos para reforzar la variedad temática.
-    \item Realizar el entrenamiento con variabilidad de idiomas, para mejorar la capacidad de generalización del sistema.
-    \item Investigar acerca de la posibilidad de utilizar modelos cross-encoder en español para la etapa de re-ranking, lo que podría aportar mejoras adicionales.
-    \item Desarrollar estrategias de eficiencia computacional, para acelerar la inferencia y viabilizar implementaciones en tiempo real.
-    \item Evaluar el sistema en otros dominios o tareas relacionadas para medir su generalización.
-    \item Gracias a todo lo aprendido, poder participar en futuras ediciones de TalentCLEF o en otras competiciones similares, para seguir validando y mejorando el enfoque propuesto.
-\end{itemize}
+Partiendo de las limitaciones identificadas y las lecciones aprendidas durante la competición, se abren diversas vías para la evolución del sistema. Una prioridad inmediata debe ser la ingeniería de datos y el aumento sintético del corpus. Para combatir el sobreajuste y mejorar la generalización ante datos reales no vistos, es fundamental enriquecer el entrenamiento generando pares positivos y negativos difíciles ("hard negatives") mediante \gls{LLM}s, así como incorporar fuentes de datos externas que aporten una mayor variabilidad terminológica más allá de la taxonomía oficial.
 
-% Se ha presentado un prototipo robusto de sistema de recuperación semántica en español, cuyos resultados ayudan a guiar tanto la aplicación práctica (mediante la combinación de varios modelos de vanguardia) como futuras investigaciones (destacando el valor del re-ranking y la necesidad de recursos lingüísticos especializados). Se espera que las lecciones aprendidas sirvan de base para continuar avanzando en la mejora de sistemas de búsqueda y recuperación de información en contextos académicos y científicos.
+Desde una perspectiva arquitectónica, las futuras iteraciones deberían centrarse en una diversificación más estratégica durante la etapa de fusión. En lugar de combinar modelos basándose únicamente en su métrica de rendimiento individual, sería más beneficioso integrar enfoques léxicos dispersos (como BM25 o SPLADE) junto con modelos densos para maximizar la ortogonalidad de los errores y capturar matices complementarios. Asimismo, dado el coste computacional de los cross-encoders, se plantea explorar técnicas de destilación de conocimiento para transferir su precisión a arquitecturas bi-encoder más ligeras, viabilizando así el despliegue del sistema en entornos productivos de tiempo real.
+
+Finalmente, es imperativo abordar la dimensión ética y la transferibilidad del sistema. Futuros trabajos deberían incorporar módulos específicos para la detección y mitigación de sesgos de género y geográficos en las representaciones vectoriales, asegurando una normalización de competencias equitativa. Del mismo modo, extender la evaluación a dominios adyacentes, como el emparejamiento de currículums con ofertas o la inferencia de habilidades, permitiría verificar la robustez y versatilidad de la arquitectura propuesta en el ecosistema más amplio de la gestión del talento.
