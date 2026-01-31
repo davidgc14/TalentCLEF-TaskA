@@ -9,7 +9,7 @@
 
 \noindent En este apéndice se incluyen las tablas de resultados completas obtenidas durante la evaluación de los modelos, que por razones de espacio no se han podido incluir en el cuerpo principal del documento. Estas tablas proporcionan una visión detallada del desempeño de cada modelo en las diferentes tareas y conjuntos de datos evaluados.
 
-\begin{table}[ht]
+\begin{table}[H]
     \tiny
     \centering
     \begin{tabular}{rlrlr}
@@ -482,3 +482,69 @@
     \caption{Resultados completos de los 10 mejores modelos de reranking evaluados sobre la métrica \gls{MAP} para distintos órdenes de reordenación.}
     \label{tab:cross_encoder_top10}
 \end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{table}[H]
+    \centering
+    \tiny
+    \begin{tabular}{llccccc}
+        \hline
+        \# & Participant        & Avg.MAP(en,es,de) & MAP(en-en) & MAP(es-es) & MAP(de-de) & MAP(zh-zh) \\
+        \hline
+        1  & ranabarakat        & 0.53              & 0.559      & 0.527      & 0.516      & 0.508      \\
+        2  & omokhtar           & 0.53              & 0.554      & 0.522      & 0.515      & 0.507      \\
+        3  & ranabarakat        & 0.53              & 0.554      & 0.522      & 0.515      & 0.507      \\
+        4  & ranabarakat        & 0.53              & 0.553      & 0.521      & 0.515      & 0.506      \\
+        5  & omokhtar           & 0.52              & 0.542      & 0.516      & 0.503      & 0.505      \\
+        6  & \textbf{Propuesta} & 0.52              & 0.551      & 0.497      & 0.508      & 0.502      \\
+        7  & jensjoris          & 0.52              & 0.533      & 0.519      & 0.500      & 0.510      \\
+        8  & pjmathematician    & 0.52              & 0.563      & 0.507      & 0.476      & 0.516      \\
+        9  & NLPnorth           & 0.49              & 0.537      & 0.496      & 0.442      & 0.495      \\
+        10 & NLPnorth           & 0.48              & 0.511      & 0.446      & 0.484      & 0.477      \\
+        11 & pjmathematician    & 0.48              & 0.496      & 0.479      & 0.458      & 0.427      \\
+        12 & pjmathematician    & 0.48              & 0.520      & 0.462      & 0.449      & 0.447      \\
+        13 & NLPnorth           & 0.47              & 0.489      & 0.467      & 0.466      & 0.487      \\
+        14 & NLPnorth           & 0.47              & 0.509      & 0.471      & 0.424      & 0.427      \\
+        15 & akacha             & 0.46              & 0.523      & 0.466      & 0.404      & 0.497      \\
+        16 & phanduchung03      & 0.46              & 0.477      & 0.439      & 0.464      & 0.473      \\
+        17 & napatnicky         & 0.45              & 0.463      & 0.438      & 0.445      & 0.451      \\
+        18 & team\_scalar       & 0.45              & 0.473      & 0.438      & 0.427      & n/a        \\
+        19 & hallucinators      & 0.44              & 0.469      & 0.445      & 0.417      & 0.469      \\
+        20 & NLPnorth           & 0.44              & 0.490      & 0.421      & 0.406      & 0.444      \\
+        21 & napatnicky         & 0.42              & 0.443      & 0.413      & 0.418      & 0.436      \\
+        22 & omokhtar           & 0.42              & 0.468      & 0.421      & 0.377      & 0.251      \\
+        23 & napatnicky         & 0.42              & 0.430      & 0.414      & 0.423      & 0.434      \\
+        24 & srtej              & 0.42              & 0.479      & 0.420      & 0.360      & 0.415      \\
+        25 & srtej              & 0.42              & 0.479      & 0.420      & 0.360      & 0.350      \\
+        26 & udii-upm           & 0.41              & 0.448      & 0.415      & 0.377      & 0.451      \\
+        27 & pjmathematician    & 0.41              & 0.508      & 0.387      & 0.340      & 0.142      \\
+        28 & pjmathematician    & 0.41              & 0.441      & 0.398      & 0.380      & 0.448      \\
+        29 & adambrikman        & 0.40              & 0.440      & 0.402      & 0.355      & 0.421      \\
+        30 & srtej              & 0.39              & 0.478      & 0.352      & 0.345      & 0.433      \\
+        31 & Beamery Edge       & 0.37              & 0.354      & 0.372      & 0.373      & 0.367      \\
+        32 & melissamoreno      & 0.36              & 0.408      & 0.348      & 0.324      & n/a        \\
+        33 & adambrikman        & 0.36              & 0.408      & 0.348      & 0.324      & 0.380      \\
+        34 & TalentCLEF         & 0.36              & 0.408      & 0.348      & 0.324      & 0.380      \\
+        35 & napatnicky         & 0.36              & 0.408      & 0.348      & 0.324      & 0.380      \\
+        36 & VerbaNex AI        & 0.36              & 0.386      & 0.354      & 0.338      & n/a        \\
+        37 & ayeshasaeed        & 0.35              & 0.355      & 0.360      & 0.347      & 0.412      \\
+        38 & srtej              & 0.18              & 0.188      & 0.188      & 0.177      & 0.170      \\
+        39 & srtej              & 0.18              & 0.194      & 0.184      & 0.172      & 0.168      \\
+        40 & Ixa                & 0.18              & 0.199      & 0.173      & 0.169      & n/a        \\
+        41 & Ixa                & 0.18              & 0.200      & 0.166      & 0.168      & n/a        \\
+        42 & Ixa                & 0.15              & 0.159      & 0.150      & 0.150      & n/a        \\
+        43 & Ixa                & 0.14              & 0.199      & 0.122      & 0.110      & n/a        \\
+        44 & Ixa                & 0.14              & 0.200      & 0.115      & 0.106      & n/a        \\
+        45 & gabrielrsilva      & 0.08              & 0.125      & 0.078      & 0.037      & n/a        \\
+        46 & adambrikman        & 0.00              & 0.000      & 0.000      & 0.000      & 0.000      \\
+        47 & adambrikman        & 0.00              & 0.000      & 0.000      & 0.000      & 0.000      \\
+        48 & adambrikman        & 0.00              & 0.000      & 0.000      & 0.000      & 0.000      \\
+        49 & adambrikman        & 0.00              & 0.000      & 0.000      & 0.000      & 0.000      \\
+        \hline
+    \end{tabular}
+    \caption{Resultados \gls{MAP} por participante, ordenados por la media de los resultados en los idiomas inglés, español y alemán.}
+    \label{tab:final_results_test_mean}
+\end{table}
+
