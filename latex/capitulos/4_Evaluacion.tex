@@ -255,7 +255,7 @@ Destaca aquí la presencia de un decrecimiento de más de 4 puntos porcentuales 
 
 \subsection{Resultados sobre otros idiomas}
 
-Aunque el enfoque principal de este trabajo ha sido el desarrollo de un sistema para el idioma español, la \gls{Tarea} también contempla la evaluación en otros idiomas: inglés, alemán y chino. Con el objetivo de analizar la capacidad de generalización del sistema propuesto, se procedió a evaluar el mismo modelo sobre los conjuntos de datos de prueba correspondientes a estos idiomas, sin realizar ningún ajuste adicional. Los resultados obtenidos se muestran en las Tablas \ref{tab:final_results_test_en}, \ref{tab:final_results_test_de} y \ref{tab:final_results_test_zh}.
+Aunque el enfoque principal de este trabajo ha sido el desarrollo de un sistema para el idioma español, la \gls{Tarea} también contempla la evaluación en otros idiomas, como el inglés y el alemán. Con el objetivo de analizar la capacidad de generalización del sistema propuesto, se procedió a evaluar el mismo modelo sobre los conjuntos de datos de prueba correspondientes a estos idiomas, sin realizar ningún ajuste adicional. Los resultados obtenidos se muestran en las Tablas \ref{tab:final_results_test_en} y \ref{tab:final_results_test_de}.
 
 
 \begin{table}[ht!]
@@ -300,6 +300,12 @@ Aunque el enfoque principal de este trabajo ha sido el desarrollo de un sistema 
 \end{table}
 
 
+En estos escenarios, el sistema propuesto alcanza la quinta posición en los idiomas inglés y alemán, mientras que para chino se sitúa en la octava posición. Estos resultados ponen de manifiesto la capacidad de generalización del enfoque adoptado, ya que todas las etapas del sistema se apoyan en modelos multilingües. Si bien se aprecia una leve mejora del rendimiento en estos idiomas en comparación con el español, este comportamiento puede atribuirse al uso de modelos preentrenados multilingües como base del sistema.
+
+\subsection{Capacidad de generalización}
+
+Para evaluar la capacidad de generalización del sistema propuesto, desde la organización se propusieron de forma voluntaria la evaluación sobre escenarios cross-lingües, así como la evaluación sobre el idioma chino, para el que no se disponía de datos de entrenamiento específicos. Aunque en nuestro caso no se contempló el entrenamiento adicional en ningún idioma que no fuera el español, se procedió a evaluar el sistema completo sobre los conjuntos de datos de prueba correspondientes, para así analizar su capacidad de generalización ante entornos nuevos. Los resultados obtenidos para el caso del chino se muestran en la Tabla \ref{tab:final_results_test_zh}. \todo{Si hay tiempo, intentar evaluar los casos crosslingues y mostrar los resultados aquí, para analizar mejor la generalización.}
+
 \begin{table}[ht!]
     \centering
     \begin{tabular}{|c|l|c|}
@@ -320,8 +326,6 @@ Aunque el enfoque principal de este trabajo ha sido el desarrollo de un sistema 
     \label{tab:final_results_test_zh}
 \end{table}
 
-En estos escenarios, el sistema propuesto alcanza la quinta posición en los idiomas inglés y alemán, mientras que para chino se sitúa en la octava posición. Estos resultados ponen de manifiesto la capacidad de generalización del enfoque adoptado, ya que todas las etapas del sistema se apoyan en modelos multilingües. Si bien se aprecia una leve mejora del rendimiento en estos idiomas en comparación con el español, este comportamiento puede atribuirse al uso de modelos preentrenados multilingües como base del sistema.
-
 \subsection{Rendimiento medio}
 
-En rendimiento medio, el sistema ha alcanzado un \gls{MAP} de \textbf{0.521}, situándose en el sexto puesto de la clasificación general de la \gls{Tarea}. La tabla completa de resultados puede ser consultada en la Tabla \ref{tab:final_results_test_mean} del apéndice.\todo{Si hay tiempo, intentar evaluar los casos crosslingues y mostrar los resultados en una nueva subsection aquí, para analizar mejor la generalización.}
+Para la ordenación general de las propuestas enviadas, la organización se ha basado en el rendimiento medio entre los idiomas español, inglés y alemán sobre la métrica \gls{MAP}. El sistema aquí presentado ha alcanzado un valor medio de \textbf{0.521}, situándose en el sexto puesto de la clasificación general de la \gls{Tarea}. Si consideramos únicamente la mejor propuesta de cada equipo, el sistema se posiciona como el tercer mejor equipo participante, lo que resalta la solidez y eficacia del enfoque adoptado en este trabajo. Los resultados completos pueden ser consultados en la Tabla \ref{tab:final_results_test_mean} del apéndice.
