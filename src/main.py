@@ -374,7 +374,7 @@ def main():
         trec_results = dict_to_trec_format(final_dict, args.run_name)
         
         # Write run file
-        run_file = output_dir / f"run_{args.lang}-{args.lang}_{source}_{args.run_name}.trec"
+        run_file = output_dir / f"run_{args.lang}-{args.lang}_{source}.trec"
         write_run_file(trec_results, run_file)
         
         # Evaluate if source is validation
