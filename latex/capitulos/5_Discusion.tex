@@ -44,21 +44,6 @@
 
 % Como conclusion. El sistema desarrollado ha demostrado ser competitivo y robusto para la tarea de recuperación de información en español, a pesar de las limitaciones y desafíos enfrentados. La combinación de múltiples modelos y técnicas ha permitido maximizar el rendimiento, aunque con ciertas limitaciones en cuanto a la generalización y estabilidad del sistema. Sin embargo, hay áreas claras de mejora y oportunidades para futuras investigaciones que podrían abordar las limitaciones identificadas y potenciar aún más el rendimiento del sistema.
 
-
-% ###############################################
-
-% Estoy redactando un trabajo de investigación. El orden es 
-% 1_Introduccion.tex
-% 2_EstadoArte.tex
-% 3_Sistema.tex
-% 4_Evaluacion
-
-% Necesito ayuda para reescribir el capitulo de 5_Discusion, que es el penúltimo (despues quedaria otro de conclusiones y trabajo futuro en el que no vamos a entrar aqui). Quiero que te centres en el Capitulo de discusion. Lee el resto de capitulos de forma ordenada, tranquila y a conciencia. Veras muchas imagenes a las que no tienes acceso. No te preocupes, centrate en la información que tienes accesible.
-
-% Una vez leidos todos los capitulos y con el contexto suficiente, lee el capitulo de Discusion, donde he puesto de manera desordenada y lineal todas las ideas que tengo que me gustaria redactar en este capitulo. Reescribe, reestructura y extiende la información que se encuentra ya escrita en el capitulo de discusion. No quiero que falte nada del contenido de lo que ya hay escrito. Lo que si puedes hacer es extender los analisis y detallarlos en profundidad. Busca en internet si lo necesitas. 
-
-% Mantén el tono y el vocabulario usado en el resto del trabajo. Devuelve tu respuesta en un bloque de texto plano en formato latex, devolviendo el contenido completo del capitulo de discusion. Si es demasiado extenso, interrumpe la muestra de tu solución y pideme continuar en el siguiente mensaje.
-
 % ###################################################
 
 
@@ -115,16 +100,6 @@ La arquitectura propuesta se fundamenta en la hipótesis de que la combinación 
 Aunque la técnica de \gls{WSum} logró superar el rendimiento de los modelos individuales, la ganancia fue extremadamente baja frente a los datos de validación. Un análisis detallado de los tres modelos finalistas seleccionados revela, como comentamos anteriormente, un problema de redundancia arquitectónica. 
 
 Dos de los modelos base comparten fundamentos arquitectónicos muy similares (basados en variantes de \textit{XLM-RoBERTa} y entrenados con objetivos similares). Esta falta de diversidad arquitectónica implica que los modelos tienden a compartir los mismos sesgos inductivos y a cometer errores similares, reduciendo la eficacia teórica de la fusión. Como se intuía en la alineación vertical de la Figura \ref{fig:zero_shot_map}, haber forzado la selección de modelos con arquitecturas distintas, incluso sacrificando ligeramente el rendimiento individual, podría haber maximizado la complementariedad y, por ende, el resultado final de la fusión. Sin embargo, la decisión basada en tomar simplemente los mejores modelos individuales puede haber limitado el potencial de esta etapa del sistema.
-
-
-% Para la fase de reranking se ha intentado proceder como con los modelos de retrieval: hacer una evaluación masiva de modelos para poder seleccionar con mejor criterio el modelo cross-encoder. Sin embargo, en este caso no contamos con un ranking público de mejores modelos para la tarea (MTEB tiene fundamentalmente bi-encoders y modelos densos). Ya al hacer el retrieval me di cuenta de que en Hugging Face no todos los modelos son etiquetados de forma correcta (bi-encoders, cross-encoders, o modelos de retrieval, modelos de ranking) (es decir, hay modelos que estaban en MTEB pero que no estaban en la etiqueta de hugging face de modelos de retrieval, y al igual con los modelos de reranking), produciendo una visión sesgada en la búsqueda de modelos, ya que solo voy a tener acceso a los que sí hayan etiquetado correctamente su modelo. Es por ello que el número de modelos conseguidos, 90, no es ni de lejos representativo con todos los que deberían aparecer ahí fuera. 
-
-% También es cierto que el haber decidido trabajar con sentence-transformers ha limitado en gran medida el acceso a los modelos disponibles, pero era necesario definir un marco de trabajo concreto para poder avanzar.
-
-% He tratado en el reranking de obtener primero una visión general del rendimiento y adecuación de los modelos a la tarea, viendo su comportamiento en la reordenación de distintas cantidades: 5, 10, 25, 50 y 100. Esto ha mostrado que los reordenamientos de valores grandes empeoraban los resultados ya conseguidos con el ajuste fino y la fusión. Por ello, al ver que la mayoría de los modelos mejoraba la métrica de la fusión con una reordenación de un top pequeño, se decidió hacer un análisis más detallado de cómo de acusada era la degradación cuando k aumentaba. En la figura \ref{fig:top10_reranking_individual} se ve cómo parece que, para la tarea en cuestión, los modelos en general tienden a empeorar la métrica cuando k es mayor o igual a 20. 
-
-% Sorprende aquí mucho el comportamiento de modelos como posih-reranker-base-mse, que a pesar de presentar la peor métrica para k=5, es el que menos degradación sufre cuando k aumenta. Un comportamiento similar presenta mmarco-mMiniLMv2-L12-H384-v1, que en este caso incluso es el único que mejora su rendimiento para k=10, aunque luego se degrade igualmente. Este último es el que resultados más estables reporta, siendo una buena opción a considerar si se buscara generalización. Debido a que solo se buscaba la maximización de la métrica MAP, es por ello que se ha seleccionado el mejor simplemente, aunque es probable que esta decisión haya repercutido en la métrica sobre el conjunto de test.
-
 
 \subsection{Re-Ranking: Selección de Modelos y Profundidad de Búsqueda}
 
