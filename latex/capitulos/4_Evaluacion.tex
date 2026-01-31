@@ -224,9 +224,11 @@ Con la perspectiva de maximizar el rendimiento del sistema, se seleccionó el mo
 
 \section{Evaluación sobre Test}
 
-Finalmente, se procedió a evaluar el sistema completo, incluyendo todas las fases descritas, sobre el conjunto de datos de prueba. Para ello, el ranking producido por el sistema, compuesto por la fusión \gls{WSum} de los tres mejores modelos ajustados y el re-ranking mediante el modelo \textit{Jsevisal/CrossEncoder-ModernBERT-base-qnli}, fue enviado al sistema de evaluación sobre test de Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}} alcanzando un \gls{MAP} de \textbf{??}. 
+Finalmente, se procedió a evaluar el sistema completo, incluyendo todas las fases descritas, sobre el conjunto de datos de prueba. Para ello, el ranking producido por el sistema, fue enviado al sistema de evaluación sobre test de Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}}. Los resultados obtenidos son los siguientes\footnote{Los datos que se muestran a continuación fueron tomados a fecha 31 de Enero de 2026, pudiendo existir propuestas posteriores que modifiquen los rankings aquí presentados.}. 
 
-Este resultado, considerándolo como resultado final de la propuesta presentada en este trabajo, se posiciona en el \textbf{??}º puesto de la clasificación general de la \gls{Tarea}\footnote{Datos tomados a fecha 30 de Enero de 2026.}, para el caso monolingüe de español. Se observa en la Tabla \ref{tab:final_results_test} el ranking final proporcionado por la plataforma de evaluación.
+\subsection{Resultados sobre el español}
+
+Para el caso monolingüe español en el que se ha centrado este estudio, se ha obtenido un valor \gls{MAP} de \textbf{0.497}. Este resultado, considerándolo como resultado final de la propuesta presentada, se posiciona en el octavo puesto de la clasificación general de la \gls{Tarea} para el caso monolingüe de español. En la Tabla \ref{tab:final_results_test_es} se muestra el ranking final proporcionado por la plataforma de evaluación.
 
 
 \begin{table}[ht!]
@@ -241,10 +243,85 @@ Este resultado, considerándolo como resultado final de la propuesta presentada 
         5                 & jensjoris             & 0.519                \\ \hline
         6                 & omokhtar              & 0.516                \\ \hline
         7                 & pjmathematician       & 0.507                \\ \hline
-        8                 & NLPnorth              & 0.496                \\ \hline
-        9                 & pjmathematician       & 0.479                \\ \hline
-        ??                & \textbf{Propuesta}    & \textbf{??}          \\ \hline
+        8                 & \textbf{Propuesta}    & \textbf{0.497}       \\ \hline
+        9                 & NLPnorth              & 0.496                \\ \hline
+        10                & pjmathematician       & 0.479                \\ \hline
     \end{tabular}
-    \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} por parte de todos los participantes, inlcuida la propuesta aquí planteada.}
-    \label{tab:final_results_test}
+    \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe español.}
+    \label{tab:final_results_test_es}
 \end{table}
+
+Destaca aquí la presencia de un decrecimiento de más de 4 puntos porcentuales respecto al resultado obtenido sobre el conjunto de validación. Este hecho refleja la naturaleza distinta del conjunto de test, poniendo de manifiesto la diferencia de rendimiento del sistema frente a escenarios no vistos durante su desarrollo.
+
+\subsection{Resultados sobre otros idiomas}
+
+Aunque el enfoque principal de este trabajo ha sido el desarrollo de un sistema para el idioma español, la \gls{Tarea} también contempla la evaluación en otros idiomas: inglés, alemán y chino. Con el objetivo de analizar la capacidad de generalización del sistema propuesto, se procedió a evaluar el mismo modelo sobre los conjuntos de datos de prueba correspondientes a estos idiomas, sin realizar ningún ajuste adicional. Los resultados obtenidos se muestran en las Tablas \ref{tab:final_results_test_en}, \ref{tab:final_results_test_de} y \ref{tab:final_results_test_zh}.
+
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|l|c|}
+        \hline
+        \textbf{Posición} & \textbf{Participante} & \textbf{MAP (en-en)} \\ \hline
+        1                 & pjmathematician       & 0.563                \\ \hline
+        2                 & ranabarakat           & 0.559                \\ \hline
+        3                 & omokhtar              & 0.554                \\ \hline
+        4                 & ranabarakat           & 0.554                \\ \hline
+        5                 & \textbf{Propuesta}    & \textbf{0.551}       \\ \hline
+        6                 & omokhtar              & 0.542                \\ \hline
+        7                 & jensjoris             & 0.533                \\ \hline
+        8                 & akacha                & 0.523                \\ \hline
+        9                 & pjmathematician       & 0.520                \\ \hline
+        10                & NLPnorth              & 0.511                \\ \hline
+    \end{tabular}
+    \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe inglés.}
+    \label{tab:final_results_test_en}
+\end{table}
+
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|l|c|}
+        \hline
+        \textbf{Posición} & \textbf{Participante} & \textbf{MAP (de-de)} \\ \hline
+        1                 & ranabarakat           & 0.516                \\ \hline
+        2                 & omokhtar              & 0.515                \\ \hline
+        3                 & ranabarakat           & 0.515                \\ \hline
+        4                 & ranabarakat           & 0.515                \\ \hline
+        5                 & \textbf{Propuesta}    & \textbf{0.508}       \\ \hline
+        6                 & pjmathematician       & 0.476                \\ \hline
+        7                 & jensjoris             & 0.500                \\ \hline
+        8                 & omokhtar              & 0.503                \\ \hline
+        9                 & NLPnorth              & 0.484                \\ \hline
+        10                & pjmathematician       & 0.508                \\ \hline
+    \end{tabular}
+    \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe alemán.}
+    \label{tab:final_results_test_de}
+\end{table}
+
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|l|c|}
+        \hline
+        \textbf{Posición} & \textbf{Participante} & \textbf{MAP (zh-zh)} \\ \hline
+        1                 & pjmathematician       & 0.516                \\ \hline
+        2                 & jensjoris             & 0.510                \\ \hline
+        3                 & ranabarakat           & 0.508                \\ \hline
+        4                 & omokhtar              & 0.507                \\ \hline
+        5                 & ranabarakat           & 0.507                \\ \hline
+        6                 & ranabarakat           & 0.506                \\ \hline
+        7                 & omokhtar              & 0.505                \\ \hline
+        8                 & \textbf{Propuesta}    & \textbf{0.502}       \\ \hline
+        9                 & akacha                & 0.497                \\ \hline
+        10                & NLPnorth              & 0.495                \\ \hline
+    \end{tabular}
+    \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe chino.}
+    \label{tab:final_results_test_zh}
+\end{table}
+
+En estos escenarios, el sistema propuesto alcanza la quinta posición en los idiomas inglés y alemán, mientras que para chino se sitúa en la octava posición. Estos resultados ponen de manifiesto la capacidad de generalización del enfoque adoptado, ya que todas las etapas del sistema se apoyan en modelos multilingües. Si bien se aprecia una leve mejora del rendimiento en estos idiomas en comparación con el español, este comportamiento puede atribuirse al uso de modelos preentrenados multilingües como base del sistema.
+
+\subsection{Rendimiento medio}
+
+En rendimiento medio, el sistema ha alcanzado un \gls{MAP} de \textbf{0.521}, situándose en el sexto puesto de la clasificación general de la \gls{Tarea}. La tabla completa de resultados puede ser consultada en la Tabla \ref{tab:final_results_test_mean} del apéndice.
