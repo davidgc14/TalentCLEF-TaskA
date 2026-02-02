@@ -1,12 +1,11 @@
 .venv/
 __pycache__/
 
-doc/*
+doc/papers/paper_*
 !doc/lab-overview.pdf
 !doc/summary-TalentCLEF.pdf
 
-src/output/*
-!src/output/ranking*
+output/20*
 
 
 latex/TFM.*
