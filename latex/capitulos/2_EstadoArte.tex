@@ -9,15 +9,8 @@
 \section{Fundamentos y Evolución de la Recuperación de Información}
 \label{sec:RetrievalHistory}
 
-% \noindent La capacidad de identificar y organizar información relevante dentro de grandes volúmenes de datos ha sido uno de los pilares fundamentales de las ciencias de la computación. Antes de abordar el estudio específico del emparejamiento de titulaciones laborales, es necesario analizar la evolución de la \gls{IR} y cómo los paradigmas de ordenación han transitado desde reglas deterministas hacia arquitecturas híbridas de alta complejidad.
 
-% \subsection{Modelos Clásicos: Del Determinismo a la Similitud Estadística}
-
-% En sus orígenes, los sistemas de \gls{IR} operaban bajo modelos booleanos que buscaban la coincidencia exacta entre términos. En este esquema, la recuperación se limitaba a una lógica binaria donde un documento era relevante únicamente si contenía los términos precisos de la consulta. Si bien este enfoque garantizaba precisión terminológica, carecía de una noción de relevancia gradual, lo que resultaba insuficiente para gestionar la ambigüedad y sinonimia del lenguaje natural.
-
-% La transición hacia el Modelo de Espacio Vectorial y el uso de métricas de ponderación como \glslink{TF-IDF}{TF-IDF} supuso un cambio de paradigma. Por primera vez, los elementos no solo se recuperaban, sino que se ordenaban mediante el cálculo de medidas de similitud \cite{salton1975vector}. Posteriormente, el desarrollo de modelos probabilísticos como \glslink{BM25}{BM25} perfeccionó esta aproximación, estableciendo un estándar de robustez léxica que sigue vigente hoy en día \cite{robertson2009probabilistic}. No obstante, estos métodos tradicionales se encuentran limitados por el denominado \textit{vocabulary mismatch}, al ser incapaces de interpretar el contexto o la semántica profunda más allá de la presencia explícita de términos.
-
-\noindent La disciplina de la \gls{IR} constituye uno de los pilares angulares de las ciencias de la computación modernas, respondiendo a la necesidad crítica de acceder, filtrar y organizar datos relevantes dentro de corpus documentales en constante expansión. %Más allá de la simple indexación, la \gls{IR} se define formalmente como el proceso científico y técnico destinado a satisfacer una necesidad de información expresada por un usuario mediante consultas en lenguaje natural, extrayendo para ello recursos de colecciones no estructuradas.
+\noindent La disciplina de la \gls{IR} constituye uno de los pilares angulares de las ciencias de la computación modernas, respondiendo a la necesidad crítica de acceder, filtrar y organizar datos relevantes dentro de corpus documentales en constante expansión. 
 
 Antes de profundizar en las particularidades del dominio que nos ocupa, resulta necesario establecer un marco teórico que analice la trayectoria histórica de la disciplina. Esta evolución no es lineal, sino que representa una transformación de paradigmas: desde los primeros sistemas basados en reglas deterministas y coincidencias exactas, hacia arquitecturas híbridas contemporáneas que integran inferencia estadística y aprendizaje profundo. Comprender este tránsito es fundamental para contextualizar las limitaciones de los enfoques tradicionales y justificar la necesidad de modelos de ranking avanzados.
 
@@ -25,33 +18,23 @@ Antes de profundizar en las particularidades del dominio que nos ocupa, resulta 
 
 El orígen de los sistemas de \gls{IR} se encuentra en los modelos booleanos, predominantes durante las primeras décadas de la computación comercial. Estos sistemas operaban bajo una lógica de conjuntos estricta, fundamentada en el álgebra booleana, donde la satisfacción de una consulta dependía exclusivamente de la presencia o ausencia binaria de términos indexados. En este esquema, un documento era considerado relevante si, y solo si, cumplía con las condiciones exactas de la consulta. Aunque este enfoque ofrecía una alta predictibilidad y una eficiencia computacional presentaba una incapacidad para establecer una jerarquía de relevancia, además de ser vulnerable a la ambigüedad propia del lenguaje natural.
 
-La verdadera revolución en la \gls{IR} llegó con la introducción del concepto de ``ordenación por relevancia''. Esta se materializó a través del Modelo de Espacio Vectorial, el cual transformó la representación de documentos y consultas en vectores dentro de un espacio multidimensional \cite{salton1975vector}. Esta abstracción algebraica permitió, por primera vez, calcular el grado de similitud entre una consulta y un documento mediante operaciones geométricas, como el coseno del ángulo entre vectores. %Central a este avance fue el desarrollo de esquemas de ponderación como \glslink{TF-IDF}{TF-IDF}, que penalizan los términos muy frecuentes en la colección (ruido estadístico) y premian aquellos que son distintivos de un documento específico.
+La verdadera revolución en la \gls{IR} llegó con la introducción del concepto de ``ordenación por relevancia''. Esta se materializó a través del Modelo de Espacio Vectorial, el cual transformó la representación de documentos y consultas en vectores dentro de un espacio multidimensional \cite{salton1975vector}. Esta abstracción algebraica permitió, por primera vez, calcular el grado de similitud entre una consulta y un documento mediante operaciones geométricas, como el coseno del ángulo entre vectores. 
 
 Posteriormente, la comunidad científica avanzó hacia marcos teóricos más robustos, dando lugar a los modelos probabilísticos. Estos enfoques se basan en el Principio de Ranking de Probabilidad, que postula que un sistema de recuperación es óptimo si ordena los documentos de manera decreciente según su probabilidad de ser relevantes para el usuario. La culminación de esta familia de modelos es el algoritmo \glslink{BM25}{BM25}, una función de ranking que refina la ponderación clásica introduciendo normalización por longitud de documento y saturación de frecuencia de términos \cite{robertson2009probabilistic}. A día de hoy, \glslink{BM25}{BM25} permanece como un estándar industrial de facto y una línea base difícil de superar en escenarios de recuperación léxica pura.
 
 Sin embargo, a pesar de la solidez matemática de estos métodos tradicionales, todos comparten una limitación intrínseca: la dependencia exclusiva de la coincidencia léxica exacta. Estos modelos sufren del denominado \textit{vocabulary mismatch}, un fenómeno donde documentos semánticamente relevantes son descartados simplemente porque no contienen los mismos términos que la consulta, fallando en capturar fenómenos lingüísticos complejos como la sinonimia y la polisemia. Esta incapacidad para interpretar el contexto semántico motivó la búsqueda de nuevas aproximaciones que pudieran superar estas barreras, dando lugar a la siguiente gran revolución en la \gls{IR}.
 
-% \subsection{El Papel del Aprendizaje Automático}
-
-% La llegada del \gls{ML} permitió que la disciplina evolucionara hacia el \gls{LTR} definido ampliamente en \cite{liu2009learning}. En lugar de depender de funciones de relevancia estáticas, los sistemas comienzan a emplear modelos supervisados capaces de combinar múltiples señales (características léxicas, metadatos, popularidad, etc.) para optimizar funciones de pérdida específicas.
-
-% Este periodo consolidó aproximaciones fundamentales para la ordenación de resultados: los enfoques \textit{pointwise} (evaluación individual), \textit{pairwise} (comparación de pares) y \textit{listwise} (optimización de la lista completa). Aunque el \gls{LTR} mejoró significativamente la precisión, su dependencia de un ajuste de características manual limitaba su capacidad de generalización en dominios con alta variabilidad lingüística.
-
-% \subsection{Recuperación Neuronal y Representaciones Densas}
-
-% La irrupción del \gls{DL} y los modelos basados en \textit{Transformers} han redefinido la \gls{IR} contemporánea. El cambio fundamental reside en el paso de la recuperación dispersa, basada en palabras clave, a la recuperación densa, basada en embeddings \cite{karpukhin2020dense}. Mediante el uso de modelos de lenguaje, es posible proyectar consultas y documentos en un espacio vectorial continuo donde la cercanía geométrica representa similitud semántica, permitiendo capturar conceptos incluso en ausencia de coincidencias léxicas exactas.
-
 \subsubsection{El Papel del Aprendizaje Automático}
 
-La evolución de la \gls{IR} alcanzó un punto de inflexión con la integración de técnicas de \gls{ML}, dando lugar al marco de trabajo conocido como \gls{LTR} \cite{liu2009learning}. Esta transición marcó el abandono de las funciones de relevancia estáticas y predefinidas en favor de modelos supervisados capaces de aprender funciones de ranking óptimas a partir de datos de entrenamiento. %En este escenario, la relevancia deja de ser una métrica aislada para convertirse en el resultado de una combinación compleja de múltiples señales, que incluyen desde indicadores léxicos y metadatos estructurales hasta señales de comportamiento de usuario y medidas de popularidad.
+La evolución de la \gls{IR} alcanzó un punto de inflexión con la integración de técnicas de \gls{ML}, dando lugar al marco de trabajo conocido como \gls{LTR} \cite{liu2009learning}. Esta transición marcó el abandono de las funciones de relevancia estáticas y predefinidas en favor de modelos supervisados capaces de aprender funciones de ranking óptimas a partir de datos de entrenamiento. 
 
 
 
 La literatura académica clasifica tradicionalmente las aproximaciones de \gls{LTR} en tres categorías fundamentales, diferenciadas por su función de pérdida y la estructura de sus datos de entrada:
 
 \begin{itemize}
-    \item \textbf{Pointwise:} Trata el problema de la ordenación como una tarea de regresión o clasificación individual. Cada documento se evalúa de forma aislada frente a la consulta, asignándole una puntuación de relevancia absoluta. %Su principal limitación radica en que ignora la relación de orden relativa entre los documentos de una misma lista.
-    \item \textbf{Pairwise:} Transforma el problema en una clasificación binaria de pares de documentos. El objetivo es predecir, dado un par, cuál de los dos es más relevante para una consulta determinada.% Aunque captura mejor la estructura jerárquica que el enfoque pointwise, puede presentar inconsistencias al agregar resultados globales.
+    \item \textbf{Pointwise:} Trata el problema de la ordenación como una tarea de regresión o clasificación individual. Cada documento se evalúa de forma aislada frente a la consulta, asignándole una puntuación de relevancia absoluta.
+    \item \textbf{Pairwise:} Transforma el problema en una clasificación binaria de pares de documentos. El objetivo es predecir, dado un par, cuál de los dos es más relevante para una consulta determinada.
     \item \textbf{Listwise:} Representa la aproximación más sofisticada, abordando la lista completa de documentos como la unidad de optimización. Estas funciones de pérdida intentan optimizar directamente métricas de evaluación de ranking, capturando de manera integral la estructura de la lista recuperada.
 \end{itemize}
 
@@ -61,23 +44,7 @@ A pesar de que el \gls{LTR} supuso un avance sustancial en la precisión de los 
 
 La reciente irrupción del \gls{DL} y, de manera más específica, la consolidación de las arquitecturas basadas en Transformers, han redefinido por completo los cimientos de la \gls{IR} contemporánea. Este nuevo paradigma, denominado Recuperación Neuronal, propone una transición fundamental: el paso de la recuperación dispersa hacia la recuperación densa \cite{karpukhin2020dense}. Mientras que los métodos tradicionales representan documentos como vectores de alta dimensionalidad pero escasamente poblados (basados en términos exactos), los modelos neuronales proyectan tanto consultas como documentos en un espacio vectorial continuo de baja dimensionalidad, denominado espacio de embeddings.
 
-En este espacio latente, la relevancia se mide por la proximidad geométrica entre vectores en un espacio denso. Esta capacidad de representación se apoya en modelos de lenguaje pre-entrenados que, mediante mecanismos de atención, logran capturar el contexto bidireccional de las palabras. %En las arquitecturas modernas de búsqueda, esto se implementa frecuentemente a través de \textit{bi-encoders} para la fase de recuperación inicial y \textit{cross-encoders} para la fase de re-ranking, donde se requiere un análisis semántico exhaustivo de la interacción entre consulta y documento. Este esquema híbrido no solo mejora la calidad de los resultados, sino que permite que los sistemas de recuperación de información sean verdaderamente "conscientes" del significado subyacente en el lenguaje natural.
-
-% \section{Estrategias de Refinamiento}
-
-% A medida que los corpus documentales han ganado en escala, ha surgido una tensión técnica entre dos objetivos contrapuestos: la exhaustividad y la precisión. La imposibilidad de aplicar modelos de máxima complejidad sobre millones de documentos en tiempo real ha motivado la aparición de estrategias de modificación del ranking original, con la intención de optimizar la calidad de los resultados presentados.
-
-% \subsubsection{Re-ranking: Precisión mediante Interacción Profunda}
-% La técnica de \textit{re-ranking} surge de la necesidad de aplicar modelos de alta intensidad computacional sobre un subconjunto reducido de candidatos. Para ello, tras una recuperación rápida basada en métodos léxicos o vectoriales aproximados, se selecciona una ``ventana'' de resultados para ser analizada por un modelo más costoso. Esta fase permite evaluar interacciones semánticas finas que son computacionalmente inviables en la fase de búsqueda masiva, garantizando que los elementos en las posiciones superiores sean los de mayor relevancia real. Un ejemplo claro es el mostrado en \cite{nogueira2019passage}, donde demuestran que el uso de cross-encoders en la etapa de re-ranking mejora sustancialmente la calidad del ranking final.
-
-% \subsubsection{Fusión de Rankings: Robustez y Diversidad de Señales}
-% Paralelamente, la Fusión de Rankings (\textit{Rank Fusion}) aborda la varianza intrínseca entre diferentes modelos. La evidencia en la literatura científica demuestra que distintos algoritmos de recuperación suelen identificar diferentes subconjuntos de elementos relevantes. La motivación de la fusión reside en el principio de robustez: combinar múltiples listas de resultados permite mitigar los sesgos de modelos individuales. Algoritmos como \gls{RRF} desarrollado en \cite{cormack2009reciprocal} se han convertido en estándares debido a su capacidad para integrar fuentes heterogéneas basándose en la posición relativa, mejorando la estabilidad del sistema sin necesidad de normalizar puntuaciones dispares.
-
-% \subsection{El Paradigma de las Arquitecturas Híbridas}
-
-% En la actualidad, el estado del arte no se define por el uso de una única técnica, sino por la integración de múltiples capas de procesamiento. La transición hacia sistemas que combinan la recuperación inicial con fases posteriores de refinamiento y consolidación de resultados ha demostrado ser el enfoque más eficaz\footnote{Este hecho se ve reflejado en las propuestas de solución planteadas por los distintos participantes en la competición de TalentCLEF, como se detallará más en detalle en la sección \ref{sec:TalentCLEFOverview}.}. 
-
-% Históricamente, se ha evidenciado que la unión de diversas metodologías genera sistemas significativamente más estables y precisos. Este marco de trabajo híbrido constituye el fundamento sobre el que se desarrollan las soluciones modernas de alta precisión, permitiendo una adaptación flexible a problemas de dominio específico como el que se aborda en este trabajo.
+En este espacio latente, la relevancia se mide por la proximidad geométrica entre vectores en un espacio denso. Esta capacidad de representación se apoya en modelos de lenguaje pre-entrenados que, mediante mecanismos de atención, logran capturar el contexto bidireccional de las palabras. 
 
 \section{Estrategias de Refinamiento}
 
@@ -95,7 +62,6 @@ De forma complementaria al re-ranking, la Fusión de Rankings aborda la varianza
 
 La motivación subyacente a la fusión es el principio de robustez: la agregación de múltiples listas de resultados provenientes de señales distintas tiende a mitigar los errores individuales y reforzar los aciertos comunes. Existen multitud de enfoques para la fusión de rankings, que van desde métodos simples como la suma o el promedio de posiciones, hasta algoritmos más sofisticados que ponderan las listas según su calidad histórica o su diversidad.
 
-%Entre las diversas técnicas existentes, el algoritmo \gls{RRF} propuesto por \cite{cormack2009reciprocal} se ha consolidado como un estándar de facto. Su popularidad radica en su capacidad para integrar fuentes heterogéneas basándose únicamente en la posición relativa de los documentos, eliminando la necesidad de normalizar puntuaciones de similitud que a menudo son incomparables entre distintos modelos. Esto dota al sistema de una mayor estabilidad y generalización ante consultas variadas.
 
 \subsubsection{El Paradigma de las Arquitecturas Híbridas}
 
@@ -128,63 +94,6 @@ En cuanto a los análisis bibliométricos sobre investigación en esta tarea, es
 
 Una distinción clave que ha emergido en la literatura reciente es la diferencia entre (i) la clasificación contra una taxonomía canónica y (ii) el matching o ranking entre pares de textos libres. Mientras la clasificación se beneficia de puntos de referencia estables, el matching real debe lidiar con ruido, abreviaturas, títulos internos y asimetrías informativas que no aparecen en las taxonomías que se encuentran disponibles. En consecuencia, las soluciones más robustas tienden a combinar representaciones semánticas aprendidas con estrategias de evaluación y depuración específicas del dominio, integrando tanto medidas globales de similitud como señales estructurales extraídas del mercado laboral \cite{gasco2025brief}.
 
-%%
-
-% \section{Enfoques abordados en TalentCLEF}
-% \label{sec:TalentCLEFOverview}
-
-% La \gls{Tarea} de TalentCLEF 2025 surge de forma natural ante la creciente evolución del \gls{JTM} en entornos multilingües. Gracias a ello, mutlitud de equipos se sintieron atraídos aportando una alta variedad de enfoques, buscando resolver el desafío de alinear semánticamente títulos de trabajo en inglés, español, alemán y, opcionalmente, chino. El análisis de las soluciones presentadas por los participantes revela una fuerte tendencia hacia el uso de modelos de lenguaje basados en Transformers, aunque las estrategias de implementación, entrenamiento y uso de recursos externos variaron significativamente.
-
-% \subsection{Estrategias Dominantes}
-
-% La mayoría de las soluciones giraron en torno a modelos de \textit{Sentence Transformers} multilingües preentrenados, como MPNet \cite{brikman2025multilingual}, JobBERT \cite{decorte2025multilingual} o variantes de SBERT \cite{nizami2025enhancing,bhangale2025fine}. El objetivo común fue la generación de embeddings en un espacio semántico compartido, donde títulos de trabajo equivalentes en diferentes idiomas tuvieran una alta similitud\footnote{La similitud medida en los espacios vectoriales generados fue la similitud coseno, elegida de forma unánime entre todas las propuestas de solución al problema.}.
-
-% Un hallazgo clave, propuesto por el equipo NLPnorth \cite{zhang2025nlpnorth}, fue la comparación directa de tres métodos de ajuste fino de cara a la resolución del problema:
-% \begin{itemize}
-%     \item \textbf{Discriminativo (Clasificación):} Reformular la tarea como una clasificación binaria (si dos títulos coinciden o no), generando para ello pares negativos.
-%     \item \textbf{Contrastivo:} Entrenar el modelo para acercar las representaciones de pares positivos y alejar las de pares negativos.
-%     \item \textbf{Basado en Prompts:} Utilizar LLMs para evaluar la similitud.
-% \end{itemize}
-% Los resultados de NLPnorth sugirieron que el aprendizaje contrastivo fue su estrategia más efectiva.
-
-% Otros equipos, como UDII-UPM \cite{rodriguez2025udii}, exploraron el rendimiento de modelos preentrenados sin ajuste fino, aplicando un enfoque \textit{zero-shot}, proponiendo una fusión de representaciones semánticas de diferentes modelos para robustecer el matching. 
-
-% Por otro lado, el equipo Pjmathematician utilizó embeddings GIST e incorporó datos generados mediante LLMs \cite{vachharajani2025pjmathematician}.
-
-% \subsection{El Rol Crítico de Recursos Externos}
-
-% % El uso de la taxonomía \gls{ESCO} fue un diferenciador clave para varias de las soluciones de mayor rendimiento.
-
-% \subsubsection{Uso de ESCO}
-% La taxonomía \gls{ESCO} no solo sirvió como base de conocimiento, sino también como fuente de datos de entrenamiento. El equipo VerbaNex \cite{novoa2025verbanex} utilizó las relaciones jerárquicas de \gls{ESCO} para generar automáticamente pares adicionales positivos y negativos, ajustando su modelo para crear un espacio semántico alineado con la taxonomía. De manera similar, NLPnorth \cite{zhang2025nlpnorth} también extrajo datos adicionales de \gls{ESCO} para su entrenamiento\footnote{Cabe destacar que el conjunto de datos de entrenamiento ya habían sido generado por la organización y se encontraba a disposición de los participantes. Sin embargo, conociendo la procedencia y método de producción de este set de datos, algunos participantes decidieron aumentar dicho set para una mejor generalización de los modelos en el aprendizaje.}.
-
-% Otros equipos adoptaron un enfoque híbrido. El sistema de dos etapas de TechWolf \cite{rodriguez2025two} utilizó tanto \gls{ESCO} como \gls{ISCO} en un primer sistema de recuperación de candidatos, para luego refinar la lista de candidatos mediante un LLM en una etapa de \textit{re-ranking}.
-
-% \subsubsection{Uso de LLMs}
-% Además del \textit{re-ranking} mencionado, varios equipos utilizaron algún \gls{LLM} para la generación de datos. El equipo NT \cite{nga2025nt} propuso un sistema basado en la generación de descripciones de trabajo mediante \gls{LLM}s, seguida de un sistema de \gls{IR}. Sin embargo, su rendimiento fue bastante limitado en comparación con otros enfoques basados en Transformers.
-
-% \subsection{Gestión de Escenarios Multilingües y Cross-Lingües}
-
-% El desafío principal de la tarea era la correcta alineación semántica entre idiomas.
-% \begin{itemize}
-%     \item \textbf{Espacio Semántico Compartido:} La estrategia dominante fue el uso de codificadores multilingües (SBERT, MPNet) ajustados para proyectar todos los idiomas en un único espacio vectorial \cite{brikman2025multilingual,nizami2025enhancing,novoa2025verbanex}.
-%     \item \textbf{Inglés como Lengua Pivote:} El equipo de TechWolf \cite{rodriguez2025two} investigó explícitamente el uso del inglés como idioma pivote, traduciendo los títulos de otros idiomas al inglés antes de la comparación, una estrategia que demostró mejorar el rendimiento en algunos escenarios cross-lingües.
-%     \item \textbf{Recuperación Híbrida:} El equipo AlexU-NLP \cite{barakat2025alexu} propuso un sistema de recuperación híbrido con un enfoque de \textit{curriculum learning}, diseñado para gestionar la dificultad progresiva de los pares multilingües.
-% \end{itemize}
-
-% \subsection{Consideraciones Específicas: Chino y Sesgo de Género}
-
-% Aunque la mayoría de los participantes se centraron en inglés, español y alemán, la tarea incluía dos consideraciones importantes: el idioma chino y la evaluación del sesgo de género.
-
-% \subsubsection{El Caso del Chino}
-% El idioma chino (en pares \textit{zh-zh} y \textit{en-zh}) fue una subtarea voluntaria dentro de la \gls{Tarea}. Sin embargo, la mayoría de los trabajos centraron sus esfuerzos en los idiomas europeos, debido a que el chino no se encontraba dentro de los datos de entrenamiento, sino únicamente en validación y testeo. Este enfoque fue tomado por la organización con la intención de evaluar la capacidad multilingue de las distintas propuestas. 
-
-% \subsubsection{Evaluación del Sesgo de Género}
-% Una componente clave de la tarea fue la medición del sesgo de género. En idiomas como el español y el alemán, donde los títulos de trabajo pueden tener marcas explícitas de género, se evaluó cómo las distintas soluciones manejaban estas diferencias,  para evaluar si los sistemas perpetuaban o mitigaban sesgos de género en sus predicciones. Los datos de la competición incluían anotaciones ocultas de género y expresiones con marcas de género para permitir este análisis. La organización proponía buscar un sistema que minimizara las diferencias de rendimiento entre títulos de trabajo asociados a diferentes grupos de género.
-
-% A pesar de que esta evaluación fue central, pocos trabajos de los participantes detallaron explícitamente las técnicas de mitigación del sesgo que aplicaron. La mayoría de los sistemas se centraron en la precisión del matching semántico. Los trabajos de NLPnorth y de Ixa evaluaron este tema con detenimiento, consiguiendo una puntuación perfecta en la métrica de \gls{RBO}.
-
-% %%
 
 \section{Enfoques y Metodologías en TalentCLEF}
 \label{sec:TalentCLEFOverview}
@@ -241,42 +150,10 @@ Finalmente, la \gls{Tarea} incorporó una dimensión ética crucial: la evaluaci
 
 Para medir esto, la organización incluyó anotaciones ocultas y pares diseñados específicamente para testear la neutralidad de las predicciones. El objetivo era minimizar la disparidad de rendimiento entre grupos de género. A pesar de la importancia de esta métrica, pocos participantes detallaron técnicas explícitas de mitigación de sesgos, priorizando la precisión semántica pura. No obstante, los trabajos de NLPnorth y del grupo Ixa destacaron en este apartado, logrando puntuaciones perfectas en la métrica de \gls{RBO}, demostrando que es posible alcanzar un alto rendimiento técnico sin sacrificar la igualdad de género.
 
-
-
-% \section{Transformers para Semejanza Semántica}
-% \label{sec:Transformers}
-
-% Los transformers han sido la palanca tecnológica dominante en las tareas de comprensión y comparación semántica de textos desde su aparición. En el contexto de la tarea, su adopción no sólo ha permitido avances significativos en calidad de ranking, sino que ha generado un conjunto diverso de arquitecturas y estrategias de uso que conviene desglosar.
-
-% \subsection{Definición y características}
-% Un transformer es una arquitectura de red neuronal basada principalmente en mecanismos de atención que procesan secuencias sin recurrir a operaciones recurrentes o convolucionales. La atención permite que cada posición de entrada sintetice información de todas las demás posiciones mediante pesos aprendidos; esto facilita la captura de relaciones de largo alcance, la paralelización durante el entrenamiento y la construcción de representaciones contextualizadas de tokens y oraciones \cite{vaswani2017attention}. Aunque el diseño original incluye bloques de encoder y decoder, la práctica moderna para tareas de recuperación y matching usa variantes sólo-encoder (para embeddings), encoder-decoder y modelos sólo-decoder (para \gls{LLM}) según el uso concreto.
-
-% \subsection{Su utilización en la tarea}
-% En la práctica aparecen tres patrones arquitectónicos generales, con variantes muy interesantes:
-
-% \subsubsection{Bi-encoders} % (sentence-transformers / dual encoders)
-% Cada query se codifica por separado con el mismo encoder para producir vectores en un espacio semántico compartido, y usa la similitud entre vectores para ordenar candidatos. Este esquema es ideal cuando se requiere recuperar a escala, porque la indexación de vectores y la búsqueda aproximada permiten latencias bajas. Su principal fortaleza es la eficiencia en la fase de inferencia; su principal limitación es que la interacción entre consulta y candidato es sólo implícita en el espacio vectorial, por lo que puede fallar a la hora de resolver matices finos.
-
-% \subsubsection{Cross-encoders} % (re-rankers y matchers de interacción)
-% Un cross-encoder toma la pareja \texttt{(consulta, candidato)} y las procesa juntas, produciendo una puntuación que refleja la compatibilidad tras un proceso de atención en ambas direcciones. Proporciona decisiones más precisas porque permite interacciones finas entre las dos secuencias, capturando coincidencias léxicas localizadas, supresiones y dependencias sintácticas que un bi-encoder puede pasar por alto. Sin embargo, el coste computacional es mucho más alto. Con esta técnica no es viable aplicar cross-encoders exhaustivamente sobre grandes conjuntos sin una fase previa de filtrado. Por ello se emplean habitualmente como re-rankers sobre un conjunto reducido (top-k) obtenido con otros métodos menos costosos. La práctica de combinar un retrieval rápido y re-ranking posterior ha quedado consolidada como patrón de diseño en sistemas de \gls{IR} modernos \cite{sbertRetrieveamp,xu2025survey}.
-
-% \subsubsection{Modelos autoregresivos} %  y LLMs para generación y scoring
-% Los modelos autoregresivos se han usado de forma complementaria: para generar descripciones adicionales de un título, traducir o normalizar textos, crear negativos/positivos sintéticos, o para puntuar directamente parejas mediante prompting. Ofrecen flexibilidad y poder de razonamiento, pero también son muy propensos a la generación de ruido. Requieren de un control cuidadoso y suelen tener costes computacionales y de infraestructura elevados.
-
-% \subsection{Técnicas de entrenamiento específicas para mejorar la calidad del ranking}
-% El rendimiento de los transformers depende tanto de la arquitectura como de la estrategia de entrenamiento y de la calidad de los datos usados. En la tarea se observan varias técnicas que marcan la diferencia:
-
-% \begin{itemize}
-%     \item \textbf{Entrenamiento contrastivo:} las técnicas contrastivas, como por ejemplo \gls{InfoNCE}, acercan los pares positivos de vectores y separan los negativos. Una selección inteligente de negativos mejora la discriminación del espacio semántico y reduce falsos positivos en los rankings. Técnicas recientes que centran su foco en la selección de negativos han mostrado ganancias notables en el fine-tuning de embeddings \cite{solatorio2024gistembed}.
-%     \item \textbf{Variantes de las técnicas contrastivas:} existen algunas modificaciones, como focal-\gls{InfoNCE}, que tratan de penalizar más los errores en ejemplos difíciles y estabilizar el aprendizaje cuando existe un desbalance fuerte entre positivos y negativos. Con ello consiguen mejorar la capacidad de priorizar los verdaderos positivos en los primeros puestos del ranking \cite{hou2023improving}.
-%     \item \textbf{Curriculum learning:} comenzar con negativos fáciles y evolucionar hacia negativos más difíciles (o introducir negativos guiados por similitud léxica/semántica) puede estabilizar el entrenamiento y evitar que el modelo colapse ante una distribución ``long-tail'' de títulos.
-%     \item \textbf{Fine-tuning multilingüe:} ajustar modelos multilingües con datos balanceados por idioma puede ayudar a alinear representaciones cross-lingües y a reducir la fragmentación de la representación del embedding. Algunos métodos modernos de entrenamiento masivo multilingüe han demostrado que el aprendizaje dirigido para varios idiomas simultáneamente mejora la transferencia entre pares idiomáticos \cite{mao2024ems}.
-% \end{itemize}
-
 \section{Transformers para Semejanza Semántica}
 \label{sec:Transformers}
 
-% Si\todo{Revisar esta nueva version} en la sección anterior se analizaron los enfoques generales de la competición, es imprescindible profundizar en la palanca tecnológica que ha hecho posibles dichos avances: la arquitectura Transformer. 
+
 Desde su irrupción, los Transformers se han consolidado como el estándar indiscutible para tareas de comprensión del lenguaje natural, y en el contexto de TalentCLEF 2025, su adopción ha sido universal. Su capacidad para modelar dependencias complejas ha permitido no solo mejoras cuantitativas en la calidad del ranking, sino también el florecimiento de una diversidad de arquitecturas y estrategias de alineación semántica que se detallan a continuación.
 
 \subsection{Fundamentos de la Arquitectura Transformer}
