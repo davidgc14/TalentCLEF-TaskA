@@ -19,3 +19,5 @@ temp.*
 
 models/finetuned models/*
 models/CrossEncoder*
+
+DevNotes.md
