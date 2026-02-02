@@ -23,7 +23,7 @@ lang_dict = {
 today = time.strftime("%Y-%m-%d")
 
 project_dir = Path(__file__).resolve().parents[1]
-date_dir = project_dir / 'src' / 'output' / today
+date_dir = project_dir / 'output' / today
 date_dir.mkdir(parents=True, exist_ok=True)
 
 # Crear subdirectorio incremental por ejecución (001, 002, ...)
