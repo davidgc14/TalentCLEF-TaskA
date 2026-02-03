@@ -183,7 +183,7 @@ Basándonos en los resultados expuestos, a pesar de que todas ellas han mejoread
 
 Con ello obtenemos un sistema que maximiza la métrica \gls{MAP} mediante la combinación ponderada de las fortalezas individuales de los modelos base.
 
-\section{Fase 5: Re-Ranking}
+\section{Fase 4: Re-Ranking}
 
 Procedemos a continuación con la fase final de re-ranking, cuyo objetivo es refinar aún más el ordenamiento de los mejores candidatos recuperados para cada consulta. Para ello, es necesario seleccionar un modelo cross-encoder adecuado que permita evaluar la relevancia de los pares $(q, d)$ de manera más precisa.
 
@@ -222,7 +222,7 @@ Se puede observar que, frente a la asíntota marcada por los resultados obtenido
 Con la perspectiva de maximizar el rendimiento del sistema, se seleccionó el modelo \textit{Jsevisal/CrossEncoder-ModernBERT-base-qnli} para la fase final de re-ranking, ya que fue el que obtuvo el mejor desempeño al reordenar las 5 mejores candidaturas, alcanzando un \gls{MAP} de \textbf{0.541862}. Este resultado representa una mejora significativa respecto al mejor desempeño previo obtenido en la fase de fusión de rankings, mejorando su resultado en más de 4 puntos porcentuales.
 
 
-\section{Evaluación sobre Test}
+\section{Evaluación sobre test}
 
 Finalmente, se procedió a evaluar el sistema completo, incluyendo todas las fases descritas, sobre el conjunto de datos de prueba. Para ello, el ranking producido por el sistema, fue enviado al sistema de evaluación sobre test de Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}}. Los resultados obtenidos son los siguientes\footnote{Los datos que se muestran a continuación fueron tomados a fecha 31 de Enero de 2026, pudiendo existir propuestas posteriores que modifiquen los rankings aquí presentados.}. 
 

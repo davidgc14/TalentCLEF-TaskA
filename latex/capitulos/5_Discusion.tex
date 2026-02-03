@@ -35,7 +35,7 @@ Es necesario reconocer un sesgo metodológico en la selección inicial de los mo
 
 En este sentido, una dificultad latente que persistió durante toda la búsqueda de modelos para la fase de Retrieval fue la falta de etiquetas fiables en Hugging Face sobre la funcionalidad de los modelos. Muchos modelos no estaban correctamente etiquetados como modelos de retrieval, lo que dificultó la identificación precisa de arquitecturas especializadas y pudo haber excluido candidatos potenciales que no estaban correctamente indexados. Esta limitación subraya la necesidad de una mayor estandarización en la documentación y etiquetado de modelos en repositorios públicos para facilitar futuras investigaciones.
 
-\section{Dinámicas de Entrenamiento y Adaptación}
+\section{Dinámicas de entrenamiento y adaptación}
 
 El proceso de fine-tuning reveló la fragilidad del aprendizaje supervisado cuando se dispone de datos limitados o sintéticos en un dominio altamente específico.
 
@@ -58,7 +58,7 @@ Aunque la técnica de \gls{WSum} logró superar el rendimiento de los modelos in
 
 Dos de los modelos base comparten fundamentos arquitectónicos muy similares (basados en variantes de \textit{XLM-RoBERTa} y entrenados con objetivos similares). Esta falta de diversidad arquitectónica implica que los modelos tienden a compartir los mismos sesgos inductivos y a cometer errores similares, reduciendo la eficacia teórica de la fusión. Como se intuía en la alineación vertical de la Figura \ref{fig:zero_shot_map}, haber forzado la selección de modelos con arquitecturas distintas, incluso sacrificando ligeramente el rendimiento individual, podría haber maximizado la complementariedad y, por ende, el resultado final de la fusión. Sin embargo, la decisión basada en tomar simplemente los mejores modelos individuales puede haber limitado el potencial de esta etapa del sistema.
 
-\subsection{Re-Ranking: Selección de Modelos y Profundidad de Búsqueda}
+\subsection{Re-ranking}
 
 La etapa de re-ranking se planteó inicialmente con una metodología análoga a la de recuperación: una evaluación masiva de candidatos para seleccionar empíricamente el mejor modelo. Sin embargo, esta fase se enfrentó a obstáculos significativos relacionados con la disponibilidad y clasificación de los recursos, así como dilemas críticos sobre la estabilidad frente al rendimiento máximo.
 
@@ -78,7 +78,7 @@ Por el contrario, modelos como \textit{posih-reranker-base-mse} mostraron un com
 
 Sin embargo, dado que el objetivo principal era maximizar la métrica \gls{MAP} en validación, se optó por seleccionar el modelo con el mejor rendimiento absoluto para $k=5$. Esta decisión, aunque justificada desde una perspectiva de optimización de métricas, pudo haber comprometido la estabilidad del sistema frente a variaciones en los datos. En retrospectiva, y a la luz de la caída de rendimiento en el conjunto de test, es muy probable que una opción más conservadora y estable como \textit{mmarco-mMiniLMv2} hubiera ofrecido una mejor generalización ante datos no vistos, sacrificando la métrica en validación a cambio de de una mayor robustez.
 
-\section{Discrepancia entre Validación y Test}
+\section{Discrepancia entre validación y test}
 
 \subsection{Sobreestimación y cambio de dominio}
 Quizás el punto más crítico de la discusión es la notable caída del rendimiento al evaluar sobre el conjunto de test. Este descenso confirma que los conjuntos de entrenamiento y validación provenían de un mismo dominio, lo que llevó a una sobreestimación de la capacidad real del sistema durante el desarrollo. El conjunto de test, proveniente de una fuente y una distribución de datos distinta, penalizó el sobreajuste del sistema a los datos de \gls{ESCO}.% Esto subraya la necesidad crítica de contar con conjuntos de validación \textit{out-of-domain} para estimar de forma fidedigna el rendimiento en escenarios reales.

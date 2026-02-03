@@ -121,15 +121,15 @@ La lista unificada resultante de la fusión pasa a una etapa final de reordenami
 
 Debido a su alto coste computacional, este proceso se aplica únicamente a los candidatos más prometedores resultantes de la etapa anterior.\todo{Debo incluir aqui el fundamento teorico y estrategia de seleccion?} %El modelo emitirá un \textit{logit} que representará la puntuación de relevancia final utilizada para ordenar la lista definitiva.
 
-\section{Tecnologías y Estrategias de Aprendizaje}
+\section{Tecnologías y estrategias de aprendizaje}
 
 La implementación del sistema se apoya en un conjunto de tecnologías y funciones de pérdida seleccionadas específicamente para maximizar el aprendizaje de similitud semántica.
 
-\subsection{Librerías y Entorno}
+\subsection{Librerías y entorno}
 
 El desarrollo se lleva a cabo utilizando el lenguaje Python, apoyándose en el ecosistema de Hugging Face y la librería \texttt{SentenceTransformers} \cite{reimers2019sentence}, que facilita el entrenamiento de los modelos bi-encoders que necesitamos. Para la gestión de tensores y el entrenamiento en GPU, se utiliza \textbf{PyTorch}. Se ha seleccionado como entorno de desarrollo Google Colab, aprovechando sus capacidades de cómputo en la nube y acceso a GPUs. 
 
-\subsection{Función de Pérdida en Recuperación}
+\subsection{Función de pérdida en recuperación}
 \label{sec:Funciones_de_perdida}
 
 Para la optimización del espacio vectorial en la etapa de recuperación densa, se emplea exclusivamente la función de pérdida \gls{MNRL}. Esta elección se fundamenta en su alta eficiencia para el entrenamiento de modelos bi-encoder cuando se dispone de pares positivos, como es el caso de los datos sintéticos que nos proporciona la competición.
@@ -168,7 +168,7 @@ Finalmente, el valor de \gls{MAP} se obtiene promediando la \gls{AP} sobre la to
 \]
 
 
-\section{Flujo de Trabajo Experimental}
+\section{Flujo de trabajo experimental}
 
 Para validar la arquitectura propuesta y alcanzar los objetivos definidos, se plantea un flujo de trabajo iterativo dividido en cuatro fases principales:
 
@@ -180,8 +180,8 @@ Se procede al ajuste fino de los 10 mejores modelos de recuperación utilizando 
 
 En esta fase, se aplica un Early Stopping basado en la función de pérdida \gls{MNRL} y se monitoriza el rendimiento en el conjunto de validación utilizando la métrica \gls{MAP}. Se experimenta también con diferentes configuraciones de tasas de aprendizaje y de tamaños del lote, tratando de optimizar la convergencia y la generalización del modelo. 
 
-\subsection{Fase 3: Optimización de la Fusión}
+\subsection{Fase 3: Optimización de la fusión}
 Una vez entrenados los modelos individuales, se analiza la estrategia de fusión óptima. Se evalúa el impacto de diferentes combinaciones de modelos y se ajusta el parámetro $k$ del algoritmo \gls{RRF} para maximizar la métrica \gls{MAP} en el conjunto de validación, así como la búsqueda de pesos óptimos en la técnica de \gls{WSum}.
 
-\subsection{Fase 4: Implementación del Re-ranking}
+\subsection{Fase 4: Implementación del re-ranking}
 Finalmente, se integra el cross-encoder. Se analiza el compromiso entre rendimiento y tiempo de cómputo variando la profundidad del re-ranking. El resultado de esta fase constituye el sistema final a evaluar en la competición.
