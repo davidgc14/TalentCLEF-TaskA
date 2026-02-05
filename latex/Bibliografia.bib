@@ -134,6 +134,46 @@
   publisher = {Now Publishers, Inc.}
 }
 
+@inproceedings{joachims2002optimizing,
+  title     = {Optimizing search engines using clickthrough data},
+  author    = {Joachims, Thorsten},
+  booktitle = {Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining},
+  pages     = {133--142},
+  year      = {2002}
+}
+
+@article{burges2006learning,
+  title   = {Learning to rank with nonsmooth cost functions},
+  author  = {Burges, Christopher and Ragno, Robert and Le, Quoc},
+  journal = {Advances in neural information processing systems},
+  volume  = {19},
+  year    = {2006}
+}
+
+@inproceedings{li2007mcrank,
+  title     = {Mcrank: Learning to rank using multiple classification and gradient boosting},
+  author    = {Li, Ping and Wu, Qiang and Burges, Christopher},
+  booktitle = {Advances in neural information processing systems},
+  volume    = {20},
+  year      = {2007}
+}
+
+@inproceedings{burges2005learning,
+  title     = {Learning to rank using gradient descent},
+  author    = {Burges, Chris and Shaked, Tal and Renshaw, Erin and Lazier, Ari and Deeds, Matt and Hamilton, Nicole and Hullender, Greg},
+  booktitle = {Proceedings of the 22nd international conference on Machine learning},
+  pages     = {89--96},
+  year      = {2005}
+}
+
+@inproceedings{cao2007learning,
+  title     = {Learning to rank: from pairwise approach to listwise approach},
+  author    = {Cao, Zhe and Qin, Tao and Liu, Tie-Yan and Tsai, Ming-Feng and Li, Hang},
+  booktitle = {Proceedings of the 24th international conference on Machine learning},
+  pages     = {129--136},
+  year      = {2007}
+}
+
 % Contraposicion entre recuperación dispersa y densa
 @inproceedings{karpukhin2020dense,
   title     = {Dense Passage Retrieval for Open-Domain Question Answering.},
@@ -149,6 +189,55 @@
   author  = {Nogueira, Rodrigo and Cho, Kyunghyun},
   journal = {arXiv preprint arXiv:1901.04085},
   year    = {2019}
+}
+
+% Reranking
+@inproceedings{guo2016deep,
+  title     = {A deep relevance matching model for ad-hoc retrieval},
+  author    = {Guo, Jiafeng and Fan, Yixing and Ai, Qingyao and Croft, W Bruce},
+  booktitle = {Proceedings of the 25th ACM international on conference on information and knowledge management},
+  pages     = {55--64},
+  year      = {2016}
+}
+
+@article{humeau2019poly,
+  title   = {Poly-encoders: Transformer architectures and pre-training strategies for fast and accurate multi-sentence scoring},
+  author  = {Humeau, Samuel and Shuster, Kurt and Lachaux, Marie-Anne and Weston, Jason},
+  journal = {arXiv preprint arXiv:1905.01969},
+  year    = {2019}
+}
+
+@inproceedings{devlin2019bert,
+  title     = {BERT: Pre-training of deep bidirectional transformers for language understanding},
+  author    = {Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  booktitle = {Proceedings of the 2019 conference of the North American chapter of the association for computational linguistics: human language technologies, volume 1 (long and short papers)},
+  pages     = {4171--4186},
+  year      = {2019}
+}
+
+@article{liu2019roberta,
+  title   = {RoBERTa: A robustly optimized bert pretraining approach},
+  author  = {Liu, Yinhan and Ott, Myle and Goyal, Naman and Du, Jingfei and Joshi, Mandar and Chen, Danqi and Levy, Omer and Lewis, Mike and Zettlemoyer, Luke and Stoyanov, Veselin},
+  journal = {arXiv preprint arXiv:1907.11692},
+  year    = {2019}
+}
+
+@book{lin2022pretrained,
+  title     = {Pretrained transformers for text ranking: Bert and beyond},
+  author    = {Lin, Jimmy and Nogueira, Rodrigo and Yates, Andrew},
+  year      = {2022},
+  publisher = {Springer Nature}
+}
+
+@article{li2023parade,
+  title     = {Parade: Passage representation aggregation fordocument reranking},
+  author    = {Li, Canjia and Yates, Andrew and MacAvaney, Sean and He, Ben and Sun, Yingfei},
+  journal   = {ACM Transactions on Information Systems},
+  volume    = {42},
+  number    = {2},
+  pages     = {1--26},
+  year      = {2023},
+  publisher = {ACM New York, NY, USA}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -421,6 +510,31 @@
   year      = {2009}
 }
 
+@article{oord2018representation,
+  title   = {Representation learning with contrastive predictive coding},
+  author  = {Oord, Aaron van den and Li, Yazhe and Vinyals, Oriol},
+  journal = {arXiv preprint arXiv:1807.03748},
+  year    = {2018}
+}
+
+% Fusion
+@inproceedings{belkin1993effect,
+  title     = {The effect multiple query representations on information retrieval system performance},
+  author    = {Belkin, Nicholas J and Cool, Colleen and Croft, W Bruce and Callan, James P},
+  booktitle = {Proceedings of the 16th annual international ACM SIGIR conference on Research and development in information retrieval},
+  pages     = {339--346},
+  year      = {1993}
+}
+
+@article{fox1994combination,
+  title     = {Combination of multiple searches},
+  author    = {Fox, Edward A and Shaw, Joseph A},
+  journal   = {NIST special publication SP},
+  volume    = {243},
+  year      = {1994},
+  publisher = {NATIONAL INSTIUTE OF STANDARDS \& TECHNOLOGY}
+}
+
 @inproceedings{wu2006evaluating,
   title        = {Evaluating score normalization methods in data fusion},
   author       = {Wu, Shengli and Crestani, Fabio and Bi, Yaxin},
@@ -430,13 +544,42 @@
   organization = {Springer}
 }
 
-@article{oord2018representation,
-  title   = {Representation learning with contrastive predictive coding},
-  author  = {Oord, Aaron van den and Li, Yazhe and Vinyals, Oriol},
-  journal = {arXiv preprint arXiv:1807.03748},
-  year    = {2018}
+% hibridas
+
+@article{bruch2023analysis,
+  title     = {An analysis of fusion functions for hybrid retrieval},
+  author    = {Bruch, Sebastian and Gai, Siyu and Ingber, Amir},
+  journal   = {ACM Transactions on Information Systems},
+  volume    = {42},
+  number    = {1},
+  pages     = {1--35},
+  year      = {2023},
+  publisher = {ACM New York, NY}
 }
 
+@article{zhang2022hlatr,
+  title   = {HLATR: enhance multi-stage text retrieval with hybrid list aware transformer reranking},
+  author  = {Zhang, Yanzhao and Long, Dingkun and Xu, Guangwei and Xie, Pengjun},
+  journal = {arXiv preprint arXiv:2205.10569},
+  year    = {2022}
+}
+
+@article{luan2021sparse,
+  title     = {Sparse, dense, and attentional representations for text retrieval},
+  author    = {Luan, Yi and Eisenstein, Jacob and Toutanova, Kristina and Collins, Michael},
+  journal   = {Transactions of the Association for Computational Linguistics},
+  volume    = {9},
+  pages     = {329--345},
+  year      = {2021},
+  publisher = {MIT Press One Rogers Street, Cambridge, MA 02142-1209, USA journals-info~…}
+}
+
+@article{gao2021coil,
+  title   = {COIL: Revisit exact lexical match in information retrieval with contextualized inverted list},
+  author  = {Gao, Luyu and Dai, Zhuyun and Callan, Jamie},
+  journal = {arXiv preprint arXiv:2104.07186},
+  year    = {2021}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% EVALUACION %%%%%%%%%%%
