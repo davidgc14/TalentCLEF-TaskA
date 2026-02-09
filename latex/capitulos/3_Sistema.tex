@@ -41,7 +41,7 @@ La Figura \ref{fig:arquitectura_diagrama} ilustra el diagrama de bloques de la a
 
 \subsubsection{Fundamento teórico: Bi-Encoders}
 
-La arquitectura base empleada es la red siamesa de bi-encoders \cite{reimers2019sentence}. En este esquema, dada una consulta $q$ y un candidato $d$, se utilizan dos instancias del mismo modelo preentrenado (con pesos compartidos) para procesar cada entrada de forma independiente y generar sus representaciones vectoriales densas, denotadas como $u$ y $v$ respectivamente.
+\noindent La arquitectura base empleada es la red siamesa de bi-encoders \cite{reimers2019sentence}. En este esquema, dada una consulta $q$ y un candidato $d$, se utilizan dos instancias del mismo modelo preentrenado (con pesos compartidos) para procesar cada entrada de forma independiente y generar sus representaciones vectoriales densas, denotadas como $u$ y $v$ respectivamente.
 
 La similitud semántica $sim(q, d)$ se calcula mediante la función de similitud coseno entre ambos vectores, lo que permite una recuperación eficiente mediante búsqueda por proximidad:
 
@@ -69,7 +69,7 @@ Para mitigar estas limitaciones y mejorar la robustez del sistema, se implementa
 
 \subsubsection{Reciprocal Rank Fusion (RRF)}
 
-El algoritmo \gls{RRF} \cite{cormack2009reciprocal} es una técnica de fusión basada exclusivamente en la posición de los candidatos en el ranking, ignorando las puntuaciones de similitud originales. Esto lo hace especialmente robusto frente a modelos que devuelven puntuaciones en escalas no calibradas o dispares.
+\noindent El algoritmo \gls{RRF} \cite{cormack2009reciprocal} es una técnica de fusión basada exclusivamente en la posición de los candidatos en el ranking, ignorando las puntuaciones de similitud originales. Esto lo hace especialmente robusto frente a modelos que devuelven puntuaciones en escalas no calibradas o dispares.
 
 Este algoritmo asigna una puntuación a cada candidato $d$ basándose en la inversa de su rango en cada una de las listas recuperadas. La fórmula de agregación es la siguiente:
 
@@ -86,7 +86,7 @@ Donde:
 
 \subsubsection{Mean Normalized Z-score (MNZ)}
 
-A diferencia de \gls{RRF}, las técnicas basadas en puntuación intentan preservar la información sobre la intensidad de la similitud que el modelo ha asignado a cada documento. Sin embargo, dado que distintos modelos de embedding pueden operar en espacios vectoriales con distribuciones de similitud diferentes, es necesaria una normalización previa.
+\noindent A diferencia de \gls{RRF}, las técnicas basadas en puntuación intentan preservar la información sobre la intensidad de la similitud que el modelo ha asignado a cada documento. Sin embargo, dado que distintos modelos de embedding pueden operar en espacios vectoriales con distribuciones de similitud diferentes, es necesaria una normalización previa.
 
 La estrategia en el cálculo de la \gls{MNZ}\footnote{Una implementación interesante de esta técnica se puede leer en \cite{wu2006evaluating}.} es estandarizar las puntuaciones de cada ranking individual antes de la fusión. Para cada candidato $d$ en un ranking $i$, la puntuación original $S_{i}(d)$ se transforma:
 
@@ -102,7 +102,7 @@ Donde $\mu_i$ y $\sigma_i$ son la media y la desviación estándar de las puntua
 
 \subsubsection{Weighted Sum (WSum)}
 
-Mientras que \gls{RRF} y \gls{MNZ} tratan a todos los modelos que participan de igual forma (asumiendo una fiabilidad similar), la técnica de \gls{WSum} introduce un sesgo explícito basado en la confianza que se tiene en cada modelo. Esta técnica es ideal cuando se conoce a priori que ciertos modelos puedan tener un desempeño distinto en la tarea objetivo.
+\noindent Mientras que \gls{RRF} y \gls{MNZ} tratan a todos los modelos que participan de igual forma (asumiendo una fiabilidad similar), la técnica de \gls{WSum} introduce un sesgo explícito basado en la confianza que se tiene en cada modelo. Esta técnica es ideal cuando se conoce a priori que ciertos modelos puedan tener un desempeño distinto en la tarea objetivo.
 
 La puntuación final se obtiene mediante una combinación lineal de las similitudes normalizadas, donde cada modelo $i$ tiene asociado un peso $w_i$:
 
@@ -118,13 +118,13 @@ Sujeto a la restricción $\sum w_i = 1$. La determinación de los pesos óptimos
 
 \subsubsection{Fundamento teórico: Cross-Encoders}
 
-A diferencia de los bi-encoders, que generan representaciones vectoriales independientes para la consulta $q$ y el candidato $d$, los cross-encoders procesan el par concatenado $(q, d)$ como una única secuencia de entrada. Este enfoque aprovecha el mecanismo de autoatención de las arquitecturas Transformer, permitiendo que el modelo capture interacciones no lineales, dependencias sintácticas y contextuales cruzadas entre los términos de la consulta y el candidato \cite{vaswani2017attention}. 
+\noindent A diferencia de los bi-encoders, que generan representaciones vectoriales independientes para la consulta $q$ y el candidato $d$, los cross-encoders procesan el par concatenado $(q, d)$ como una única secuencia de entrada. Este enfoque aprovecha el mecanismo de autoatención de las arquitecturas Transformer, permitiendo que el modelo capture interacciones no lineales, dependencias sintácticas y contextuales cruzadas entre los términos de la consulta y el candidato \cite{vaswani2017attention}. 
 
 La salida del cross-encoder es típicamente una puntuación de relevancia, obtenida mediante una capa de clasificación sobre la representación final de un token especial, que resume la interacción semántica del par. Esta puntuación, no necesariamente normalizada, se utiliza para reordenar los candidatos seleccionados del ranking proporcionado de entrada. Aunque este método es computacionalmente más intensivo que los bi-encoders, ofrece una precisión superior en tareas de matching semántico, al modelar matices y relaciones complejas que se pierden en las representaciones independientes de los bi-encoders \cite{nogueira2019passage}. Por esta razón, su aplicación se restringe a un subconjunto reducido de candidatos prometedores, típicamente los top-$k$ resultantes de la fusión, equilibrando así eficiencia y efectividad.
 
 \subsubsection{Estrategia de selección de modelos}
 
-La selección del modelo cross-encoder se realiza mediante un proceso de evaluación exhaustiva en escenario zero-shot, similar al empleado en la fase de recuperación, pero sin ajuste fino posterior debido a restricciones computacionales. 
+\noindent La selección del modelo cross-encoder se realiza mediante un proceso de evaluación exhaustiva en escenario zero-shot, similar al empleado en la fase de recuperación, pero sin ajuste fino posterior debido a restricciones computacionales. 
 
 Se realiza una selección preliminar de modelos del estado del arte disponibles en repositorios como Hugging Face, tratando de priorizar arquitecturas con alto desempeño en benchmarks de re-ranking semántico. Posteriormente, se evalúa su rendimiento reordenando listas de candidatos de diferentes tamaños provenientes de la fusión de rankings sobre el conjunto de validación.
 
@@ -183,15 +183,15 @@ Finalmente, el valor de \gls{MAP} se obtiene promediando la \gls{AP} sobre la to
 \noindent Para validar la arquitectura propuesta y alcanzar los objetivos definidos, se plantea un flujo de trabajo iterativo dividido en cuatro fases principales:
 
 \subsubsection{Fase 1: Zero-shot}
-Inicialmente, se evalúa el rendimiento de un conjunto de modelos pre-entrenados seleccionados (multilingües y monolingües) sin realizar ningún tipo de entrenamiento. Esto establece una línea base de rendimiento y permite cuantificar la ganancia obtenida posteriormente mediante el entrenamiento con los datos proporcionados.
+\noindent Inicialmente, se evalúa el rendimiento de un conjunto de modelos pre-entrenados seleccionados (multilingües y monolingües) sin realizar ningún tipo de entrenamiento. Esto establece una línea base de rendimiento y permite cuantificar la ganancia obtenida posteriormente mediante el entrenamiento con los datos proporcionados.
 
 \subsubsection{Fase 2: Entrenamiento de Bi-encoders}
-Se procede al ajuste fino de los 10 mejores modelos de recuperación utilizando los datos de entrenamiento proporcionados por la organización de TalentCLEF, consistentes en pares extraídos de \gls{ESCO}. 
+\noindent Se procede al ajuste fino de los 10 mejores modelos de recuperación utilizando los datos de entrenamiento proporcionados por la organización de TalentCLEF, consistentes en pares extraídos de \gls{ESCO}. 
 
 En esta fase, se aplica un Early Stopping basado en la función de pérdida \gls{MNRL} y se monitoriza el rendimiento en el conjunto de validación utilizando la métrica \gls{MAP}. Se experimenta también con diferentes configuraciones de tasas de aprendizaje y de tamaños del lote, tratando de optimizar la convergencia y la generalización del modelo. 
 
 \subsubsection{Fase 3: Optimización de la fusión}
-Una vez entrenados los modelos individuales, se analiza la estrategia de fusión óptima. Se evalúa el impacto de diferentes combinaciones de modelos y se ajusta el parámetro $k$ del algoritmo \gls{RRF} para maximizar la métrica \gls{MAP} en el conjunto de validación, así como la búsqueda de pesos óptimos en la técnica de \gls{WSum}.
+\noindent Una vez entrenados los modelos individuales, se analiza la estrategia de fusión óptima. Se evalúa el impacto de diferentes combinaciones de modelos y se ajusta el parámetro $k$ del algoritmo \gls{RRF} para maximizar la métrica \gls{MAP} en el conjunto de validación, así como la búsqueda de pesos óptimos en la técnica de \gls{WSum}.
 
 \subsubsection{Fase 4: Implementación del re-ranking}
-Finalmente, se integra el cross-encoder. Se analiza el compromiso entre rendimiento y tiempo de cómputo variando la profundidad del re-ranking. El resultado de esta fase constituye el sistema final a evaluar en la competición.
+\noindent Finalmente, se integra el cross-encoder. Se analiza el compromiso entre rendimiento y tiempo de cómputo variando la profundidad del re-ranking. El resultado de esta fase constituye el sistema final a evaluar en la competición.
