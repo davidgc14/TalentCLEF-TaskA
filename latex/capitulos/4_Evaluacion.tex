@@ -29,6 +29,56 @@ Es importante destacar que las restricciones de memoria y los límites de tiempo
     \label{tab:especificaciones_sistema}
 \end{table}
 
+
+\section{Conjuntos de datos}
+\label{sec:Datasets}
+
+\noindent Para el desarrollo y evaluación de los sistemas participantes en la \glslink{Tarea}{tarea A de TalentCLEF 2025}, la organización proporcionó tres particiones de datos diferenciadas: entrenamiento, validación y test. Una característica fundamental de este benchmark es la heterogeneidad en el origen de los datos, diseñada para simular la complejidad de un entorno real de \gls{HCM}.
+
+El conjunto de entrenamiento es de naturaleza sintética y fue generado automáticamente a partir de la taxonomía \gls{ESCO}. Este dataset consiste en pares de titulaciones profesionales relacionadas extraídas de la jerarquía de la taxonomía, disponibles únicamente para los idiomas inglés, español y alemán. Al tratarse de datos derivados de una fuente controlada, carecen del ruido que suelen caracterizar a los de naturaleza humana, pero proporcionan una base semántica sólida para nuestro problema.
+
+Por el contrario, los conjuntos de validación y test fueron construidos a partir de datos reales de procesos de selección, garantizando así la fidelidad del escenario de evaluación. En estos conjuntos, las consultas (\textit{queries}) corresponden a títulos de ofertas de empleo reales, mientras que los elementos del corpus (\textit{corpus elements}) son los títulos de los últimos puestos de trabajo extraídos de los currículums de los aspirantes a dichas ofertas \cite{gasco2025overview}.
+
+El proceso de preparación de estos datos incluyó una fase de limpieza rigurosa para anonimizar la información (eliminando nombres de empresas o ubicaciones), pero preservando intencionadamente el ruido natural, errores tipográficos y variaciones lingüísticas propias del mercado laboral real. Además, para los idiomas con marca de género gramatical (español y alemán), se generaron variantes masculinas, femeninas y neutras para permitir la evaluación de sesgos. Es importante destacar que para el idioma chino no se proporcionaron datos de entrenamiento, planteándose como un reto de aprendizaje \textit{zero-shot} puro.
+
+\begin{table}[!ht]
+    \centering
+    \resizebox{0.95\textwidth}{!}{%
+        \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+            \hline
+            \multirow{2}{*}{\textbf{Métrica}} & \multicolumn{4}{c|}{\textbf{Validación}} & \multicolumn{4}{c|}{\textbf{Test}}                                                                                     \\ \cline{2-9}
+                                              & \textbf{EN}                              & \textbf{ES}                        & \textbf{DE} & \textbf{ZH} & \textbf{EN} & \textbf{ES} & \textbf{DE} & \textbf{ZH} \\ \hline
+            \# Consultas                      & 105                                      & 185                                & 203         & 103         & 116         & 191         & 226         & 116         \\ \hline
+            \# Elementos corpus               & 2,619                                    & 4,729                              & 4,661       & 2,513       & 1,231       & 1,509       & 1,509       & 769         \\ \hline
+            Avg. relevantes/consulta          & 23.0                                     & 41.5                               & 41.0        & 22.5        & 32.9        & 65.1        & 57.9        & 32.9        \\ \hline
+        \end{tabular}%
+    }
+    \caption{Resumen estadístico de los conjuntos de validación y test de la \glslink{Tarea}{Tarea A} por idioma (EN: Inglés, ES: Español, DE: Alemán, ZH: Chino).}
+    \label{tab:estadisticas_corpus}
+\end{table}
+
+La Tabla \ref{tab:estadisticas_corpus} resume las estadísticas principales de los conjuntos de validación y test de todos los idiomas incluidos en la \gls{Tarea}. En relación con los datos de entrenamiento, extraídos de la taxonomía \gls{ESCO}, disponemos de un total de $20724$ pares de titulaciones relacionadas para el caso del español. Una muestra de estos datos puede ser observada en la Tabla \ref{tab:sample_training_data}, donde se aprecia la diversidad de relaciones semánticas presentes, desde sinónimos y variantes de género hasta relaciones de especialización.
+
+\begin{table}[h!]
+    \centering
+    \resizebox{0.95\textwidth}{!}{%
+        \begin{tabular}{ll}
+            \hline
+            \textbf{job\_title\_1}                      & \textbf{job\_title\_2}                     \\
+            \hline
+            técnico de TICs                             & técnica de TI                              \\
+            ingeniera técnica del automóvil             & ingeniero técnico de automoción            \\
+            auxiliar de enfermería de geriatría         & auxiliar de enfermería                     \\
+            investigador de fraudes financieros         & auditor forense/auditora forense           \\
+            directora de residencia de personas mayores & director de residencia de personas mayores \\
+            ...                                         & ...                                        \\
+            \hline
+        \end{tabular}
+    }
+    \caption{Ejemplo de pares de titulaciones relacionadas presentes en el conjunto de entrenamiento para el idioma español.}
+    \label{tab:sample_training_data}
+\end{table}
+
 \section{Fase 1: Evaluación zero-shot}
 \label{sec:ZeroShot}
 
@@ -59,34 +109,38 @@ Tras un proceso de limpieza para descartar configuraciones erróneas y modelos i
 
 % El análisis de estos resultados revela una predominancia significativa de los modelos multilingües sobre los monolingües. A pesar de que el corpus de evaluación es exclusivamente en español, los modelos multilingües demostraron una mayor capacidad de generalización y captura de matices semánticos, superando sistemáticamente a las arquitecturas entrenadas únicamente en español.\footnote{Esto creo que lo tengo que poner más bien en el análisis.}
 
-La Tabla \ref{tab:top_10_zero_shot} presenta los 10 modelos con mejor rendimiento en esta fase. Cabe mencionar que en la totalidad de esta lista no se encuentra ningún modelo monolingüe español, lo que subraya la eficacia de los modelos multilingües en la tarea planteada.
+La Tabla \ref{tab:top_10_zero_shot} presenta los 10 modelos con mejor rendimiento en esta fase\footnote{Para simplificar la notación, se omitirá en todo el trabajo el prefijo del autor en el nombre de los modelos (ej. \textit{bilingual-embedding-large} en lugar de \textit{Lajavaness/bilingual-embedding-large}). Los nombres completos y los resultados pueden ser consultados en las tablas completas del Apéndice \ref{ch:Tablas}.}. Cabe mencionar que en la totalidad de esta lista no se encuentra ningún modelo monolingüe español, lo que subraya la eficacia de los modelos multilingües en la tarea planteada.
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{|l|l|}
-        \hline
-        \textbf{Modelo}                                             & \textbf{MAP} \\ \hline
-        Lajavaness/bilingual-embedding-large                        & 0.4493       \\ \hline
-        jinaai/jina-embeddings-v3                                   & 0.4453       \\ \hline
-        chienpham/sts-multilingual-mpnet-base-v2                    & 0.4436       \\ \hline
-        intfloat/multilingual-e5-large-instruct                     & 0.4426       \\ \hline
-        AIDA-UPM/mstsb-paraphrase-multilingual-mpnet-base-v2        & 0.4287       \\ \hline
-        shtilev/medical\_embedded\_v4                               & 0.4265       \\ \hline
-        sentence-transformers/paraphrase-multilingual-mpnet-base-v2 & 0.4169       \\ \hline
-        Alibaba-NLP/gte-multilingual-base                           & 0.4155       \\ \hline
-        shtilev/medical\_embedded\_v5                               & 0.4117       \\ \hline
-    \end{tabular}
-    \caption{Top 10 modelos preentrenados en evaluación \textit{zero-shot} ordenados por \gls{MAP}.}
+    \resizebox{0.95\textwidth}{!}{%
+        \begin{tabular}{llcl}
+            \hline
+            \textbf{Modelo}                             & \textbf{Idioma} & \textbf{\# Parámetros} & \textbf{MAP} \\ \hline
+            bilingual-embedding-large                   & bilingüe        & 560M                   & 0.449        \\
+            jina-embeddings-v3                          & multilingüe     & 572M                   & 0.445        \\
+            sts-multilingual-mpnet-base-v2              & multilingüe     & 278M                   & 0.443        \\
+            multilingual-e5-large-instruct              & multilingüe     & 560M                   & 0.442        \\
+            mstsb-paraphrase-multilingual-mpnet-base-v2 & multilingüe     & 278M                   & 0.428        \\
+            medical\_embedded\_v4                       & multilingüe     & 278M                   & 0.426        \\
+            paraphrase-multilingual-mpnet-base-v2       & multilingüe     & 278M                   & 0.416        \\
+            gte-multilingual-base                       & multilingüe     & 305M                   & 0.415        \\
+            medical\_embedded\_v5                       & multilingüe     & 278M                   & 0.411        \\
+            Linq-Embed-Mistral                          & monolingüe      & 7.1B                   & 0.409        \\
+            \hline
+        \end{tabular}
+    }
+    \caption{Top 10 modelos preentrenados en evaluación \textit{zero-shot} ordenados por \gls{MAP} (K = mil, M = millón, B = mil millones).}
     \label{tab:top_10_zero_shot}
 \end{table}
 
 \section{Fase 2: Fine-Tuning}
 
-\noindent Tomando como base los 10 modelos más prometedores identificados en la fase anterior, se procedió a su ajuste fino supervisado. Para simplificar la notación, en adelante se omitirá el prefijo del autor en el nombre de los modelos (ej. \textit{bilingual-embedding-large} en lugar de \textit{Lajavaness/bilingual-embedding-large}).
+\noindent Tomando como base los 10 modelos más prometedores identificados en la fase anterior, se procedió a su ajuste fino supervisado. El objetivo de esta etapa fue adaptar las representaciones aprendidas por estos modelos a la naturaleza específica de los datos de la \gls{Tarea}, con la esperanza de mejorar su capacidad para capturar las relaciones semánticas relevantes entre los títulos profesionales.
 
 \subsection{Configuración del entrenamiento}
 
-\noindent El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento descrito en la Sección \ref{sec:DefinicionDelProblema}, empleando la función de pérdida \gls{MNRL} descrita en la Sección \ref{sec:Funciones_de_perdida}. Para mitigar el riesgo de sobreajuste, dada la naturaleza de los datos y el tamaño de los modelos, se limitó el entrenamiento a una única época, con una tasa de aprendizaje de $5\times 10^{-6}$ y un tamaño de lote de 16.
+\noindent El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento descrito en la Sección \ref{sec:Datasets}, empleando la función de pérdida \gls{MNRL} descrita en la Sección \ref{sec:Funciones_de_perdida}. Para mitigar el riesgo de sobreajuste, dada la naturaleza de los datos y el tamaño de los modelos, se limitó el entrenamiento a una única época, con una tasa de aprendizaje de $5\times 10^{-6}$ y un tamaño de lote de 16.
 
 Como evidencia del rápido sobreajuste observado al extender el entrenamiento, la Figura \ref{fig:finetuned_loss} muestra las curvas de pérdida de validación para dos de los modelos, donde se aprecia una degradación del rendimiento a partir de la primera época.
 
