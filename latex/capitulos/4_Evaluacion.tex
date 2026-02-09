@@ -6,12 +6,12 @@
 \fancyhead[RE]{\textsc{CAPÍTULO} \thechapter. Evaluación}
 \label{ch:Evaluacion}
 
-\noindent En el presente capítulo se detalla la metodología empleada para la validación de la propuesta, así como los resultados obtenidos en las distintas fases del experimento. El proceso de evaluación se ha estructurado en tres etapas consecutivas: una selección inicial de modelos mediante evaluación \textit{Zero-Shot}, un refinamiento mediante aprendizaje supervisado y, finalmente, la aplicación de técnicas de fusión de rankings y re-ranking para maximizar el rendimiento del sistema.
+\noindent En el presente capítulo se detalla la metodología empleada para la validación de la propuesta, así como los resultados obtenidos en las distintas fases del experimento. El proceso de evaluación se ha estructurado en tres etapas consecutivas: una selección inicial de modelos mediante evaluación \textit{zero-shot}, un refinamiento mediante aprendizaje supervisado y, finalmente, la aplicación de técnicas de fusión de rankings y re-ranking para maximizar el rendimiento del sistema.
 
 \section{Entorno de desarrollo y especificaciones}
 \label{sec:Entorno}
 
-La totalidad de los experimentos presentados se han ejecutado en un entorno virtualizado proporcionado por Google Colab\footnote{\url{https://colab.research.google.com/}}. Las características técnicas del hardware empleado se detallan en la Tabla \ref{tab:especificaciones_sistema}.
+\noindent La totalidad de los experimentos presentados se han ejecutado en un entorno virtualizado proporcionado por Google Colab\footnote{\url{https://colab.research.google.com/}}. Las características técnicas del hardware empleado se detallan en la Tabla \ref{tab:especificaciones_sistema}.
 
 Es importante destacar que las restricciones de memoria y los límites de tiempo de ejecución impuestas por la plataforma condicionaron la selección de los modelos. Se priorizaron aquellas arquitecturas capaces de realizar inferencia y entrenamiento dentro de estos márgenes, descartando modelos con un número de parámetros excesivo que comprometieran la ejecución del sistema propuesto.
 
@@ -29,17 +29,17 @@ Es importante destacar que las restricciones de memoria y los límites de tiempo
     \label{tab:especificaciones_sistema}
 \end{table}
 
-\section{Fase 1: Evaluación Zero-Shot}
+\section{Fase 1: Evaluación zero-shot}
 \label{sec:ZeroShot}
 
-El objetivo de esta primera fase fue identificar, dentro del vasto estado del arte, aquellos modelos preentrenados con mayor potencial para la tarea sin haber sido sometidos aún a un ajuste específico con los datos de la \gls{Tarea}.
+\noindent El objetivo de esta primera fase fue identificar, dentro del vasto estado del arte, aquellos modelos preentrenados con mayor potencial para la tarea sin haber sido sometidos aún a un ajuste específico con los datos de la \gls{Tarea}.
 
 \subsection{Selección y filtrado de modelos base}
 
-Para la conformación del conjunto de candidatos, se evaluaron modelos obtenidos a través de la librería \texttt{SentenceTransformers} de Hugging Face\footnote{\url{https://huggingface.co/}}, provenientes de dos fuentes de selección principales:
+\noindent Para la conformación del conjunto de candidatos, se evaluaron modelos obtenidos a través de la librería \texttt{SentenceTransformers} de Hugging Face\footnote{\url{https://huggingface.co/}}, provenientes de dos fuentes de selección principales:
 
 \begin{enumerate}
-    \item \textbf{MTEB Leaderboard} \cite{mteb-leaderboard}: Se seleccionaron los 100 mejores modelos con licencia pública basándose en su desempeño medio en un total de 13 benchmarks de recuperación de información (Retrieval) y similitud semántica\footnote{Datos tomados a fecha 1 de diciembre de 2025. Los valores medios de referencia se detallan en la Tabla \ref{tab:resultados_completos_modelos_mteb_retrieval}.}. Entre las tareas de referencia se incluyen \textit{BELEBELE}, \textit{MIRACL Retrieval Hard Negatives}, \textit{TREC COVID} y \textit{Wikipedia Retrieval Multilingual}, entre otras\footnote{El conjunto total de benchmarks asociados a la tarea de recuperación de información pueden ser consultados directamente en su repositorio: \url{https://huggingface.co/spaces/mteb/leaderboard}.}.
+    \item \textbf{MTEB Leaderboard} \cite{mteb-leaderboard}: Se seleccionaron los 100 mejores modelos con licencia pública basándose en su desempeño medio en un total de 13 benchmarks de recuperación de información (Retrieval) y similitud semántica\footnote{Datos tomados a fecha 1 de diciembre de 2025. Los valores medios de referencia se detallan en la Tabla \ref{tab:resultados_completos_modelos_mteb_retrieval} del Apéndice \ref{ch:Tablas}.}. Entre las tareas de referencia se incluyen \textit{BELEBELE}, \textit{MIRACL Retrieval Hard Negatives}, \textit{TREC COVID} y \textit{Wikipedia Retrieval Multilingual}, entre otras\footnote{El conjunto total de benchmarks asociados a la tarea de recuperación de información pueden ser consultados directamente en su repositorio: \url{https://huggingface.co/spaces/mteb/leaderboard}.}.
           
     \item \textbf{Hugging Face}: Se complementó la lista anterior mediante una búsqueda automatizada filtrando por arquitecturas Transformer diseñadas para \textit{Sentence Similarity} y que incluyeran explícitamente el idioma español en su entrenamiento.
 \end{enumerate}
@@ -48,12 +48,12 @@ Tras un proceso de limpieza para descartar configuraciones erróneas y modelos i
 
 \subsection{Resultados preliminares}
 
-La Figura \ref{fig:zero_shot_map} ilustra el desempeño de los 190 modelos evaluados sobre el conjunto de validación utilizando la métrica \gls{MAP}.
+\noindent La Figura \ref{fig:zero_shot_map} ilustra el desempeño de los 190 modelos evaluados sobre el conjunto de validación utilizando la métrica \gls{MAP}.
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.9\textwidth]{imagenes/zero-shot-evaluation-plot.png}
-    \caption{Dispersión del rendimiento (\glslink{MAP}{MAP}) en evaluación Zero-Shot. El eje horizontal representa el tamaño del modelo (número de parámetros) en escala logarítmica.}
+    \caption{Dispersión del rendimiento (\glslink{MAP}{MAP}) en evaluación \textit{zero-shot}. El eje horizontal representa el tamaño del modelo (número de parámetros) en escala logarítmica.}
     \label{fig:zero_shot_map}
 \end{figure}
 
@@ -76,17 +76,17 @@ La Tabla \ref{tab:top_10_zero_shot} presenta los 10 modelos con mejor rendimient
         Alibaba-NLP/gte-multilingual-base                           & 0.4155       \\ \hline
         shtilev/medical\_embedded\_v5                               & 0.4117       \\ \hline
     \end{tabular}
-    \caption{Top 10 modelos preentrenados en evaluación Zero-Shot ordenados por \gls{MAP}.}
+    \caption{Top 10 modelos preentrenados en evaluación \textit{zero-shot} ordenados por \gls{MAP}.}
     \label{tab:top_10_zero_shot}
 \end{table}
 
 \section{Fase 2: Fine-Tuning}
 
-Tomando como base los 10 modelos más prometedores identificados en la fase anterior, se procedió a su ajuste fino supervisado. Para simplificar la notación, en adelante se omitirá el prefijo del autor en el nombre de los modelos (ej. \textit{bilingual-embedding-large} en lugar de \textit{Lajavaness/bilingual-embedding-large}).
+\noindent Tomando como base los 10 modelos más prometedores identificados en la fase anterior, se procedió a su ajuste fino supervisado. Para simplificar la notación, en adelante se omitirá el prefijo del autor en el nombre de los modelos (ej. \textit{bilingual-embedding-large} en lugar de \textit{Lajavaness/bilingual-embedding-large}).
 
 \subsection{Configuración del entrenamiento}
 
-El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento descrito en la Sección \ref{sec:DefinicionDelProblema}, empleando la función de pérdida \gls{MNRL} descrita en la Sección \ref{sec:Funciones_de_perdida}. Para mitigar el riesgo de sobreajuste, dada la naturaleza de los datos y el tamaño de los modelos, se limitó el entrenamiento a una única época, con una tasa de aprendizaje de $5\times 10^{-6}$ y un tamaño de lote de 16.
+\noindent El entrenamiento se realizó utilizando el conjunto de datos de entrenamiento descrito en la Sección \ref{sec:DefinicionDelProblema}, empleando la función de pérdida \gls{MNRL} descrita en la Sección \ref{sec:Funciones_de_perdida}. Para mitigar el riesgo de sobreajuste, dada la naturaleza de los datos y el tamaño de los modelos, se limitó el entrenamiento a una única época, con una tasa de aprendizaje de $5\times 10^{-6}$ y un tamaño de lote de 16.
 
 Como evidencia del rápido sobreajuste observado al extender el entrenamiento, la Figura \ref{fig:finetuned_loss} muestra las curvas de pérdida de validación para dos de los modelos, donde se aprecia una degradación del rendimiento a partir de la primera época.
 
@@ -107,7 +107,7 @@ Como evidencia del rápido sobreajuste observado al extender el entrenamiento, l
 
 \subsection{Resultados tras el entrenamiento}
 
-La Tabla \ref{tab:finetuned_results} compara el desempeño de los modelos antes y después del proceso de ajuste fino, ordenados de mayor a menor \gls{MAP} tras el entrenamiento. Se observa una mejora media aproximada de 3 puntos porcentuales en la métrica \gls{MAP} para la mayoría de los candidatos, validando la eficacia del entrenamiento supervisado en el dominio específico de la tarea. En la Figura \ref{fig:finetuned_comparison} se ilustra gráficamente esta mejora.
+\noindent La Tabla \ref{tab:finetuned_results} compara el desempeño de los modelos antes y después del proceso de ajuste fino, ordenados de mayor a menor \gls{MAP} tras el entrenamiento. Se observa una mejora media aproximada de 3 puntos porcentuales en la métrica \gls{MAP} para la mayoría de los candidatos, validando la eficacia del entrenamiento supervisado en el dominio específico de la tarea. En la Figura \ref{fig:finetuned_comparison} se ilustra gráficamente esta mejora.
 
 \begin{figure}[!ht]
     \centering
@@ -142,12 +142,12 @@ Es necesario puntualizar el caso de los modelos \textit{jina-embeddings-v3} y \t
 
 \section{Fase 3: Ranking Fusion}
 
-Con el objetivo de explotar la complementariedad entre las diferentes representaciones aprendidas, se seleccionaron los tres modelos con mejor desempeño tras el entrenamiento (\textit{bilingual-embedding-large}, \textit{multilingual-e5-large-instruct} y \textit{gte-multilingual-base}) para constituir un sistema de ensamblado mediante fusión de rankings. Se evaluaron las tres estrategias anteriormente mencionadas.
+\noindent Con el objetivo de explotar la complementariedad entre las diferentes representaciones aprendidas, se seleccionaron los tres modelos con mejor desempeño tras el entrenamiento (\textit{bilingual-embedding-large}, \textit{multilingual-e5-large-instruct} y \textit{gte-multilingual-base}) para constituir un sistema de ensamblado mediante fusión de rankings. Se evaluaron las tres estrategias anteriormente mencionadas.
 
 \subsection{Análisis comparativo de técnicas de fusión}
 
 \subsubsection{Reciprocal Rank Fusion (RRF)}
-Mediante un barrido de parámetros (Figura \ref{fig:rrf_k_analysis}), se determinó que el valor óptimo para la constante de suavizado es $k=5$. Con esta configuración, el sistema alcanzó un \gls{MAP} de \textbf{0.49717}, superando los resultados individuales de los modelos base.
+\noindent Mediante una búsqueda exhaustiva de parámetros (Figura \ref{fig:rrf_k_analysis}), se determinó que el valor óptimo para la constante de suavizado es $k=5$. Con esta configuración, el sistema alcanzó un \gls{MAP} de \textbf{0.49717}, superando los resultados individuales de los modelos base.
 
 \begin{figure}[H]
     \centering
@@ -157,10 +157,10 @@ Mediante un barrido de parámetros (Figura \ref{fig:rrf_k_analysis}), se determi
 \end{figure}
 
 \subsubsection{Mean Normalized Z-score (MNZ)}
-Tras aplicar una normalización min-max, la fusión mediante \gls{MNZ} devolvió un \gls{MAP} de \textbf{0.49896}, mostrando una ligera superioridad frente a \gls{RRF}.
+\noindent Tras aplicar una normalización min-max, la fusión mediante \gls{MNZ} devolvió un \gls{MAP} de \textbf{0.49896}, mostrando una ligera superioridad frente a \gls{RRF}.
 
 \subsubsection{Weighted Sum (WSum)}
-Finalmente, se evaluó la técnica de \gls{WSum}, asignando pesos específicos a cada modelo basándose en valores obtenidos tras una búsqueda de parámetros derivadas de su rendimiento individual. La combinación de pesos óptima encontrada fue:
+\noindent Finalmente, se evaluó la técnica de \gls{WSum}, asignando pesos específicos a cada modelo basándose en valores obtenidos tras una búsqueda de parámetros derivadas de su rendimiento individual. La combinación de pesos óptima encontrada fue:
 \begin{itemize}
     \item \textit{bilingual-embedding-large}: 0.35
     \item \textit{multilingual-e5-large-instruct}: 0.38
@@ -171,7 +171,7 @@ Esta configuración permitió alcanzar un \gls{MAP} de \textbf{0.49953}, constit
 
 \subsection{Selección final de arquitectura}
 
-Basándonos en los resultados expuestos, a pesar de que todas ellas han mejoreado los desempeños individuales de cada uno de los modelos, se ha seleccionado la técnica de \gls{WSum} como estrategia de fusión definitiva para el sistema propuesto. En la Figura \ref{fig:fusion_results} se muestran los resultados obtenidos con cada una de las técnicas evaluadas.
+\noindent Basándonos en los resultados expuestos, a pesar de que todas las técnicas de fusión han mejoreado los desempeños individuales de cada uno de los modelos, se ha seleccionado la técnica de \gls{WSum} como estrategia de fusión definitiva para el sistema propuesto. En la Figura \ref{fig:fusion_results} se muestran los resultados obtenidos con cada una de las técnicas evaluadas.
 
 \begin{figure}[ht!]
     \centering
@@ -185,9 +185,9 @@ Con ello obtenemos un sistema que maximiza la métrica \gls{MAP} mediante la com
 
 \section{Fase 4: Re-Ranking}
 
-Procedemos a continuación con la fase final de re-ranking, cuyo objetivo es refinar aún más el ordenamiento de los mejores candidatos recuperados para cada consulta. Para ello, es necesario seleccionar un modelo cross-encoder adecuado que permita evaluar la relevancia de los pares $(q, d)$ de manera más precisa.
+\noindent Procedemos a continuación con la fase final de re-ranking, cuyo objetivo es mejorar la precisión del ranking generado por la fusión mediante una evaluación más detallada de la relevancia semántica entre cada consulta y los candidatos seleccionados. Para lograr esto, se necesario seleccionar un modelo cross-encoder adecuado que pueda capturar las interacciones contextuales y dependencias no lineales de las consultas y los candidatos. De esta manera, obtendremos una nueva puntuación de similitud que nos permitirá reordenar los candidatos de forma óptima, priorizando aquellos con mayor alineación semántica.
 
-Se obtuvo una lista de 90 modelos cross-encoder multilingües desde la plataforma Hugging Face, de los cuales se pudieron evaluar 72 dentro de las restricciones de compatibilidad y recursos del entorno. Se evaluó la capacidad de estos modelos mediante la reordenación de los 10, 25, 50 y 100 mejores candidatos generados por el sistema de fusión \gls{WSum} previamente descrito\footnote{Una tabla completa con los resultados de esta evaluación se puede consultar en la Tabla \ref{tab:cross_encoder_results} del Apéndice \ref{ch:Tablas}.}. Las Figuras \ref{fig:distribucion_reranking_global} y \ref{fig:boxplot_reranking_global} muestran la distribución de los resultados obtenidos en términos de \gls{MAP} para los distintos tamaños de listas reordenadas.
+Para ello se obtuvo una lista de 90 modelos cross-encoder multilingües desde la plataforma Hugging Face, de los cuales se pudieron evaluar 72 dentro de las restricciones de compatibilidad y recursos del entorno. Se evaluó la capacidad de estos modelos mediante la reordenación de los 10, 25, 50 y 100 mejores candidatos generados por el sistema de fusión \gls{WSum} previamente descrito\footnote{Una tabla completa con los resultados de esta evaluación se puede consultar en la Tabla \ref{tab:cross_encoder_results} del Apéndice \ref{ch:Tablas}.}. Las Figuras \ref{fig:distribucion_reranking_global} y \ref{fig:boxplot_reranking_global} muestran la distribución de los resultados obtenidos en términos de \gls{MAP} para los distintos tamaños de listas reordenadas.
 
 \begin{figure}[ht!]
     \centering
@@ -203,7 +203,7 @@ Se obtuvo una lista de 90 modelos cross-encoder multilingües desde la plataform
     \label{fig:boxplot_reranking_global}
 \end{figure}
 
-Se puede observar que, frente a la asíntota marcada por los resultados obtenidos en la fase de fusión, los que han conseguido superar este han sido los modelos en la reordenación de las 10 y 25 mejores candidaturas. Por ello, tratando de buscar el valor óptimo de mejora, se seleccionaron los 10 mejores modelos en esta primera fase para realizar un análisis más detallado de su comportamiento. La Figura \ref{fig:boxplot_reranking_top10} muestra la distribución de los resultados obtenidos por estos modelos en función del tamaño de la lista reordenada. De forma individualizada también se puede observar en la Figura \ref{fig:top10_reranking_individual} la degradación del rendimiento al aumentar el tamaño de la lista a reordenar\footnote{Los datos numéricos pueden ser consultados en la Tabla \ref{tab:cross_encoder_top10}.}. 
+Se puede observar que, frente a la asíntota marcada por los resultados obtenidos en la fase de fusión, los que han conseguido superar este han sido los modelos en la reordenación de las 10 y 25 mejores candidaturas. Por ello, tratando de buscar el valor óptimo de mejora, se seleccionaron los 10 mejores modelos en esta primera fase para realizar un análisis más detallado de su comportamiento. La Figura \ref{fig:boxplot_reranking_top10} muestra la distribución de los resultados obtenidos por estos modelos en función del tamaño de la lista reordenada. De forma individualizada también se puede observar en la Figura \ref{fig:top10_reranking_individual} la degradación del rendimiento al aumentar el tamaño de la lista a reordenar\footnote{Los datos numéricos pueden ser consultados en la Tabla \ref{tab:cross_encoder_top10} del Apéndice \ref{ch:Tablas}.}. 
 
 \begin{figure}[ht!]
     \centering
@@ -224,11 +224,11 @@ Con la perspectiva de maximizar el rendimiento del sistema, se seleccionó el mo
 
 \section{Evaluación sobre test}
 
-Finalmente, se procedió a evaluar el sistema completo, incluyendo todas las fases descritas, sobre el conjunto de datos de prueba. Para ello, el ranking producido por el sistema, fue enviado al sistema de evaluación sobre test de Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}}. Los resultados obtenidos son los siguientes\footnote{Los datos que se muestran a continuación fueron tomados a fecha 31 de Enero de 2026, pudiendo existir propuestas posteriores que modifiquen los rankings aquí presentados.}. 
+\noindent Finalmente, se procedió a evaluar el sistema completo, incluyendo todas las fases descritas, sobre el conjunto de datos de prueba. Para ello, el ranking producido por el sistema, fue enviado al sistema de evaluación sobre test de Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}}. Los resultados obtenidos son los siguientes\footnote{Los datos que se muestran a continuación fueron tomados a fecha 31 de Enero de 2026, pudiendo existir propuestas posteriores que modifiquen los rankings aquí presentados.}. 
 
 \subsection{Resultados sobre el español}
 
-Para el caso monolingüe español en el que se ha centrado este estudio, se ha obtenido un valor \gls{MAP} de \textbf{0.497}. Este resultado, considerándolo como resultado final de la propuesta presentada, se posiciona en el octavo puesto de la clasificación general de la \gls{Tarea} para el caso monolingüe de español. En la Tabla \ref{tab:final_results_test_es} se muestra el ranking final proporcionado por la plataforma de evaluación.
+\noindent Para el caso monolingüe español en el que se ha centrado este estudio, se ha obtenido un valor \gls{MAP} de \textbf{0.497}. Este resultado, considerándolo como resultado final de la propuesta presentada, se posiciona en el octavo puesto de la clasificación general de la \gls{Tarea} para el caso monolingüe de español. En la Tabla \ref{tab:final_results_test_es} se muestra el ranking final proporcionado por la plataforma de evaluación.
 
 
 \begin{table}[ht!]
@@ -255,7 +255,7 @@ Destaca aquí la presencia de un decrecimiento de más de 4 puntos porcentuales 
 
 \subsection{Resultados sobre otros idiomas}
 
-Aunque el enfoque principal de este trabajo ha sido el desarrollo de un sistema para el idioma español, la \gls{Tarea} también contempla la evaluación en otros idiomas, como el inglés y el alemán. Con el objetivo de analizar la capacidad de generalización del sistema propuesto, se procedió a evaluar el mismo modelo sobre los conjuntos de datos de prueba correspondientes a estos idiomas, sin realizar ningún ajuste adicional. Los resultados obtenidos se muestran en las Tablas \ref{tab:final_results_test_en} y \ref{tab:final_results_test_de}.
+\noindent Aunque el enfoque principal de este trabajo ha sido el desarrollo de un sistema para el idioma español, la \gls{Tarea} también contempla la evaluación en otros idiomas, como el inglés y el alemán. Con el objetivo de analizar la capacidad de generalización del sistema propuesto, se procedió a evaluar el mismo modelo sobre los conjuntos de datos de prueba correspondientes a estos idiomas, sin realizar ningún ajuste adicional. Los resultados obtenidos se muestran en las Tablas \ref{tab:final_results_test_en} y \ref{tab:final_results_test_de}.
 
 
 \begin{table}[ht!]
@@ -304,7 +304,7 @@ En estos escenarios, el sistema propuesto alcanza la quinta posición en los idi
 
 \subsection{Capacidad de generalización}
 
-Para evaluar la capacidad de generalización del sistema propuesto, desde la organización se propusieron de forma voluntaria la evaluación sobre escenarios cross-lingües, así como la evaluación sobre el idioma chino, para el que no se disponía de datos de entrenamiento específicos. Aunque en nuestro caso no se contempló el entrenamiento adicional en ningún idioma que no fuera el español, se procedió a evaluar el sistema completo sobre los conjuntos de datos de prueba correspondientes, para así analizar su capacidad de generalización ante entornos nuevos. Los resultados obtenidos para el caso del chino se muestran en la Tabla \ref{tab:final_results_test_zh}. \todo{Si hay tiempo, intentar evaluar los casos crosslingues y mostrar los resultados aquí, para analizar mejor la generalización.}
+\noindent Para evaluar la capacidad de generalización del sistema propuesto, desde la organización se propusieron de forma voluntaria la evaluación sobre escenarios cross-lingües, así como la evaluación sobre el idioma chino, para el que no se disponía de datos de entrenamiento específicos. Aunque en nuestro caso no se contempló el entrenamiento adicional en ningún idioma que no fuera el español, se procedió a evaluar el sistema completo sobre los conjuntos de datos de prueba correspondientes, para así analizar su capacidad de generalización ante entornos nuevos. Los resultados obtenidos para el caso del chino se muestran en la Tabla \ref{tab:final_results_test_zh}. % \todo{Si hay tiempo, intentar evaluar los casos crosslingues y mostrar los resultados aquí, para analizar mejor la generalización.}
 
 \begin{table}[ht!]
     \centering
@@ -328,4 +328,4 @@ Para evaluar la capacidad de generalización del sistema propuesto, desde la org
 
 \subsection{Rendimiento medio}
 
-Para la ordenación general de las propuestas enviadas, la organización se ha basado en el rendimiento medio entre los idiomas español, inglés y alemán sobre la métrica \gls{MAP}. El sistema aquí presentado ha alcanzado un valor medio de \textbf{0.521}, situándose en el sexto puesto de la clasificación general de la \gls{Tarea}. Si consideramos únicamente la mejor propuesta de cada equipo, el sistema se posiciona como el tercer mejor equipo participante, lo que resalta la solidez y eficacia del enfoque adoptado en este trabajo. Los resultados completos pueden ser consultados en la Tabla \ref{tab:final_results_test_mean} del apéndice.\todo{Revisar nombres de las tablas anteriores e intentar recurrir a \ref{tab:original_map_results} para contrastar los nombres. ¿Puede ser que en codabench hayan más resultados que los mostrados en el Overview? Si es así, se podría mencionar en que puesto quedaría mi sistema, además de escribir un correo a la organización para ver si se han enviado propuestas posteriores a la fecha limite.}
+\noindent Para la ordenación general de las propuestas enviadas, la organización se ha basado en el rendimiento medio entre los idiomas español, inglés y alemán sobre la métrica \gls{MAP}. El sistema aquí presentado ha alcanzado un valor medio de \textbf{0.521}, situándose en el sexto puesto de la clasificación general de la \gls{Tarea} de la competición TalentCLEF2025. Si consideramos únicamente la mejor propuesta de cada equipo, el sistema se posiciona como el tercer mejor equipo participante, lo que resalta la solidez y eficacia del enfoque adoptado en este trabajo. Los resultados completos pueden ser consultados en la Tabla \ref{tab:final_results_test_mean} del Apéndice \ref{ch:Tablas}.\todo{Revisar nombres de las tablas anteriores e intentar recurrir a \ref{tab:original_map_results} para contrastar los nombres. ¿Puede ser que en codabench hayan más resultados que los mostrados en el Overview? Si es así, se podría mencionar en que puesto quedaría mi sistema, además de escribir un correo a la organización para ver si se han enviado propuestas posteriores a la fecha limite.}
