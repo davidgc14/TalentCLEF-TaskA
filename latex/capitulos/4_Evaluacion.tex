@@ -102,7 +102,7 @@ Tras un proceso de limpieza para descartar configuraciones erróneas y modelos i
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.9\textwidth]{imagenes/zero-shot-evaluation-plot.png}
+    \includegraphics[width=0.95\textwidth]{imagenes/zero-shot-evaluation-plot.png}
     \caption{Dispersión del rendimiento (\glslink{MAP}{MAP}) en evaluación \textit{zero-shot}. El eje horizontal representa el tamaño del modelo (número de parámetros) en escala logarítmica.}
     \label{fig:zero_shot_map}
 \end{figure}
@@ -165,7 +165,7 @@ Como evidencia del rápido sobreajuste observado al extender el entrenamiento, l
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{imagenes/training/comparacion_finetuning.png}
+    \includegraphics[width=0.95\textwidth]{imagenes/training/comparacion_finetuning.png}
     \caption{Comparativa del rendimiento (\gls{MAP}) de los 10 mejores modelos antes y después del ajuste fino.}
     \label{fig:finetuned_comparison}
 \end{figure}
@@ -174,22 +174,25 @@ Es necesario puntualizar el caso de los modelos \textit{jina-embeddings-v3} y \t
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{rlrr}
-        \hline
-           & Modelo                                      & MAP Previo & MAP Ajustado \\
-        \hline
-        1  & bilingual-embedding-large                   & 0.4493     & 0.4902       \\
-        2  & multilingual-e5-large-instruct              & 0.4426     & 0.4902       \\
-        3  & gte-multilingual-base                       & 0.4155     & 0.4693       \\
-        4  & paraphrase-multilingual-mpnet-base-v2       & 0.4169     & 0.4602       \\
-        5  & mstsb-paraphrase-multilingual-mpnet-base-v2 & 0.4287     & 0.4589       \\
-        6  & medical\_embedded\_v4                       & 0.4265     & 0.4580       \\
-        7  & medical\_embedded\_v5                       & 0.4117     & 0.4568       \\
-        8  & sts-multilingual-mpnet-base-v2              & 0.4436     & 0.4516       \\
-        9  & jina-embeddings-v3                          & 0.4453     & 0.4453       \\
-        10 & Linq-Embed-Mistral                          & 0.4095     & 0.4095       \\
-        \hline
-    \end{tabular}
+    \resizebox{0.95\textwidth}{!}{%
+        
+        \begin{tabular}{rlrr}
+            \hline
+               & \textbf{Modelo}                             & \textbf{MAP Previo} & \textbf{MAP Ajustado} \\
+            \hline
+            1  & bilingual-embedding-large                   & 0.4493              & 0.4902                \\
+            2  & multilingual-e5-large-instruct              & 0.4426              & 0.4902                \\
+            3  & gte-multilingual-base                       & 0.4155              & 0.4693                \\
+            4  & paraphrase-multilingual-mpnet-base-v2       & 0.4169              & 0.4602                \\
+            5  & mstsb-paraphrase-multilingual-mpnet-base-v2 & 0.4287              & 0.4589                \\
+            6  & medical\_embedded\_v4                       & 0.4265              & 0.4580                \\
+            7  & medical\_embedded\_v5                       & 0.4117              & 0.4568                \\
+            8  & sts-multilingual-mpnet-base-v2              & 0.4436              & 0.4516                \\
+            9  & jina-embeddings-v3                          & 0.4453              & 0.4453                \\
+            10 & Linq-Embed-Mistral                          & 0.4095              & 0.4095                \\
+            \hline
+        \end{tabular}
+    }
     \caption{Resultados comparativos tras el entrenamiento de los 10 mejores modelos.}
     \label{tab:finetuned_results}
 \end{table}
@@ -205,7 +208,7 @@ Es necesario puntualizar el caso de los modelos \textit{jina-embeddings-v3} y \t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{imagenes/fusion/curva_optimizacion_k_fusion.png}
+    \includegraphics[width=0.9\textwidth]{imagenes/fusion/curva_optimizacion_k_fusion.png}
     \caption{Optimización del parámetro $k$ en la técnica \gls{RRF}. El máximo local se sitúa en $k=5$.}
     \label{fig:rrf_k_analysis}
 \end{figure}
@@ -229,7 +232,7 @@ Esta configuración permitió alcanzar un \gls{MAP} de \textbf{0.49953}, constit
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.7\textwidth]{imagenes/fusion/comparacion_fusion_ranking.png}
+    \includegraphics[width=0.9\textwidth]{imagenes/fusion/comparacion_fusion_ranking.png}
     \caption{Comparativa de las técnicas de fusión evaluadas en términos de \gls{MAP} con respecto al valor máximo individual alcalzado por los modelos.}
     \label{fig:fusion_results}
 \end{figure}
@@ -245,14 +248,14 @@ Para ello se obtuvo una lista de 90 modelos cross-encoder multilingües desde la
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.7\textwidth]{imagenes/reranking/distribucion.png}
+    \includegraphics[width=0.9\textwidth]{imagenes/reranking/distribucion.png}
     \caption{Distribución de los resultados \gls{MAP} obtenidos tras el re-ranking con distintos tamaños de listas.}
     \label{fig:distribucion_reranking_global}
 \end{figure}
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.7\textwidth]{imagenes/reranking/boxplot.png}
+    \includegraphics[width=0.85\textwidth]{imagenes/reranking/boxplot.png}
     \caption{Boxplot de los resultados \gls{MAP} obtenidos tras el re-ranking con distintos tamaños de listas.}
     \label{fig:boxplot_reranking_global}
 \end{figure}
@@ -261,14 +264,14 @@ Se puede observar que, frente a la asíntota marcada por los resultados obtenido
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.7\textwidth]{imagenes/reranking/boxplot_top10.png}
+    \includegraphics[width=0.85\textwidth]{imagenes/reranking/boxplot_top10.png}
     \caption{Boxplot de los resultados \gls{MAP} obtenidos por los 10 mejores modelos tras el re-ranking con distintos tamaños de listas.}
     \label{fig:boxplot_reranking_top10}
 \end{figure}
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.9\textwidth]{imagenes/reranking/degradation_top10.png}
+    \includegraphics[width=0.95\textwidth]{imagenes/reranking/degradation_top10.png}
     \caption{Rendimiento \gls{MAP} individual de los 10 mejores modelos tras el re-ranking con distintos tamaños de listas.}
     \label{fig:top10_reranking_individual}
 \end{figure}
@@ -278,32 +281,53 @@ Con la perspectiva de maximizar el rendimiento del sistema, se seleccionó el mo
 
 \section{Evaluación sobre test}
 
-\noindent Finalmente, se procedió a evaluar el sistema completo, incluyendo todas las fases descritas, sobre el conjunto de datos de prueba. Para ello, el ranking producido por el sistema, fue enviado al sistema de evaluación sobre test de Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}}. Los resultados obtenidos son los siguientes\footnote{Los datos que se muestran a continuación fueron tomados a fecha 31 de Enero de 2026, pudiendo existir propuestas posteriores que modifiquen los rankings aquí presentados.}. 
+\noindent Finalmente, se procedió a evaluar el sistema completo, incluyendo todas las fases descritas, sobre el conjunto de datos de prueba. Para ello, el ranking producido por el sistema, fue enviado al sistema de evaluación sobre test de Codabench\footnote{\url{https://www.codabench.org/competitions/5842/}}. Los resultados obtenidos son los siguientes\footnote{Los datos que se muestran a continuación fueron tomados a fecha 31 de Enero de 2026, pudiendo existir propuestas posteriores que modifiquen los rankings aquí presentados. En concreto, se han incluido los resultados de equipos como omokhtar, que no se encontraban en los resultados publicados por la organización en \cite{gasco2025overview}.}. 
 
 \subsection{Resultados sobre el español}
 
-\noindent Para el caso monolingüe español en el que se ha centrado este estudio, se ha obtenido un valor \gls{MAP} de \textbf{0.497}. Este resultado, considerándolo como resultado final de la propuesta presentada, se posiciona en el octavo puesto de la clasificación general de la \gls{Tarea} para el caso monolingüe de español. En la Tabla \ref{tab:final_results_test_es} se muestra el ranking final proporcionado por la plataforma de evaluación.
-
+\noindent Para el caso monolingüe español en el que se ha centrado este estudio, se ha obtenido un valor \gls{MAP} de \textbf{0.497}. Este resultado, considerándolo como resultado final de la propuesta presentada, se posiciona en el quinto puesto de la clasificación general de la \gls{Tarea} para el caso monolingüe de español. En la Tabla \ref{tab:final_results_test_es} se muestra el ranking final proporcionado por la plataforma de evaluación.
 
 \begin{table}[ht!]
     \centering
-    \begin{tabular}{|c|l|c|}
+    \begin{tabular}{clc}
         \hline
         \textbf{Posición} & \textbf{Participante} & \textbf{MAP (es-es)} \\ \hline
-        1                 & ranabarakat           & 0.527                \\ \hline
-        2                 & omokhtar              & 0.522                \\ \hline
-        3                 & ranabarakat           & 0.522                \\ \hline
-        4                 & ranabarakat           & 0.521                \\ \hline
-        5                 & jensjoris             & 0.519                \\ \hline
-        6                 & omokhtar              & 0.516                \\ \hline
-        7                 & pjmathematician       & 0.507                \\ \hline
-        8                 & \textbf{Propuesta}    & \textbf{0.497}       \\ \hline
-        9                 & NLPnorth              & 0.496                \\ \hline
-        10                & pjmathematician       & 0.479                \\ \hline
+        1                 & AlexU-NLP             & 0.527                \\ 
+        2                 & omokhtar              & 0.522                \\ 
+        3                 & TechWolf              & 0.519                \\ 
+        4                 & pjmathematician       & 0.507                \\ 
+        \textbf{5}        & \textbf{Propuesta}    & \textbf{0.497}       \\ 
+        6                 & NLPnorth              & 0.496                \\ 
+        7                 & NT                    & 0.466                \\
+        8                 & SCaLAR                & 0.438                \\
+        9                 & HULAT-UC3M            & 0.415                \\ 
+        10                & UDII-UPM              & 0.402                \\ \hline
+        
+        
     \end{tabular}
     \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe español.}
     \label{tab:final_results_test_es}
 \end{table}
+
+% \begin{table}[ht!]
+%     \centering
+%     \begin{tabular}{clc}
+%         \hline
+%         \textbf{Posición} & \textbf{Participante} & \textbf{MAP (es-es)} \\ \hline
+%         1                 & ranabarakat           & 0.527                \\ 
+%         2                 & omokhtar              & 0.522                \\ 
+%         3                 & ranabarakat           & 0.522                \\ 
+%         4                 & ranabarakat           & 0.521                \\ 
+%         5                 & jensjoris             & 0.519                \\ 
+%         6                 & omokhtar              & 0.516                \\ 
+%         7                 & pjmathematician       & 0.507                \\ 
+%         \textbf{8}                 & \textbf{Propuesta}    & \textbf{0.497}       \\ 
+%         9                 & NLPnorth              & 0.496                \\ 
+%         10                & pjmathematician       & 0.479                \\ \hline
+%     \end{tabular}
+%     \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe español.}
+%     \label{tab:final_results_test_es}
+% \end{table}
 
 Destaca aquí la presencia de un decrecimiento de más de 4 puntos porcentuales respecto al resultado obtenido sobre el conjunto de validación. Este hecho refleja la naturaleza distinta del conjunto de test, poniendo de manifiesto la diferencia de rendimiento del sistema frente a escenarios no vistos durante su desarrollo.
 
@@ -314,19 +338,19 @@ Destaca aquí la presencia de un decrecimiento de más de 4 puntos porcentuales 
 
 \begin{table}[ht!]
     \centering
-    \begin{tabular}{|c|l|c|}
+    \begin{tabular}{clc}
         \hline
         \textbf{Posición} & \textbf{Participante} & \textbf{MAP (en-en)} \\ \hline
-        1                 & pjmathematician       & 0.563                \\ \hline
-        2                 & ranabarakat           & 0.559                \\ \hline
-        3                 & omokhtar              & 0.554                \\ \hline
-        4                 & ranabarakat           & 0.554                \\ \hline
-        5                 & \textbf{Propuesta}    & \textbf{0.551}       \\ \hline
-        6                 & omokhtar              & 0.542                \\ \hline
-        7                 & jensjoris             & 0.533                \\ \hline
-        8                 & akacha                & 0.523                \\ \hline
-        9                 & pjmathematician       & 0.520                \\ \hline
-        10                & NLPnorth              & 0.511                \\ \hline
+        1                 & pjmathematician       & 0.563                \\ 
+        2                 & AlexU-NLP             & 0.559                \\ 
+        3                 & omokhtar              & 0.554                \\ 
+        \textbf{4}        & \textbf{Propuesta}    & \textbf{0.551}       \\
+        5                 & NLPnorth              & 0.537                \\ 
+        6                 & TechWolf              & 0.533                \\ 
+        7                 & NT                    & 0.523                \\ 
+        8                 & HULAT-UC3M            & 0.479                \\
+        9                 & SCaLAR                & 0.473                \\
+        10                & UDII-UPM              & 0.448                \\ \hline
     \end{tabular}
     \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe inglés.}
     \label{tab:final_results_test_en}
@@ -335,46 +359,48 @@ Destaca aquí la presencia de un decrecimiento de más de 4 puntos porcentuales 
 
 \begin{table}[ht!]
     \centering
-    \begin{tabular}{|c|l|c|}
+    \begin{tabular}{clc}
         \hline
         \textbf{Posición} & \textbf{Participante} & \textbf{MAP (de-de)} \\ \hline
-        1                 & ranabarakat           & 0.516                \\ \hline
-        2                 & omokhtar              & 0.515                \\ \hline
-        3                 & ranabarakat           & 0.515                \\ \hline
-        4                 & ranabarakat           & 0.515                \\ \hline
-        5                 & \textbf{Propuesta}    & \textbf{0.508}       \\ \hline
-        6                 & pjmathematician       & 0.476                \\ \hline
-        7                 & jensjoris             & 0.500                \\ \hline
-        8                 & omokhtar              & 0.503                \\ \hline
-        9                 & NLPnorth              & 0.484                \\ \hline
-        10                & pjmathematician       & 0.508                \\ \hline
+        1                 & AlexU-NLP             & 0.516                \\ 
+        2                 & omokhtar              & 0.515                \\ 
+        \textbf{3}        & \textbf{Propuesta}    & \textbf{0.508}       \\ 
+        4                 & TechWolf              & 0.500                \\
+        5                 & pjmathematician       & 0.476                \\ 
+        6                 & NLPNorth              & 0.442                \\ 
+        7                 & SCaLAR                & 0.427                \\ 
+        8                 & NT                    & 0.404                \\ 
+        9                 & UDII-UPM              & 0.377                \\
+        10                & HULAT-UC3M            & 0.360                \\
+        
+        \hline
     \end{tabular}
     \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe alemán.}
     \label{tab:final_results_test_de}
 \end{table}
 
 
-En estos escenarios, el sistema propuesto alcanza la quinta posición en los idiomas inglés y alemán, mientras que para chino se sitúa en la octava posición. Estos resultados ponen de manifiesto la capacidad de generalización del enfoque adoptado, ya que todas las etapas del sistema se apoyan en modelos multilingües. Si bien se aprecia una leve mejora del rendimiento en estos idiomas en comparación con el español, este comportamiento puede atribuirse al uso de modelos preentrenados multilingües como base del sistema.
+En estos escenarios, el sistema propuesto alcanza la cuarta posición en el idioma inglés y la tercera posición en el caso del alemán. Estos resultados ponen de manifiesto la capacidad de generalización del enfoque adoptado, ya que todas las etapas del sistema se apoyan en modelos multilingües. Si bien se aprecia una leve mejora del rendimiento en estos idiomas en comparación con el español, este comportamiento puede atribuirse al uso de modelos preentrenados multilingües como base del sistema.
 
 \subsection{Capacidad de generalización}
 
-\noindent Para evaluar la capacidad de generalización del sistema propuesto, desde la organización se propusieron de forma voluntaria la evaluación sobre escenarios cross-lingües, así como la evaluación sobre el idioma chino, para el que no se disponía de datos de entrenamiento específicos. Aunque en nuestro caso no se contempló el entrenamiento adicional en ningún idioma que no fuera el español, se procedió a evaluar el sistema completo sobre los conjuntos de datos de prueba correspondientes, para así analizar su capacidad de generalización ante entornos nuevos. Los resultados obtenidos para el caso del chino se muestran en la Tabla \ref{tab:final_results_test_zh}. % \todo{Si hay tiempo, intentar evaluar los casos crosslingues y mostrar los resultados aquí, para analizar mejor la generalización.}
+\noindent Para evaluar la capacidad de generalización del sistema propuesto, desde la organización se propusieron de forma voluntaria la evaluación sobre escenarios cross-lingües, así como la evaluación sobre el idioma chino, para el que no se disponía de datos de entrenamiento específicos. Aunque en nuestro caso no se contempló el entrenamiento adicional en ningún idioma que no fuera el español, se procedió a evaluar el sistema completo sobre los conjuntos de datos de prueba correspondientes, para así analizar su capacidad de generalización ante entornos nuevos. Los resultados obtenidos para el caso del chino se muestran en la Tabla \ref{tab:final_results_test_zh}, donde se ha obtenido la quinta posición en el ranking general.
 
 \begin{table}[ht!]
     \centering
-    \begin{tabular}{|c|l|c|}
+    \begin{tabular}{clc }
         \hline
         \textbf{Posición} & \textbf{Participante} & \textbf{MAP (zh-zh)} \\ \hline
-        1                 & pjmathematician       & 0.516                \\ \hline
-        2                 & jensjoris             & 0.510                \\ \hline
-        3                 & ranabarakat           & 0.508                \\ \hline
-        4                 & omokhtar              & 0.507                \\ \hline
-        5                 & ranabarakat           & 0.507                \\ \hline
-        6                 & ranabarakat           & 0.506                \\ \hline
-        7                 & omokhtar              & 0.505                \\ \hline
-        8                 & \textbf{Propuesta}    & \textbf{0.502}       \\ \hline
-        9                 & akacha                & 0.497                \\ \hline
-        10                & NLPnorth              & 0.495                \\ \hline
+        1                 & pjmathematician       & 0.516                \\ 
+        2                 & TechWolf              & 0.510                \\ 
+        3                 & AlexU-NLP             & 0.508                \\ 
+        4                 & omokhtar              & 0.507                \\ 
+        \textbf{5}        & \textbf{Propuesta}    & \textbf{0.502}       \\ 
+        6                 & NT                    & 0.497                \\ 
+        7                 & NLPnorth              & 0.495                \\
+        8                 & UDII-UPM              & 0.451                \\
+        9                 & DS@GT - TalentCLEF    & 0.421                \\
+        10                & HULAT-UC3M            & 0.415                \\ \hline
     \end{tabular}
     \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea} para el caso monolingüe chino.}
     \label{tab:final_results_test_zh}
@@ -382,4 +408,35 @@ En estos escenarios, el sistema propuesto alcanza la quinta posición en los idi
 
 \subsection{Rendimiento medio}
 
-\noindent Para la ordenación general de las propuestas enviadas, la organización se ha basado en el rendimiento medio entre los idiomas español, inglés y alemán sobre la métrica \gls{MAP}. El sistema aquí presentado ha alcanzado un valor medio de \textbf{0.521}, situándose en el sexto puesto de la clasificación general de la \gls{Tarea} de la competición TalentCLEF2025. Si consideramos únicamente la mejor propuesta de cada equipo, el sistema se posiciona como el tercer mejor equipo participante, lo que resalta la solidez y eficacia del enfoque adoptado en este trabajo. Los resultados completos pueden ser consultados en la Tabla \ref{tab:final_results_test_mean} del Apéndice \ref{ch:Tablas}.\todo{Revisar nombres de las tablas anteriores e intentar recurrir a \ref{tab:original_map_results} para contrastar los nombres. ¿Puede ser que en codabench hayan más resultados que los mostrados en el Overview? Si es así, se podría mencionar en que puesto quedaría mi sistema, además de escribir un correo a la organización para ver si se han enviado propuestas posteriores a la fecha limite.}
+\noindent Para la ordenación general de las propuestas enviadas, la organización se ha basado en el rendimiento medio entre los idiomas español, inglés y alemán sobre la métrica \gls{MAP}, la cual puede ser consultada en la Tabla \ref{tab:final_results_avg}. El sistema aquí presentado ha alcanzado un valor medio de \textbf{0.521}, situándose en el tercer puesto de la clasificación general de la \gls{Tarea} de la competición TalentCLEF2025, lo que resalta la solidez y eficacia del enfoque adoptado en este trabajo. Los resultados completos pueden ser consultados en la Tabla \ref{tab:final_results_test_mean} del Apéndice \ref{ch:Tablas}.
+
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{clc }
+        \hline
+        \textbf{Posición} & \textbf{Participante} & \textbf{Avg MAP (en,es,de)} \\ \hline
+        1                 & AlexU-NLP             & 0.534                       \\ 
+        2                 & omokhtar              & 0.530                       \\
+        \textbf{3}        & \textbf{Propuesta}    & \textbf{0.521}              \\
+        4                 & TechWolf              & 0.517                       \\ 
+        5                 & pjmathematician       & 0.515                       \\ 
+    \end{tabular}
+    \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea}, en base a la media de los valores de MAP en los idiomas inglés, español y alemán.}
+    \label{tab:final_results_avg}
+\end{table}
+
+% \begin{table}[ht!]
+%     \centering
+%     \begin{tabular}{clc }
+%         \hline
+%         \textbf{Posición} & \textbf{Participante} & \textbf{Avg MAP (en,es,de,zh)} \\ \hline
+%         1                 & AlexU-NLP             & 0.527                          \\ 
+%         2                 & omokhtar              & 0.525                          \\
+%         3                 & pjmathematician       & 0.515                          \\ 
+%         4                 & TechWolf              & 0.515                          \\ 
+%         \textbf{5}        & \textbf{Propuesta}    & \textbf{0.515}                 \\
+%     \end{tabular}
+%     \caption{Resultados finales obtenidos en el conjunto de test de la \gls{Tarea}, en base a la media de los valores de MAP en los idiomas inglés, español, alemán y chino.}
+%     \label{tab:final_results_avg_and_zh}
+% \end{table}
