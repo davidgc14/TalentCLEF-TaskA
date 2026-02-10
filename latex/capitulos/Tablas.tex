@@ -13,450 +13,445 @@
 
 \section{Evaluación \textit{zero-shot}}
 
-\begin{center}
-    % \tiny
-    \begin{longtable}{lc}
-        \hline
-        \textbf{Model Name}                                                  & \textbf{Retrieval (avg)} \\
-        \hline
-        nvidia/llama-embed-nemotron-8b                                       & 68.69                    \\
-        tencent/KaLM-Embedding-Gemma3-12B-2511                               & 75.66                    \\
-        Qwen/Qwen3-Embedding-8B                                              & 70.88                    \\
-        Qwen/Qwen3-Embedding-4B                                              & 69.60                    \\
-        infly/inf-retriever-v1                                               & 66.48                    \\
-        jinaai/jina-embeddings-v4                                            & 66.43                    \\
-        Alibaba-NLP/gte-Qwen2-7B-instruct                                    & 60.08                    \\
-        Linq-AI-Research/Linq-Embed-Mistral                                  & 58.69                    \\
-        Alibaba-NLP/gte-Qwen2-1.5B-instruct                                  & 60.78                    \\
-        Qwen/Qwen3-Embedding-0.6B                                            & 64.65                    \\
-        nvidia/NV-Embed-v2                                                   & 56.72                    \\
-        google/embeddinggemma-300m                                           & 62.49                    \\
-        infly/inf-retriever-v1-1.5b                                          & 62.96                    \\
-        parasail-ai/GritLM-7B-vllm                                           & 58.31                    \\
-        Salesforce/SFR-Embedding-Mistral                                     & 59.44                    \\
-        GritLM/GritLM-8x7B                                                   & 57.54                    \\
-        Salesforce/SFR-Embedding-2\_R                                        & 57.93                    \\
-        NovaSearch/jasper\_en\_vision\_language\_v1                          & 55.12                    \\
-        nvidia/NV-Embed-v1                                                   & 53.98                    \\
-        intfloat/e5-mistral-7b-instruct                                      & 55.75                    \\
-        intfloat/multilingual-e5-large-instruct                              & 57.12                    \\
-        Snowflake/snowflake-arctic-embed-l-v2.0                              & 58.36                    \\
-        NovaSearch/stella\_en\_1.5B\_v5                                      & 52.84                    \\
-        HIT-TMG/KaLM-embedding-multilingual-mini-v1                          & 54.17                    \\
-        Snowflake/snowflake-arctic-embed-m-v2.0                              & 54.83                    \\
-        OrdalieTech/Solon-embeddings-large-0.1                               & 55.69                    \\
-        HIT-TMG/KaLM-embedding-multilingual-mini-instruct-v1                 & 50.84                    \\
-        Alibaba-NLP/gte-multilingual-base                                    & 57.16                    \\
-        Lajavaness/bilingual-embedding-large                                 & 55.10                    \\
-        intfloat/multilingual-e5-large                                       & 53.67                    \\
-        BAAI/bge-m3                                                          & 54.60                    \\
-        jinaai/jina-embeddings-v3                                            & 55.76                    \\
-        ibm-granite/granite-embedding-278m-multilingual                      & 52.20                    \\
-        WhereIsAI/UAE-Large-V1                                               & 41.21                    \\
-        avsolatorio/GIST-large-Embedding-v0                                  & 40.41                    \\
-        gandolfi/bge-m3-custom-fr-Q4\_K\_M-GGUF                              & 53.26                    \\
-        intfloat/multilingual-e5-base                                        & 52.72                    \\
-        Snowflake/snowflake-arctic-embed-s                                   & 39.84                    \\
-        Snowflake/snowflake-arctic-embed-l-v2.0                              & 39.66                    \\
-        mixedbread-ai/mxbai-embed-large-v1                                   & 40.30                    \\
-        NovaSearch/stella\_en\_400M\_v5                                      & 42.58                    \\
-        Lajavaness/bilingual-embedding-base                                  & 52.96                    \\
-        intfloat/e5-large-v2                                                 & 40.06                    \\
-        nomic-ai/nomic-embed-text-v1-unsupervised                            & 40.66                    \\
-        nomic-ai/nomic-embed-text-v1-ablated                                 & 40.74                    \\
-        ibm-granite/granite-embedding-125m-english                           & 39.26                    \\
-        BAAI/bge-large-en-v1.5                                               & 39.00                    \\
-        Snowflake/snowflake-arctic-embed-m-v1.5                              & 38.69                    \\
-        Snowflake/snowflake-arctic-embed-m-long                              & 39.30                    \\
-        Snowflake/snowflake-arctic-embed-m-v1.5                              & 39.33                    \\
-        McGill-NLP/LLM2Vec-Mistral-7B-Instruct-v2-mntp-supervised            & 43.07                    \\
-        intfloat/e5-base-v2                                                  & 40.49                    \\
-        Lajavaness/bilingual-embedding-small                                 & 49.55                    \\
-        BAAI/bge-base-en-v1.5                                                & 38.61                    \\
-        bartowski/granite-embedding-107m-multilingual-GGUF                   & 48.08                    \\
-        avsolatorio/GIST-Embedding-v0                                        & 38.45                    \\
-        deepvk/USER-bge-m3                                                   & 43.30                    \\
-        thenlper/gte-large                                                   & 38.23                    \\
-        intfloat/multilingual-e5-large                                       & 38.50                    \\
-        intfloat/e5-small-v2                                                 & 39.38                    \\
-        avsolatorio/GIST-small-Embedding-v0                                  & 37.22                    \\
-        intfloat/multilingual-e5-small                                       & 49.38                    \\
-        avsolatorio/NoInstruct-small-Embedding-v0                            & 37.81                    \\
-        BAAI/bge-small-en-v1.5                                               & 36.26                    \\
-        abhinand/MedEmbed-small-v0.1                                         & 35.16                    \\
-        ibm-granite/granite-embedding-30m-english                            & 36.43                    \\
-        manu/sentence\_croissant\_alpha\_v0.4                                & 38.35                    \\
-        AIDA-UPM/mstsb-paraphrase-multilingual-mpnet-base-v2                 & 39.76                    \\
-        thenlper/gte-small                                                   & 35.99                    \\
-        thenlper/gte-base                                                    & 35.86                    \\
-        manu/sentence\_croissant\_alpha\_v0.3                                & 37.27                    \\
-        intfloat/multilingual-e5-base                                        & 37.69                    \\
-        jinaai/jina-embedding-b-en-v1                                        & 37.96                    \\
-        nomic-ai/nomic-embed-text-v1.5                                       & 37.05                    \\
-        Snowflake/snowflake-arctic-embed-l-v2.0                              & 35.23                    \\
-        infgrad/stella-base-en-v2                                            & 35.28                    \\
-        intfloat/multilingual-e5-small                                       & 36.25                    \\
-        sentence-transformers/static-similarity-mrl-multilingual-v1          & 41.21                    \\
-        Omartificial-Intelligence-Space/Arabic-all-nli-triplet-Matryoshka    & 38.47                    \\
-        dwzhu/e5-base-4k                                                     & 36.78                    \\
-        sentence-transformers/all-mpnet-base-v2                              & 33.80                    \\
-        sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2          & 36.61                    \\
-        nomic-ai/nomic-embed-text-v1.5                                       & 34.09                    \\
-        Mihaiii/Ivysaur                                                      & 34.42                    \\
-        bigscience/sgpt-bloom-7b1-msmarco                                    & 35.27                    \\
-        manu/sentence\_croissant\_alpha\_v0.2                                & 36.48                    \\
-        sdadas/mmlw-e5-large                                                 & 33.33                    \\
-        minishlab/potion-multilingual-128M                                   & 37.86                    \\
-        avsolatorio/GIST-all-MiniLM-L6-v2                                    & 33.30                    \\
-        brahmairesearch/slx-v0.1                                             & 32.51                    \\
-        sentence-transformers/all-MiniLM-L6-v2                               & 32.51                    \\
-        Omartificial-Intelligence-Space/Arabic-labse-Matryoshka              & 36.98                    \\
-        sentence-transformers/all-MiniLM-L12-v2                              & 33.37                    \\
-        NaN                                                                  & 35.42                    \\
-        jinaai/jina-embedding-s-en-v1                                        & 34.70                    \\
-        Omartificial-Intelligence-Space/Arabic-MiniLM-L12-v2-all-nli-triplet & 35.06                    \\
-        sdadas/mmlw-e5-base                                                  & 30.79                    \\
-        chienpham/sts-multilingual-mpnet-base-v2                             & 34.66                    \\
-        sdadas/mmlw-roberta-large                                            & 31.75                    \\
-        sdadas/mmlw-roberta-base                                             & 30.39                    \\
-        sentence-transformers/LaBSE                                          & 33.17                    \\
-        ai-forever/ru-en-RoSBERTa                                            & 32.68                    \\
-        sdadas/mmlw-e5-small                                                 & 31.05                    \\
-        Mihaiii/gte-micro-v4                                                 & 30.54                    \\
-        Mihaiii/Bulbasaur                                                    & 29.88                    \\
-        omarelshehy/arabic-english-sts-matryoshka                            & 31.72                    \\
-        sergeyzh/LaBSE-ru-turbo                                              & 31.80                    \\
-        minishlab/potion-base-8M                                             & 28.63                    \\
-        shibing624/text2vec-base-multilingual                                & 26.99                    \\
-        minishlab/potion-base-4M                                             & 27.23                    \\
-        McGill-NLP/LLM2Vec-Mistral-7B-Instruct-v2-mntp-unsup-simcse          & 30.57                    \\
-        Mihaiii/Wartortle                                                    & 27.21                    \\
-        cointegrated/LaBSE-en-ru                                             & 27.15                    \\
-        Mihaiii/gte-micro                                                    & 26.16                    \\
-        minishlab/potion-base-2M                                             & 23.99                    \\
-        NaN                                                                  & 28.38                    \\
-        minishlab/M2V\_base\_output                                          & 24.74                    \\
-        Mihaiii/Venusaur                                                     & 25.64                    \\
-        superb-test-user/distilbert-base-uncased-finetuned-squad-d5716d28    & 27.22                    \\
-        Mihaiii/Squirtle                                                     & 24.85                    \\
-        minishlab/M2V\_base\_glove                                           & 24.38                    \\
-        minishlab/M2V\_base\_glove\_subword                                  & 24.12                    \\
-        sergeyzh/rubert-tiny-turbo                                           & 24.40                    \\
-        consciousAI/cai-lunaris-text-embeddings                              & 23.49                    \\
-        aari1995/German\_Semantic\_STS\_V2                                   & 21.80                    \\
-        jinaai/jina-embeddings-v2-small-en                                   & 13.45                    \\
-        NaN                                                                  & 15.75                    \\
-        jinaai/jina-embeddings-v2-base-en                                    & 10.70                    \\
-        cointegrated/rubert-tiny2                                            & 14.35                    \\
-        Omartificial-Intelligence-Space/Arabert-all-nli-triplet-Matryoshka   & 12.74                    \\
-        DeepPavlov/distilrubert-small-cased-conversational                   & 12.76                    \\
-        Omartificial-Intelligence-Space/Arabic-mpnet-base-all-nli-triplet    & 13.12                    \\
-        malenia1/ternary-weight-embedding                                    & 10.63                    \\
-        Jaume/gemma-2b-embeddings                                            & 13.05                    \\
-        Omartificial-Intelligence-Space/Marbert-all-nli-triplet-Matryoshka   & 9.19                     \\
-        Ann2020/rubert-base-cased-sentence-finetuned-ner                     & 9.90                     \\
-        cointegrated/rubert-tiny2                                            & 12.09                    \\
-        DeepPavlov/rubert-base-cased                                         & 7.97                     \\
-        ai-forever/sbert\_large\_nlu\_ru                                     & 7.80                     \\
-        ai-forever/sbert\_large\_mt\_nlu\_ru                                 & 8.47                     \\
-        binhquoc/deberta-v1-base                                             & 6.63                     \\
-        \hline
-        \caption{Modelos extraídos del repositorio MTEB, ordenados por media de resultados obtenidos en los benchmarks asociados a la tarea de Retrieval. Fecha de extracción: 1 de diciembre de 2025.}
-    \end{longtable}
-    \label{tab:resultados_completos_modelos_mteb_retrieval}
-\end{center}
+\begin{xltabular}{\textwidth}{X c}
+    \hline
+    \textbf{Model Name}                                                  & \textbf{Retrieval (avg)} \\
+    \hline
+    nvidia/llama-embed-nemotron-8b                                       & 68.69                    \\
+    tencent/KaLM-Embedding-Gemma3-12B-2511                               & 75.66                    \\
+    Qwen/Qwen3-Embedding-8B                                              & 70.88                    \\
+    Qwen/Qwen3-Embedding-4B                                              & 69.60                    \\
+    infly/inf-retriever-v1                                               & 66.48                    \\
+    jinaai/jina-embeddings-v4                                            & 66.43                    \\
+    Alibaba-NLP/gte-Qwen2-7B-instruct                                    & 60.08                    \\
+    Linq-AI-Research/Linq-Embed-Mistral                                  & 58.69                    \\
+    Alibaba-NLP/gte-Qwen2-1.5B-instruct                                  & 60.78                    \\
+    Qwen/Qwen3-Embedding-0.6B                                            & 64.65                    \\
+    nvidia/NV-Embed-v2                                                   & 56.72                    \\
+    google/embeddinggemma-300m                                           & 62.49                    \\
+    infly/inf-retriever-v1-1.5b                                          & 62.96                    \\
+    parasail-ai/GritLM-7B-vllm                                           & 58.31                    \\
+    Salesforce/SFR-Embedding-Mistral                                     & 59.44                    \\
+    GritLM/GritLM-8x7B                                                   & 57.54                    \\
+    Salesforce/SFR-Embedding-2\_R                                        & 57.93                    \\
+    NovaSearch/jasper\_en\_vision\_language\_v1                          & 55.12                    \\
+    nvidia/NV-Embed-v1                                                   & 53.98                    \\
+    intfloat/e5-mistral-7b-instruct                                      & 55.75                    \\
+    intfloat/multilingual-e5-large-instruct                              & 57.12                    \\
+    Snowflake/snowflake-arctic-embed-l-v2.0                              & 58.36                    \\
+    NovaSearch/stella\_en\_1.5B\_v5                                      & 52.84                    \\
+    HIT-TMG/KaLM-embedding-multilingual-mini-v1                          & 54.17                    \\
+    Snowflake/snowflake-arctic-embed-m-v2.0                              & 54.83                    \\
+    OrdalieTech/Solon-embeddings-large-0.1                               & 55.69                    \\
+    HIT-TMG/KaLM-embedding-multilingual-mini-instruct-v1                 & 50.84                    \\
+    Alibaba-NLP/gte-multilingual-base                                    & 57.16                    \\
+    Lajavaness/bilingual-embedding-large                                 & 55.10                    \\
+    intfloat/multilingual-e5-large                                       & 53.67                    \\
+    BAAI/bge-m3                                                          & 54.60                    \\
+    jinaai/jina-embeddings-v3                                            & 55.76                    \\
+    ibm-granite/granite-embedding-278m-multilingual                      & 52.20                    \\
+    WhereIsAI/UAE-Large-V1                                               & 41.21                    \\
+    avsolatorio/GIST-large-Embedding-v0                                  & 40.41                    \\
+    gandolfi/bge-m3-custom-fr-Q4\_K\_M-GGUF                              & 53.26                    \\
+    intfloat/multilingual-e5-base                                        & 52.72                    \\
+    Snowflake/snowflake-arctic-embed-s                                   & 39.84                    \\
+    Snowflake/snowflake-arctic-embed-l-v2.0                              & 39.66                    \\
+    mixedbread-ai/mxbai-embed-large-v1                                   & 40.30                    \\
+    NovaSearch/stella\_en\_400M\_v5                                      & 42.58                    \\
+    Lajavaness/bilingual-embedding-base                                  & 52.96                    \\
+    intfloat/e5-large-v2                                                 & 40.06                    \\
+    nomic-ai/nomic-embed-text-v1-unsupervised                            & 40.66                    \\
+    nomic-ai/nomic-embed-text-v1-ablated                                 & 40.74                    \\
+    ibm-granite/granite-embedding-125m-english                           & 39.26                    \\
+    BAAI/bge-large-en-v1.5                                               & 39.00                    \\
+    Snowflake/snowflake-arctic-embed-m-v1.5                              & 38.69                    \\
+    Snowflake/snowflake-arctic-embed-m-long                              & 39.30                    \\
+    Snowflake/snowflake-arctic-embed-m-v1.5                              & 39.33                    \\
+    McGill-NLP/LLM2Vec-Mistral-7B-Instruct-v2-mntp-supervised            & 43.07                    \\
+    intfloat/e5-base-v2                                                  & 40.49                    \\
+    Lajavaness/bilingual-embedding-small                                 & 49.55                    \\
+    BAAI/bge-base-en-v1.5                                                & 38.61                    \\
+    bartowski/granite-embedding-107m-multilingual-GGUF                   & 48.08                    \\
+    avsolatorio/GIST-Embedding-v0                                        & 38.45                    \\
+    deepvk/USER-bge-m3                                                   & 43.30                    \\
+    thenlper/gte-large                                                   & 38.23                    \\
+    intfloat/multilingual-e5-large                                       & 38.50                    \\
+    intfloat/e5-small-v2                                                 & 39.38                    \\
+    avsolatorio/GIST-small-Embedding-v0                                  & 37.22                    \\
+    intfloat/multilingual-e5-small                                       & 49.38                    \\
+    avsolatorio/NoInstruct-small-Embedding-v0                            & 37.81                    \\
+    BAAI/bge-small-en-v1.5                                               & 36.26                    \\
+    abhinand/MedEmbed-small-v0.1                                         & 35.16                    \\
+    ibm-granite/granite-embedding-30m-english                            & 36.43                    \\
+    manu/sentence\_croissant\_alpha\_v0.4                                & 38.35                    \\
+    AIDA-UPM/mstsb-paraphrase-multilingual-mpnet-base-v2                 & 39.76                    \\
+    thenlper/gte-small                                                   & 35.99                    \\
+    thenlper/gte-base                                                    & 35.86                    \\
+    manu/sentence\_croissant\_alpha\_v0.3                                & 37.27                    \\
+    intfloat/multilingual-e5-base                                        & 37.69                    \\
+    jinaai/jina-embedding-b-en-v1                                        & 37.96                    \\
+    nomic-ai/nomic-embed-text-v1.5                                       & 37.05                    \\
+    Snowflake/snowflake-arctic-embed-l-v2.0                              & 35.23                    \\
+    infgrad/stella-base-en-v2                                            & 35.28                    \\
+    intfloat/multilingual-e5-small                                       & 36.25                    \\
+    sentence-transformers/static-similarity-mrl-multilingual-v1          & 41.21                    \\
+    Omartificial-Intelligence-Space/Arabic-all-nli-triplet-Matryoshka    & 38.47                    \\
+    dwzhu/e5-base-4k                                                     & 36.78                    \\
+    sentence-transformers/all-mpnet-base-v2                              & 33.80                    \\
+    sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2          & 36.61                    \\
+    nomic-ai/nomic-embed-text-v1.5                                       & 34.09                    \\
+    Mihaiii/Ivysaur                                                      & 34.42                    \\
+    bigscience/sgpt-bloom-7b1-msmarco                                    & 35.27                    \\
+    manu/sentence\_croissant\_alpha\_v0.2                                & 36.48                    \\
+    sdadas/mmlw-e5-large                                                 & 33.33                    \\
+    minishlab/potion-multilingual-128M                                   & 37.86                    \\
+    avsolatorio/GIST-all-MiniLM-L6-v2                                    & 33.30                    \\
+    brahmairesearch/slx-v0.1                                             & 32.51                    \\
+    sentence-transformers/all-MiniLM-L6-v2                               & 32.51                    \\
+    Omartificial-Intelligence-Space/Arabic-labse-Matryoshka              & 36.98                    \\
+    sentence-transformers/all-MiniLM-L12-v2                              & 33.37                    \\
+    NaN                                                                  & 35.42                    \\
+    jinaai/jina-embedding-s-en-v1                                        & 34.70                    \\
+    Omartificial-Intelligence-Space/Arabic-MiniLM-L12-v2-all-nli-triplet & 35.06                    \\
+    sdadas/mmlw-e5-base                                                  & 30.79                    \\
+    chienpham/sts-multilingual-mpnet-base-v2                             & 34.66                    \\
+    sdadas/mmlw-roberta-large                                            & 31.75                    \\
+    sdadas/mmlw-roberta-base                                             & 30.39                    \\
+    sentence-transformers/LaBSE                                          & 33.17                    \\
+    ai-forever/ru-en-RoSBERTa                                            & 32.68                    \\
+    sdadas/mmlw-e5-small                                                 & 31.05                    \\
+    Mihaiii/gte-micro-v4                                                 & 30.54                    \\
+    Mihaiii/Bulbasaur                                                    & 29.88                    \\
+    omarelshehy/arabic-english-sts-matryoshka                            & 31.72                    \\
+    sergeyzh/LaBSE-ru-turbo                                              & 31.80                    \\
+    minishlab/potion-base-8M                                             & 28.63                    \\
+    shibing624/text2vec-base-multilingual                                & 26.99                    \\
+    minishlab/potion-base-4M                                             & 27.23                    \\
+    McGill-NLP/LLM2Vec-Mistral-7B-Instruct-v2-mntp-unsup-simcse          & 30.57                    \\
+    Mihaiii/Wartortle                                                    & 27.21                    \\
+    cointegrated/LaBSE-en-ru                                             & 27.15                    \\
+    Mihaiii/gte-micro                                                    & 26.16                    \\
+    minishlab/potion-base-2M                                             & 23.99                    \\
+    NaN                                                                  & 28.38                    \\
+    minishlab/M2V\_base\_output                                          & 24.74                    \\
+    Mihaiii/Venusaur                                                     & 25.64                    \\
+    superb-test-user/distilbert-base-uncased-finetuned-squad-d5716d28    & 27.22                    \\
+    Mihaiii/Squirtle                                                     & 24.85                    \\
+    minishlab/M2V\_base\_glove                                           & 24.38                    \\
+    minishlab/M2V\_base\_glove\_subword                                  & 24.12                    \\
+    sergeyzh/rubert-tiny-turbo                                           & 24.40                    \\
+    consciousAI/cai-lunaris-text-embeddings                              & 23.49                    \\
+    aari1995/German\_Semantic\_STS\_V2                                   & 21.80                    \\
+    jinaai/jina-embeddings-v2-small-en                                   & 13.45                    \\
+    NaN                                                                  & 15.75                    \\
+    jinaai/jina-embeddings-v2-base-en                                    & 10.70                    \\
+    cointegrated/rubert-tiny2                                            & 14.35                    \\
+    Omartificial-Intelligence-Space/Arabert-all-nli-triplet-Matryoshka   & 12.74                    \\
+    DeepPavlov/distilrubert-small-cased-conversational                   & 12.76                    \\
+    Omartificial-Intelligence-Space/Arabic-mpnet-base-all-nli-triplet    & 13.12                    \\
+    malenia1/ternary-weight-embedding                                    & 10.63                    \\
+    Jaume/gemma-2b-embeddings                                            & 13.05                    \\
+    Omartificial-Intelligence-Space/Marbert-all-nli-triplet-Matryoshka   & 9.19                     \\
+    Ann2020/rubert-base-cased-sentence-finetuned-ner                     & 9.90                     \\
+    cointegrated/rubert-tiny2                                            & 12.09                    \\
+    DeepPavlov/rubert-base-cased                                         & 7.97                     \\
+    ai-forever/sbert\_large\_nlu\_ru                                     & 7.80                     \\
+    ai-forever/sbert\_large\_mt\_nlu\_ru                                 & 8.47                     \\
+    binhquoc/deberta-v1-base                                             & 6.63                     \\
+    \hline
+    \label{tab:resultados_completos_modelos_mteb_retrieval} \\
+    \caption{Modelos extraídos del repositorio MTEB, ordenados por media de resultados obtenidos en los benchmarks asociados a la tarea de Retrieval. Fecha de extracción: 1 de diciembre de 2025.}
+\end{xltabular}
 
 
 
-\begin{center}
-    \tiny
-    \begin{longtable}{llll}
-        \hline
-        \textbf{Ranking} & \textbf{Model Name}                                                        & \textbf{Size} & \textbf{MAP} \\
-        \hline
-        1                & Lajavaness/bilingual-embedding-large                                       & 559890432     & 0.4493       \\
-        2                & jinaai/jina-embeddings-v3                                                  & 572310396     & 0.4453       \\
-        3                & chienpham/sts-multilingual-mpnet-base-v2                                   & 278043648     & 0.4436       \\
-        4                & intfloat/multilingual-e5-large-instruct                                    & 559890432     & 0.4426       \\
-        5                & AIDA-UPM/mstsb-paraphrase-multilingual-mpnet-base-v2                       & 278043648     & 0.4287       \\
-        6                & shtilev/medical\_embedded\_v4                                              & 278043648     & 0.4265       \\
-        7                & sentence-transformers/paraphrase-multilingual-mpnet-base-v2                & 278043648     & 0.4169       \\
-        8                & Alibaba-NLP/gte-multilingual-base                                          & 305368320     & 0.4155       \\
-        9                & shtilev/medical\_embedded\_v5                                              & 278043648     & 0.4117       \\
-        10               & Linq-AI-Research/Linq-Embed-Mistral                                        & 7110660096    & 0.4095       \\
-        11               & upskyy/e5-large-korean                                                     & 559890432     & 0.4058       \\
-        12               & Lajavaness/bilingual-embedding-small                                       & 117653760     & 0.4053       \\
-        13               & upskyy/gte-base-korean                                                     & 305368320     & 0.4018       \\
-        14               & Omartificial-Intelligence-Space/Arabic-all-nli-triplet-Matryoshka          & 278043648     & 0.4013       \\
-        15               & upskyy/e5-base-korean                                                      & 278043648     & 0.3953       \\
-        16               & ibm-granite/granite-embedding-278m-multilingual                            & 278043648     & 0.3921       \\
-        17               & OneFly7/biencoder\_ep10\_bs64\_trans1                                      & 278043648     & 0.3901       \\
-        18               & Omartificial-Intelligence-Space/Arabic-labse-Matryoshka                    & 471517440     & 0.3888       \\
-        19               & shtilev/medical\_embedded\_v3                                              & 278043648     & 0.3875       \\
-        20               & OneFly7/bi\_bs32\_lr2e5\_cosine\_restart\_period2\_best                    & 278043648     & 0.3847       \\
-        21               & jinaai/jina-embeddings-v2-base-es                                          & 160850688     & 0.3841       \\
-        22               & Snowflake/snowflake-arctic-embed-l-v2.0                                    & 567754752     & 0.3833       \\
-        23               & Lajavaness/bilingual-embedding-base                                        & 278043648     & 0.3827       \\
-        24               & sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2                & 117653760     & 0.3766       \\
-        25               & tomaarsen/distiluse-base-multilingual-cased-v2                             & 134734080     & 0.3749       \\
-        26               & Qwen/Qwen3-Embedding-0.6B                                                  & 595776512     & 0.3718       \\
-        27               & Omartificial-Intelligence-Space/Arabic-MiniLM-L12-v2-all-nli-triplet       & 117653760     & 0.3708       \\
-        28               & HIT-TMG/KaLM-embedding-multilingual-mini-v1                                & 494032768     & 0.3705       \\
-        29               & OneFly7/biencoder\_ep2\_bs32\_trans3                                       & 278043648     & 0.3700       \\
-        30               & upskyy/bge-m3-korean                                                       & 567754752     & 0.3692       \\
-        31               & lang-uk/ukr-paraphrase-multilingual-mpnet-base                             & 278043648     & 0.3692       \\
-        32               & HIT-TMG/KaLM-embedding-multilingual-mini-instruct-v1                       & 494032768     & 0.3681       \\
-        33               & Griffin88/sentence-embedding-LaBSE                                         & 471517440     & 0.3661       \\
-        34               & OneFly7/biencoder\_ep10\_bs32\_lr2e5\_cosine\_annealing\_hard\_neg\_2      & 278043648     & 0.3642       \\
-        35               & OneFly7/biencoder\_ep10\_bs64\_trans3                                      & 278043648     & 0.3613       \\
-        36               & hiiamsid/sentence\_similarity\_spanish\_es                                 & 109850880     & 0.3601       \\
-        37               & manu/sentence\_croissant\_alpha\_v0.3                                      & 1279887360    & 0.3601       \\
-        38               & hiiamsid/sentence\_similarity\_spanish\_es                                 & 109850880     & 0.3599       \\
-        39               & OneFly7/biencoder\_ep10\_bs64\_all                                         & 278043648     & 0.3592       \\
-        40               & OrdalieTech/Solon-embeddings-large-0.1                                     & 559890432     & 0.3577       \\
-        41               & DmitryML/distiluse-base-multilingual-cased-v1                              & 135127808     & 0.3549       \\
-        42               & upskyy/e5-small-korean                                                     & 117653760     & 0.3545       \\
-        43               & intfloat/multilingual-e5-small                                             & 117653760     & 0.3513       \\
-        44               & infly/inf-retriever-v1-1.5b                                                & 1543268864    & 0.3474       \\
-        45               & emersoftware/tulio-chilean-spanish-bert-finetuned-msmarco-qa-es            & 109850880     & 0.3471       \\
-        46               & intfloat/multilingual-e5-base                                              & 278043648     & 0.3463       \\
-        47               & OneFly7/biencoder\_ep10\_bs32\_lr2e5\_cosine\_annealing\_hard\_neg\_1      & 278043648     & 0.3459       \\
-        48               & manu/sentence\_croissant\_alpha\_v0.4                                      & 1279887360    & 0.3436       \\
-        49               & mrm8488/distiluse-base-multilingual-cased-v2-finetuned-stsb\_multi\_mt-es  & 134734080     & 0.3421       \\
-        50               & thenlper/gte-large                                                         & 335141888     & 0.3414       \\
-        51               & intfloat/multilingual-e5-large                                             & 559890432     & 0.3381       \\
-        52               & avsolatorio/GIST-large-Embedding-v0                                        & 335141888     & 0.3370       \\
-        53               & symanto/sn-xlm-roberta-base-snli-mnli-anli-xnli                            & 278043648     & 0.3368       \\
-        54               & h4g3n/multilingual-MiniLM-L12-de-en-es-fr-it-nl-pl-pt                      & 103458048     & 0.3326       \\
-        55               & mixedbread-ai/mxbai-embed-large-v1                                         & 335141888     & 0.3317       \\
-        56               & WhereIsAI/UAE-Large-V1                                                     & 335141888     & 0.3283       \\
-        57               & sdadas/mmlw-e5-large                                                       & 559890432     & 0.3280       \\
-        58               & narraticlabs/MiniLM-L6-european-union                                      & 107006976     & 0.3231       \\
-        59               & nomic-ai/nomic-embed-text-v1.5                                             & 136731648     & 0.3225       \\
-        60               & BAAI/bge-large-en-v1.5                                                     & 335141888     & 0.3212       \\
-        61               & thenlper/gte-base                                                          & 109482240     & 0.3199       \\
-        62               & Maite89/Roberta\_finetuning\_semantic\_similarity\_stsb\_multi\_mt         & 355356672     & 0.3187       \\
-        63               & avsolatorio/GIST-Embedding-v0                                              & 109482240     & 0.3170       \\
-        64               & OneFly7/biencoder\_ep10\_bs32\_trans3                                      & 278043648     & 0.3103       \\
-        65               & sdadas/mmlw-e5-base                                                        & 278043648     & 0.3089       \\
-        66               & hackathon-pln-es/paraphrase-spanish-distilroberta                          & 124645632     & 0.3067       \\
-        67               & somosnlp-hackathon-2022/paraphrase-spanish-distilroberta                   & 124645632     & 0.3064       \\
-        68               & BAAI/bge-m3                                                                & 567754752     & 0.3052       \\
-        69               & manu/sentence\_croissant\_alpha\_v0.2                                      & 1279887360    & 0.3050       \\
-        70               & thenlper/gte-small                                                         & 33360000      & 0.3044       \\
-        71               & deepvk/USER-bge-m3                                                         & 359026688     & 0.3035       \\
-        72               & chukbert/paraphrase-multilingual-MiniLM-L12-v2-MSRP-Indo-finetuned-2-epoch & 117653760     & 0.3023       \\
-        73               & BAAI/bge-base-en-v1.5                                                      & 109482240     & 0.3012       \\
-        74               & Snowflake/snowflake-arctic-embed-m-v1.5                                    & 108891648     & 0.3002       \\
-        75               & intfloat/e5-base-v2                                                        & 109482240     & 0.2992       \\
-        76               & LinerAI/Qwen3-Embedding-0.6B-academic                                      & 595776512     & 0.2991       \\
-        77               & Mihaiii/Ivysaur                                                            & 22713216      & 0.2988       \\
-        78               & jaimevera1107/all-MiniLM-L6-v2-similarity-es                               & 22713216      & 0.2986       \\
-        79               & jaimevera1107/all-MiniLM-L6-v2-similarity-es                               & 22713216      & 0.2977       \\
-        80               & Snowflake/snowflake-arctic-embed-m-long                                    & 136731648     & 0.2973       \\
-        81               & intfloat/e5-large-v2                                                       & 335141888     & 0.2952       \\
-        82               & avsolatorio/GIST-small-Embedding-v0                                        & 33360000      & 0.2921       \\
-        83               & abhinand/MedEmbed-small-v0.1                                               & 33360000      & 0.2921       \\
-        84               & sentence-transformers/all-MiniLM-L12-v2                                    & 33360000      & 0.2920       \\
-        85               & avsolatorio/GIST-all-MiniLM-L6-v2                                          & 22713216      & 0.2912       \\
-        86               & facebook/drama-large                                                       & 399803392     & 0.2905       \\
-        87               & BAAI/bge-small-en-v1.5                                                     & 33360000      & 0.2877       \\
-        88               & facebook/drama-1b                                                          & 1235814400    & 0.2863       \\
-        89               & brahmairesearch/slx-v0.1                                                   & 22713216      & 0.2838       \\
-        90               & sentence-transformers/all-MiniLM-L6-v2                                     & 22713216      & 0.2838       \\
-        91               & ibm-granite/granite-embedding-125m-english                                 & 124645632     & 0.2802       \\
-        92               & intfloat/e5-small-v2                                                       & 33360000      & 0.2780       \\
-        93               & Snowflake/snowflake-arctic-embed-s                                         & 33212160      & 0.2740       \\
-        94               & jinaai/jina-embedding-b-en-v1                                              & 109628544     & 0.2738       \\
-        95               & ibm-granite/granite-embedding-30m-english                                  & 30295296      & 0.2734       \\
-        96               & sdadas/mmlw-roberta-large                                                  & 434961408     & 0.2671       \\
-        97               & clips/mfaq                                                                 & 278045952     & 0.2663       \\
-        98               & sentence-transformers/all-mpnet-base-v2                                    & 109486464     & 0.2633       \\
-        99               & OneFly7/crossencoder\_ep10\_bs8\_trans1                                    & 278043648     & 0.2604       \\
-        100              & facebook/drama-base                                                        & 211766016     & 0.2587       \\
-        101              & jinaai/jina-embedding-s-en-v1                                              & 35330816      & 0.2424       \\
-        102              & nvidia/llama-embed-nemotron-8b                                             & 7504924672    & 0.2268       \\
-        103              & dccuchile/distilbert-base-spanish-uncased                                  & 66731520      & 0.2115       \\
-        104              & dccuchile/albert-base-4-spanish                                            & 11811584      & 0.2107       \\
-        105              & dccuchile/albert-base-2-spanish                                            & 11811584      & 0.2101       \\
-        106              & dccuchile/patana-chilean-spanish-bert                                      & 109850880     & 0.2094       \\
-        107              & dccuchile/tulio-chilean-spanish-bert                                       & 109850880     & 0.1998       \\
-        108              & PlanTL-GOB-ES/roberta-base-es-wikicat-es                                   & 124643328     & 0.1959       \\
-        109              & dccuchile/bert-base-spanish-wwm-cased                                      & 109850880     & 0.1912       \\
-        110              & dccuchile/albert-base-2-spanish-distilled-mldoc                            & 11811584      & 0.1826       \\
-        111              & dccuchile/albert-base-6-spanish                                            & 11811584      & 0.1779       \\
-        112              & dccuchile/albert-base-2-spanish-distilled-qa-sqac                          & 11811584      & 0.1660       \\
-        113              & PlanTL-GOB-ES/Controversy-Prediction                                       & 124643328     & 0.1638       \\
-        114              & dccuchile/albert-base-4-spanish-distilled-xnli                             & 11811584      & 0.1526       \\
-        115              & dccuchile/bert-base-spanish-wwm-uncased                                    & 109850880     & 0.1522       \\
-        116              & dccuchile/albert-tiny-spanish-distilled-mldoc                              & 5344136       & 0.1521       \\
-        117              & dccuchile/albert-base-2-spanish-distilled-xnli                             & 11811584      & 0.1520       \\
-        118              & PlanTL-GOB-ES/bsc-bio-ehr-es-cantemist                                     & 124643328     & 0.1469       \\
-        119              & dccuchile/albert-base-6-spanish-distilled-xnli                             & 11811584      & 0.1464       \\
-        120              & dccuchile/albert-base-2-spanish-distilled-ner                              & 11811584      & 0.1441       \\
-        121              & dccuchile/albert-tiny-spanish                                              & 5344136       & 0.1428       \\
-        122              & bertin-project/bertin-roberta-base-spanish                                 & 124643328     & 0.1415       \\
-        123              & dccuchile/albert-base-2-spanish-distilled-pawsx                            & 11811584      & 0.1410       \\
-        124              & dccuchile/albert-base-6-spanish-distilled-mldoc                            & 11811584      & 0.1398       \\
-        125              & PlanTL-GOB-ES/bsc-bio-es                                                   & 124643328     & 0.1378       \\
-        126              & dccuchile/albert-base-8-spanish-distilled-xnli                             & 11811584      & 0.1377       \\
-        127              & dccuchile/albert-base-2-spanish-distilled-pos                              & 11811584      & 0.1376       \\
-        128              & dccuchile/albert-base-8-spanish                                            & 11811584      & 0.1371       \\
-        129              & jfarray/Model\_dccuchile\_bert-base-spanish-wwm-uncased\_100\_Epochs       & 110047744     & 0.1351       \\
-        130              & dccuchile/albert-base-4-spanish-distilled-mldoc                            & 11811584      & 0.1334       \\
-        131              & PlanTL-GOB-ES/bsc-bio-ehr-es-pharmaconer                                   & 124643328     & 0.1292       \\
-        132              & dccuchile/albert-base-4-spanish-distilled-pawsx                            & 11811584      & 0.1275       \\
-        133              & dccuchile/albert-base-2-spanish-distilled-qa-mlqa                          & 11811584      & 0.1275       \\
-        134              & PlanTL-GOB-ES/roberta-base-ca                                              & 125978112     & 0.1264       \\
-        135              & PlanTL-GOB-ES/bsc-bio-ehr-es                                               & 124643328     & 0.1213       \\
-        136              & dccuchile/albert-base-2-spanish-distilled-qa-tar                           & 11811584      & 0.1212       \\
-        137              & dccuchile/albert-base-4-spanish-distilled-pos                              & 11811584      & 0.1198       \\
-        138              & dccuchile/albert-base-10-spanish-distilled-xnli                            & 11811584      & 0.1164       \\
-        139              & dccuchile/albert-xlarge-spanish                                            & 58852864      & 0.1154       \\
-        140              & dccuchile/albert-base-8-spanish-distilled-mldoc                            & 11811584      & 0.1134       \\
-        141              & dccuchile/albert-tiny-spanish-distilled-pos                                & 5344136       & 0.1123       \\
-        142              & dccuchile/albert-tiny-spanish-distilled-pawsx                              & 5344136       & 0.1106       \\
-        143              & dccuchile/albert-base-10-spanish-distilled-mldoc                           & 11811584      & 0.1103       \\
-        144              & 0xnu/pmmlv2-fine-tuned-igbo                                                & 117653760     & 0.1100       \\
-        145              & dccuchile/albert-tiny-spanish-distilled-qa-sqac                            & 5344136       & 0.1084       \\
-        146              & 0xnu/pmmlv2-fine-tuned-hausa                                               & 117653760     & 0.1078       \\
-        147              & dccuchile/albert-base-4-spanish-distilled-qa-sqac                          & 11811584      & 0.1068       \\
-        148              & PlanTL-GOB-ES/roberta-base-biomedical-clinical-es                          & 125978112     & 0.1066       \\
-        149              & PlanTL-GOB-ES/RoBERTalex                                                   & 125978112     & 0.1061       \\
-        150              & dccuchile/albert-base-spanish-distilled-xnli                               & 11811584      & 0.1059       \\
-        151              & 0xnu/pmmlv2-fine-tuned-yoruba                                              & 117653760     & 0.1052       \\
-        152              & dccuchile/albert-base-4-spanish-distilled-qa-mlqa                          & 11811584      & 0.1011       \\
-        153              & 0xnu/pmmlv2-fine-tuned-flemish                                             & 117653760     & 0.0998       \\
-        154              & dccuchile/albert-base-10-spanish                                           & 11811584      & 0.0995       \\
-        155              & dccuchile/albert-base-6-spanish-distilled-pos                              & 11811584      & 0.0995       \\
-        156              & PlanTL-GOB-ES/roberta-base-biomedical-es                                   & 125978112     & 0.0984       \\
-        157              & dccuchile/albert-base-8-spanish-distilled-pos                              & 11811584      & 0.0969       \\
-        158              & dccuchile/albert-base-4-spanish-distilled-qa-tar                           & 11811584      & 0.0944       \\
-        159              & j0h4nnes/decoy-ify\_llama3.1\_8B\_v2                                       & 117653760     & 0.0943       \\
-        160              & dccuchile/albert-base-6-spanish-distilled-qa-tar                           & 11811584      & 0.0923       \\
-        161              & dccuchile/albert-base-6-spanish-distilled-qa-sqac                          & 11811584      & 0.0902       \\
-        162              & dccuchile/albert-base-10-spanish-distilled-pos                             & 11811584      & 0.0898       \\
-        163              & dccuchile/albert-base-spanish-distilled-mldoc                              & 11811584      & 0.0898       \\
-        164              & dccuchile/albert-tiny-spanish-distilled-qa-tar                             & 5344136       & 0.0896       \\
-        165              & dccuchile/albert-xxlarge-spanish                                           & 222723584     & 0.0889       \\
-        166              & dccuchile/albert-base-spanish-distilled-pawsx                              & 11811584      & 0.0888       \\
-        167              & dccuchile/albert-base-4-spanish-distilled-ner                              & 11811584      & 0.0880       \\
-        168              & dccuchile/albert-tiny-spanish-distilled-xnli                               & 5344136       & 0.0870       \\
-        169              & dccuchile/albert-base-6-spanish-distilled-pawsx                            & 11811584      & 0.0838       \\
-        170              & dccuchile/albert-base-8-spanish-distilled-qa-tar                           & 11811584      & 0.0834       \\
-        171              & dccuchile/albert-base-10-spanish-distilled-qa-sqac                         & 11811584      & 0.0827       \\
-        172              & dccuchile/albert-base-10-spanish-distilled-pawsx                           & 11811584      & 0.0798       \\
-        173              & dccuchile/albert-base-8-spanish-distilled-qa-mlqa                          & 11811584      & 0.0794       \\
-        174              & dccuchile/albert-base-8-spanish-distilled-pawsx                            & 11811584      & 0.0794       \\
-        175              & dccuchile/albert-base-8-spanish-distilled-qa-sqac                          & 11811584      & 0.0790       \\
-        176              & dccuchile/albert-base-6-spanish-distilled-ner                              & 11811584      & 0.0785       \\
-        177              & dccuchile/albert-base-6-spanish-distilled-qa-mlqa                          & 11811584      & 0.0782       \\
-        178              & dccuchile/albert-base-spanish                                              & 11811584      & 0.0780       \\
-        179              & dccuchile/albert-base-spanish-distilled-pos                                & 11811584      & 0.0778       \\
-        180              & dccuchile/albert-tiny-spanish-distilled-qa-mlqa                            & 5344136       & 0.0756       \\
-        181              & dccuchile/albert-base-8-spanish-distilled-ner                              & 11811584      & 0.0720       \\
-        182              & dccuchile/albert-tiny-spanish-distilled-ner                                & 5344136       & 0.0719       \\
-        183              & dccuchile/albert-base-spanish-distilled-qa-tar                             & 11811584      & 0.0715       \\
-        184              & dccuchile/albert-base-spanish-distilled-qa-mlqa                            & 11811584      & 0.0714       \\
-        185              & dccuchile/albert-base-10-spanish-distilled-qa-mlqa                         & 11811584      & 0.0701       \\
-        186              & dccuchile/albert-base-spanish-distilled-qa-sqac                            & 11811584      & 0.0666       \\
-        187              & dccuchile/albert-base-10-spanish-distilled-ner                             & 11811584      & 0.0632       \\
-        188              & dccuchile/albert-base-10-spanish-distilled-qa-tar                          & 11811584      & 0.0627       \\
-        189              & dccuchile/albert-base-spanish-distilled-ner                                & 11811584      & 0.0546       \\
-        190              & dccuchile/albert-large-spanish                                             & 17811968      & 0.0391       \\
-        \hline
-        \caption{Resultados de evaluación sobre la métrica \gls{MAP} monolingüe en español en la evaluación \textit{zero-shot}.}
-    \end{longtable}
-    \label{tab:resultados_completos_modelos_zero_shot}
-\end{center}
+{\small
+\begin{xltabular}{\textwidth}{l X rc}
+    \hline
+    \textbf{Ranking} & \textbf{Model Name}                                                        & \textbf{Size} & \textbf{MAP} \\
+    \hline
+    1                & Lajavaness/bilingual-embedding-large                                       & 559890432     & 0.4493       \\
+    2                & jinaai/jina-embeddings-v3                                                  & 572310396     & 0.4453       \\
+    3                & chienpham/sts-multilingual-mpnet-base-v2                                   & 278043648     & 0.4436       \\
+    4                & intfloat/multilingual-e5-large-instruct                                    & 559890432     & 0.4426       \\
+    5                & AIDA-UPM/mstsb-paraphrase-multilingual-mpnet-base-v2                       & 278043648     & 0.4287       \\
+    6                & shtilev/medical\_embedded\_v4                                              & 278043648     & 0.4265       \\
+    7                & sentence-transformers/paraphrase-multilingual-mpnet-base-v2                & 278043648     & 0.4169       \\
+    8                & Alibaba-NLP/gte-multilingual-base                                          & 305368320     & 0.4155       \\
+    9                & shtilev/medical\_embedded\_v5                                              & 278043648     & 0.4117       \\
+    10               & Linq-AI-Research/Linq-Embed-Mistral                                        & 7110660096    & 0.4095       \\
+    11               & upskyy/e5-large-korean                                                     & 559890432     & 0.4058       \\
+    12               & Lajavaness/bilingual-embedding-small                                       & 117653760     & 0.4053       \\
+    13               & upskyy/gte-base-korean                                                     & 305368320     & 0.4018       \\
+    14               & Omartificial-Intelligence-Space/Arabic-all-nli-triplet-Matryoshka          & 278043648     & 0.4013       \\
+    15               & upskyy/e5-base-korean                                                      & 278043648     & 0.3953       \\
+    16               & ibm-granite/granite-embedding-278m-multilingual                            & 278043648     & 0.3921       \\
+    17               & OneFly7/biencoder\_ep10\_bs64\_trans1                                      & 278043648     & 0.3901       \\
+    18               & Omartificial-Intelligence-Space/Arabic-labse-Matryoshka                    & 471517440     & 0.3888       \\
+    19               & shtilev/medical\_embedded\_v3                                              & 278043648     & 0.3875       \\
+    20               & OneFly7/bi\_bs32\_lr2e5\_cosine\_restart\_period2\_best                    & 278043648     & 0.3847       \\
+    21               & jinaai/jina-embeddings-v2-base-es                                          & 160850688     & 0.3841       \\
+    22               & Snowflake/snowflake-arctic-embed-l-v2.0                                    & 567754752     & 0.3833       \\
+    23               & Lajavaness/bilingual-embedding-base                                        & 278043648     & 0.3827       \\
+    24               & sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2                & 117653760     & 0.3766       \\
+    25               & tomaarsen/distiluse-base-multilingual-cased-v2                             & 134734080     & 0.3749       \\
+    26               & Qwen/Qwen3-Embedding-0.6B                                                  & 595776512     & 0.3718       \\
+    27               & Omartificial-Intelligence-Space/Arabic-MiniLM-L12-v2-all-nli-triplet       & 117653760     & 0.3708       \\
+    28               & HIT-TMG/KaLM-embedding-multilingual-mini-v1                                & 494032768     & 0.3705       \\
+    29               & OneFly7/biencoder\_ep2\_bs32\_trans3                                       & 278043648     & 0.3700       \\
+    30               & upskyy/bge-m3-korean                                                       & 567754752     & 0.3692       \\
+    31               & lang-uk/ukr-paraphrase-multilingual-mpnet-base                             & 278043648     & 0.3692       \\
+    32               & HIT-TMG/KaLM-embedding-multilingual-mini-instruct-v1                       & 494032768     & 0.3681       \\
+    33               & Griffin88/sentence-embedding-LaBSE                                         & 471517440     & 0.3661       \\
+    34               & OneFly7/biencoder\_ep10\_bs32\_lr2e5-cosine\_annealing\_hard\_neg\_2      & 278043648     & 0.3642       \\
+    35               & OneFly7/biencoder\_ep10\_bs64\_trans3                                      & 278043648     & 0.3613       \\
+    36               & hiiamsid/sentence\_similarity\_spanish\_es                                 & 109850880     & 0.3601       \\
+    37               & manu/sentence\_croissant\_alpha\_v0.3                                      & 1279887360    & 0.3601       \\
+    38               & hiiamsid/sentence\_similarity\_spanish\_es                                 & 109850880     & 0.3599       \\
+    39               & OneFly7/biencoder\_ep10\_bs64\_all                                         & 278043648     & 0.3592       \\
+    40               & OrdalieTech/Solon-embeddings-large-0.1                                     & 559890432     & 0.3577       \\
+    41               & DmitryML/distiluse-base-multilingual-cased-v1                              & 135127808     & 0.3549       \\
+    42               & upskyy/e5-small-korean                                                     & 117653760     & 0.3545       \\
+    43               & intfloat/multilingual-e5-small                                             & 117653760     & 0.3513       \\
+    44               & infly/inf-retriever-v1-1.5b                                                & 1543268864    & 0.3474       \\
+    45               & emersoftware/tulio-chilean-spanish-bert-finetuned-msmarco-qa-es            & 109850880     & 0.3471       \\
+    46               & intfloat/multilingual-e5-base                                              & 278043648     & 0.3463       \\
+    47               & OneFly7/biencoder\_ep10\_bs32\_lr2e5-cosine\_annealing\_hard\_neg\_1      & 278043648     & 0.3459       \\
+    48               & manu/sentence\_croissant\_alpha\_v0.4                                      & 1279887360    & 0.3436       \\
+    49               & mrm8488/distiluse-base-multilingual-cased-v2-finetuned-stsb\_multi\_mt-es  & 134734080     & 0.3421       \\
+    50               & thenlper/gte-large                                                         & 335141888     & 0.3414       \\
+    51               & intfloat/multilingual-e5-large                                             & 559890432     & 0.3381       \\
+    52               & avsolatorio/GIST-large-Embedding-v0                                        & 335141888     & 0.3370       \\
+    53               & symanto/sn-xlm-roberta-base-snli-mnli-anli-xnli                            & 278043648     & 0.3368       \\
+    54               & h4g3n/multilingual-MiniLM-L12-de-en-es-fr-it-nl-pl-pt                      & 103458048     & 0.3326       \\
+    55               & mixedbread-ai/mxbai-embed-large-v1                                         & 335141888     & 0.3317       \\
+    56               & WhereIsAI/UAE-Large-V1                                                     & 335141888     & 0.3283       \\
+    57               & sdadas/mmlw-e5-large                                                       & 559890432     & 0.3280       \\
+    58               & narraticlabs/MiniLM-L6-european-union                                      & 107006976     & 0.3231       \\
+    59               & nomic-ai/nomic-embed-text-v1.5                                             & 136731648     & 0.3225       \\
+    60               & BAAI/bge-large-en-v1.5                                                     & 335141888     & 0.3212       \\
+    61               & thenlper/gte-base                                                          & 109482240     & 0.3199       \\
+    62               & Maite89/Roberta\_finetuning-semantic\_similarity\_stsb\_multi\_mt         & 355356672     & 0.3187       \\
+    63               & avsolatorio/GIST-Embedding-v0                                              & 109482240     & 0.3170       \\
+    64               & OneFly7/biencoder\_ep10\_bs32\_trans3                                      & 278043648     & 0.3103       \\
+    65               & sdadas/mmlw-e5-base                                                        & 278043648     & 0.3089       \\
+    66               & hackathon-pln-es/paraphrase-spanish-distilroberta                          & 124645632     & 0.3067       \\
+    67               & somosnlp-hackathon-2022/paraphrase-spanish-distilroberta                   & 124645632     & 0.3064       \\
+    68               & BAAI/bge-m3                                                                & 567754752     & 0.3052       \\
+    69               & manu/sentence\_croissant\_alpha\_v0.2                                      & 1279887360    & 0.3050       \\
+    70               & thenlper/gte-small                                                         & 33360000      & 0.3044       \\
+    71               & deepvk/USER-bge-m3                                                         & 359026688     & 0.3035       \\
+    72               & chukbert/paraphrase-multilingual-MiniLM-L12-v2-MSRP-Indo-finetuned-2-epoch & 117653760     & 0.3023       \\
+    73               & BAAI/bge-base-en-v1.5                                                      & 109482240     & 0.3012       \\
+    74               & Snowflake/snowflake-arctic-embed-m-v1.5                                    & 108891648     & 0.3002       \\
+    75               & intfloat/e5-base-v2                                                        & 109482240     & 0.2992       \\
+    76               & LinerAI/Qwen3-Embedding-0.6B-academic                                      & 595776512     & 0.2991       \\
+    77               & Mihaiii/Ivysaur                                                            & 22713216      & 0.2988       \\
+    78               & jaimevera1107/all-MiniLM-L6-v2-similarity-es                               & 22713216      & 0.2986       \\
+    79               & jaimevera1107/all-MiniLM-L6-v2-similarity-es                               & 22713216      & 0.2977       \\
+    80               & Snowflake/snowflake-arctic-embed-m-long                                    & 136731648     & 0.2973       \\
+    81               & intfloat/e5-large-v2                                                       & 335141888     & 0.2952       \\
+    82               & avsolatorio/GIST-small-Embedding-v0                                        & 33360000      & 0.2921       \\
+    83               & abhinand/MedEmbed-small-v0.1                                               & 33360000      & 0.2921       \\
+    84               & sentence-transformers/all-MiniLM-L12-v2                                    & 33360000      & 0.2920       \\
+    85               & avsolatorio/GIST-all-MiniLM-L6-v2                                          & 22713216      & 0.2912       \\
+    86               & facebook/drama-large                                                       & 399803392     & 0.2905       \\
+    87               & BAAI/bge-small-en-v1.5                                                     & 33360000      & 0.2877       \\
+    88               & facebook/drama-1b                                                          & 1235814400    & 0.2863       \\
+    89               & brahmairesearch/slx-v0.1                                                   & 22713216      & 0.2838       \\
+    90               & sentence-transformers/all-MiniLM-L6-v2                                     & 22713216      & 0.2838       \\
+    91               & ibm-granite/granite-embedding-125m-english                                 & 124645632     & 0.2802       \\
+    92               & intfloat/e5-small-v2                                                       & 33360000      & 0.2780       \\
+    93               & Snowflake/snowflake-arctic-embed-s                                         & 33212160      & 0.2740       \\
+    94               & jinaai/jina-embedding-b-en-v1                                              & 109628544     & 0.2738       \\
+    95               & ibm-granite/granite-embedding-30m-english                                  & 30295296      & 0.2734       \\
+    96               & sdadas/mmlw-roberta-large                                                  & 434961408     & 0.2671       \\
+    97               & clips/mfaq                                                                 & 278045952     & 0.2663       \\
+    98               & sentence-transformers/all-mpnet-base-v2                                    & 109486464     & 0.2633       \\
+    99               & OneFly7/crossencoder\_ep10\_bs8\_trans1                                    & 278043648     & 0.2604       \\
+    100              & facebook/drama-base                                                        & 211766016     & 0.2587       \\
+    101              & jinaai/jina-embedding-s-en-v1                                              & 35330816      & 0.2424       \\
+    102              & nvidia/llama-embed-nemotron-8b                                             & 7504924672    & 0.2268       \\
+    103              & dccuchile/distilbert-base-spanish-uncased                                  & 66731520      & 0.2115       \\
+    104              & dccuchile/albert-base-4-spanish                                            & 11811584      & 0.2107       \\
+    105              & dccuchile/albert-base-2-spanish                                            & 11811584      & 0.2101       \\
+    106              & dccuchile/patana-chilean-spanish-bert                                      & 109850880     & 0.2094       \\
+    107              & dccuchile/tulio-chilean-spanish-bert                                       & 109850880     & 0.1998       \\
+    108              & PlanTL-GOB-ES/roberta-base-es-wikicat-es                                   & 124643328     & 0.1959       \\
+    109              & dccuchile/bert-base-spanish-wwm-cased                                      & 109850880     & 0.1912       \\
+    110              & dccuchile/albert-base-2-spanish-distilled-mldoc                            & 11811584      & 0.1826       \\
+    111              & dccuchile/albert-base-6-spanish                                            & 11811584      & 0.1779       \\
+    112              & dccuchile/albert-base-2-spanish-distilled-qa-sqac                          & 11811584      & 0.1660       \\
+    113              & PlanTL-GOB-ES/Controversy-Prediction                                       & 124643328     & 0.1638       \\
+    114              & dccuchile/albert-base-4-spanish-distilled-xnli                             & 11811584      & 0.1526       \\
+    115              & dccuchile/bert-base-spanish-wwm-uncased                                    & 109850880     & 0.1522       \\
+    116              & dccuchile/albert-tiny-spanish-distilled-mldoc                              & 5344136       & 0.1521       \\
+    117              & dccuchile/albert-base-2-spanish-distilled-xnli                             & 11811584      & 0.1520       \\
+    118              & PlanTL-GOB-ES/bsc-bio-ehr-es-cantemist                                     & 124643328     & 0.1469       \\
+    119              & dccuchile/albert-base-6-spanish-distilled-xnli                             & 11811584      & 0.1464       \\
+    120              & dccuchile/albert-base-2-spanish-distilled-ner                              & 11811584      & 0.1441       \\
+    121              & dccuchile/albert-tiny-spanish                                              & 5344136       & 0.1428       \\
+    122              & bertin-project/bertin-roberta-base-spanish                                 & 124643328     & 0.1415       \\
+    123              & dccuchile/albert-base-2-spanish-distilled-pawsx                            & 11811584      & 0.1410       \\
+    124              & dccuchile/albert-base-6-spanish-distilled-mldoc                            & 11811584      & 0.1398       \\
+    125              & PlanTL-GOB-ES/bsc-bio-es                                                   & 124643328     & 0.1378       \\
+    126              & dccuchile/albert-base-8-spanish-distilled-xnli                             & 11811584      & 0.1377       \\
+    127              & dccuchile/albert-base-2-spanish-distilled-pos                              & 11811584      & 0.1376       \\
+    128              & dccuchile/albert-base-8-spanish                                            & 11811584      & 0.1371       \\
+    129              & jfarray/Model\_dccuchile\_bert-base-spanish-wwm-uncased\_100\_Epochs       & 110047744     & 0.1351       \\
+    130              & dccuchile/albert-base-4-spanish-distilled-mldoc                            & 11811584      & 0.1334       \\
+    131              & PlanTL-GOB-ES/bsc-bio-ehr-es-pharmaconer                                   & 124643328     & 0.1292       \\
+    132              & dccuchile/albert-base-4-spanish-distilled-pawsx                            & 11811584      & 0.1275       \\
+    133              & dccuchile/albert-base-2-spanish-distilled-qa-mlqa                          & 11811584      & 0.1275       \\
+    134              & PlanTL-GOB-ES/roberta-base-ca                                              & 125978112     & 0.1264       \\
+    135              & PlanTL-GOB-ES/bsc-bio-ehr-es                                               & 124643328     & 0.1213       \\
+    136              & dccuchile/albert-base-2-spanish-distilled-qa-tar                           & 11811584      & 0.1212       \\
+    137              & dccuchile/albert-base-4-spanish-distilled-pos                              & 11811584      & 0.1198       \\
+    138              & dccuchile/albert-base-10-spanish-distilled-xnli                            & 11811584      & 0.1164       \\
+    139              & dccuchile/albert-xlarge-spanish                                            & 58852864      & 0.1154       \\
+    140              & dccuchile/albert-base-8-spanish-distilled-mldoc                            & 11811584      & 0.1134       \\
+    141              & dccuchile/albert-tiny-spanish-distilled-pos                                & 5344136       & 0.1123       \\
+    142              & dccuchile/albert-tiny-spanish-distilled-pawsx                              & 5344136       & 0.1106       \\
+    143              & dccuchile/albert-base-10-spanish-distilled-mldoc                           & 11811584      & 0.1103       \\
+    144              & 0xnu/pmmlv2-fine-tuned-igbo                                                & 117653760     & 0.1100       \\
+    145              & dccuchile/albert-tiny-spanish-distilled-qa-sqac                            & 5344136       & 0.1084       \\
+    146              & 0xnu/pmmlv2-fine-tuned-hausa                                               & 117653760     & 0.1078       \\
+    147              & dccuchile/albert-base-4-spanish-distilled-qa-sqac                          & 11811584      & 0.1068       \\
+    148              & PlanTL-GOB-ES/roberta-base-biomedical-clinical-es                          & 125978112     & 0.1066       \\
+    149              & PlanTL-GOB-ES/RoBERTalex                                                   & 125978112     & 0.1061       \\
+    150              & dccuchile/albert-base-spanish-distilled-xnli                               & 11811584      & 0.1059       \\
+    151              & 0xnu/pmmlv2-fine-tuned-yoruba                                              & 117653760     & 0.1052       \\
+    152              & dccuchile/albert-base-4-spanish-distilled-qa-mlqa                          & 11811584      & 0.1011       \\
+    153              & 0xnu/pmmlv2-fine-tuned-flemish                                             & 117653760     & 0.0998       \\
+    154              & dccuchile/albert-base-10-spanish                                           & 11811584      & 0.0995       \\
+    155              & dccuchile/albert-base-6-spanish-distilled-pos                              & 11811584      & 0.0995       \\
+    156              & PlanTL-GOB-ES/roberta-base-biomedical-es                                   & 125978112     & 0.0984       \\
+    157              & dccuchile/albert-base-8-spanish-distilled-pos                              & 11811584      & 0.0969       \\
+    158              & dccuchile/albert-base-4-spanish-distilled-qa-tar                           & 11811584      & 0.0944       \\
+    159              & j0h4nnes/decoy-ify\_llama3.1\_8B\_v2                                       & 117653760     & 0.0943       \\
+    160              & dccuchile/albert-base-6-spanish-distilled-qa-tar                           & 11811584      & 0.0923       \\
+    161              & dccuchile/albert-base-6-spanish-distilled-qa-sqac                          & 11811584      & 0.0902       \\
+    162              & dccuchile/albert-base-10-spanish-distilled-pos                             & 11811584      & 0.0898       \\
+    163              & dccuchile/albert-base-spanish-distilled-mldoc                              & 11811584      & 0.0898       \\
+    164              & dccuchile/albert-tiny-spanish-distilled-qa-tar                             & 5344136       & 0.0896       \\
+    165              & dccuchile/albert-xxlarge-spanish                                           & 222723584     & 0.0889       \\
+    166              & dccuchile/albert-base-spanish-distilled-pawsx                              & 11811584      & 0.0888       \\
+    167              & dccuchile/albert-base-4-spanish-distilled-ner                              & 11811584      & 0.0880       \\
+    168              & dccuchile/albert-tiny-spanish-distilled-xnli                               & 5344136       & 0.0870       \\
+    169              & dccuchile/albert-base-6-spanish-distilled-pawsx                            & 11811584      & 0.0838       \\
+    170              & dccuchile/albert-base-8-spanish-distilled-qa-tar                           & 11811584      & 0.0834       \\
+    171              & dccuchile/albert-base-10-spanish-distilled-qa-sqac                         & 11811584      & 0.0827       \\
+    172              & dccuchile/albert-base-10-spanish-distilled-pawsx                           & 11811584      & 0.0798       \\
+    173              & dccuchile/albert-base-8-spanish-distilled-qa-mlqa                          & 11811584      & 0.0794       \\
+    174              & dccuchile/albert-base-8-spanish-distilled-pawsx                            & 11811584      & 0.0794       \\
+    175              & dccuchile/albert-base-8-spanish-distilled-qa-sqac                          & 11811584      & 0.0790       \\
+    176              & dccuchile/albert-base-6-spanish-distilled-ner                              & 11811584      & 0.0785       \\
+    177              & dccuchile/albert-base-6-spanish-distilled-qa-mlqa                          & 11811584      & 0.0782       \\
+    178              & dccuchile/albert-base-spanish                                              & 11811584      & 0.0780       \\
+    179              & dccuchile/albert-base-spanish-distilled-pos                                & 11811584      & 0.0778       \\
+    180              & dccuchile/albert-tiny-spanish-distilled-qa-mlqa                            & 5344136       & 0.0756       \\
+    181              & dccuchile/albert-base-8-spanish-distilled-ner                              & 11811584      & 0.0720       \\
+    182              & dccuchile/albert-tiny-spanish-distilled-ner                                & 5344136       & 0.0719       \\
+    183              & dccuchile/albert-base-spanish-distilled-qa-tar                             & 11811584      & 0.0715       \\
+    184              & dccuchile/albert-base-spanish-distilled-qa-mlqa                            & 11811584      & 0.0714       \\
+    185              & dccuchile/albert-base-10-spanish-distilled-qa-mlqa                         & 11811584      & 0.0701       \\
+    186              & dccuchile/albert-base-spanish-distilled-qa-sqac                            & 11811584      & 0.0666       \\
+    187              & dccuchile/albert-base-10-spanish-distilled-ner                             & 11811584      & 0.0632       \\
+    188              & dccuchile/albert-base-10-spanish-distilled-qa-tar                          & 11811584      & 0.0627       \\
+    189              & dccuchile/albert-base-spanish-distilled-ner                                & 11811584      & 0.0546       \\
+    190              & dccuchile/albert-large-spanish                                             & 17811968      & 0.0391       \\
+    \hline
+    \label{tab:resultados_completos_modelos_zero_shot} \\
+    \caption{Resultados de evaluación sobre la métrica \gls{MAP} monolingüe en español en la evaluación \textit{zero-shot}.}
+\end{xltabular}
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Re-ranking}
 
-\begin{center}
-    \tiny
-    \begin{longtable}{lrrrrr}
-        \hline
-        \textbf{Model Name}                                                    & \textbf{Size} & \textbf{k=10} & \textbf{k=25} & \textbf{k=50} & \textbf{k=100} \\
-        \hline
-        cross-encoder/ms-marco-TinyBERT-L2-v2                                  & 4386561       & 0.4935        & 0.4781        & 0.4506        & 0.4104         \\
-        cross-encoder/ms-marco-TinyBERT-L2                                     & 4386561       & 0.5064        & 0.4935        & 0.4687        & 0.4238         \\
-        cross-encoder/stsb-TinyBERT-L4                                         & 14351073      & 0.4964        & 0.4844        & 0.4628        & 0.4197         \\
-        cross-encoder/ms-marco-TinyBERT-L4                                     & 14351073      & 0.4962        & 0.4790        & 0.4495        & 0.4067         \\
-        cross-encoder/ms-marco-MiniLM-L2-v2                                    & 15616257      & 0.4930        & 0.4748        & 0.4479        & 0.4070         \\
-        cross-encoder/ms-marco-MiniLM-L4-v2                                    & 19165185      & 0.4962        & 0.4810        & 0.4582        & 0.4179         \\
-        hutuhehe/finretriever-cross-reranker                                   & 22713601      & 0.4916        & 0.4735        & 0.4435        & 0.3962         \\
-        Adarsh921/cross-encoder                                                & 22713601      & 0.5043        & 0.4906        & 0.4672        & 0.4279         \\
-        cross-encoder/ms-marco-MiniLM-L6-v2                                    & 22714113      & 0.5043        & 0.4906        & 0.4672        & 0.4279         \\
-        denis-gordeev/reranker\_dialog\_items\_crossencoder\_rubert-tiny-turbo & 29194081      & 0.5033        & 0.4391        & 0.3652        & 0.2623         \\
-        jinaai/jina-reranker-v1-tiny-en                                        & 33046273      & 0.4961        & 0.4808        & 0.4513        & 0.4089         \\
-        Pongsasit/mod-th-cross-encoder-minilm                                  & 33360385      & 0.5031        & 0.4813        & 0.4486        & 0.4012         \\
-        cross-encoder/ms-marco-MiniLM-L12-v2                                   & 33360897      & 0.4950        & 0.4803        & 0.4588        & 0.4202         \\
-        jinaai/jina-reranker-v1-turbo-en                                       & 37771777      & 0.4924        & 0.4747        & 0.4448        & 0.4017         \\
-        cross-encoder/ms-marco-TinyBERT-L6                                     & 66956289      & 0.4940        & 0.4786        & 0.4495        & 0.4102         \\
-        inthedarkness/klue-roberta-small-cross-encoder                         & 68091649      & 0.5026        & 0.4379        & 0.3526        & 0.2471         \\
-        mixedbread-ai/mxbai-rerank-xsmall-v1                                   & 70830337      & 0.4929        & 0.4685        & 0.4327        & 0.3773         \\
-        PotatoOff/mxbai-rerank-xsmall-v1-safetensors                           & 70830337      & 0.4929        & 0.4685        & 0.4327        & 0.3773         \\
-        Pongsasit/mod-th-cross-encoder                                         & 82119169      & 0.4916        & 0.4657        & 0.4321        & 0.3833         \\
-        cross-encoder/stsb-distilroberta-base                                  & 82119683      & 0.4936        & 0.4791        & 0.4565        & 0.4191         \\
-        cross-encoder/qnli-distilroberta-base                                  & 82119683      & 0.5341        & 0.4848        & 0.4212        & 0.3472         \\
-        cross-encoder/quora-distilroberta-base                                 & 82119683      & 0.4959        & 0.4789        & 0.4455        & 0.3873         \\
-        Turbo-AI/jina-reranker-v0-base-multilingual\_\_trimm\_vocab            & 99074305      & 0.4955        & 0.4806        & 0.4573        & 0.4222         \\
-        Turbo-AI/jina-reranker-v2-base-multilingual\_\_trim\_vocab             & 99074305      & 0.5063        & 0.4949        & 0.4760        & 0.4447         \\
-        cross-encoder/msmarco-MiniLM-L6-en-de-v1                               & 107007873     & 0.5092        & 0.4880        & 0.4493        & 0.3909         \\
-        compnet-renard/bert-base-cased-NER-reranker                            & 108312322     & 0.5323        & 0.4648        & 0.3852        & 0.2760         \\
-        cross-encoder/qnli-electra-base                                        & 109483521     & 0.5051        & 0.4306        & 0.3483        & 0.2447         \\
-        cross-encoder/ms-marco-electra-base                                    & 109483521     & 0.4958        & 0.4800        & 0.4493        & 0.4048         \\
-        cross-encoder/mmarco-mMiniLMv2-L12-H384-v1                             & 117641603     & 0.5296        & 0.5149        & 0.4892        & 0.4480         \\
-        cross-encoder/msmarco-MiniLM-L12-en-de-v1                              & 117654657     & 0.5106        & 0.4945        & 0.4685        & 0.4261         \\
-        NetherlandsForensicInstitute/robbert-2023-dutch-base-cross-encoder     & 124442881     & 0.4974        & 0.4801        & 0.4528        & 0.4045         \\
-        sdadas/polish-reranker-base-ranknet                                    & 124443649     & 0.5042        & 0.4892        & 0.4676        & 0.4266         \\
-        sdadas/polish-reranker-base-mse                                        & 124443649     & 0.5150        & 0.4997        & 0.4737        & 0.4266         \\
-        cross-encoder/quora-roberta-base                                       & 124646915     & 0.4942        & 0.4755        & 0.4459        & 0.3971         \\
-        cross-encoder/stsb-roberta-base                                        & 124646915     & 0.4972        & 0.4842        & 0.4684        & 0.4351         \\
-        NAMAA-Space/GATE-Reranker-V1                                           & 135194113     & 0.4983        & 0.4691        & 0.4179        & 0.3517         \\
-        NAMAA-Space/Namaa-Reranker-v1                                          & 135194113     & 0.4974        & 0.4684        & 0.4138        & 0.3506         \\
-        sdiazlor/modernbert-embed-base-crossencoder-human-rights               & 149605633     & 0.4848        & 0.4044        & 0.3124        & 0.1992         \\
-        Alibaba-NLP/gte-reranker-modernbert-base                               & 149605633     & 0.5038        & 0.4856        & 0.4569        & 0.4116         \\
-        ibm-granite/granite-embedding-reranker-english-r2                      & 149605633     & 0.4941        & 0.4820        & 0.4603        & 0.4283         \\
-        Jsevisal/CrossEncoder-ModernBERT-base-qnli                             & 149606402     & 0.5340        & 0.4818        & 0.4025        & 0.3081         \\
-        malaysia-ai/malaysian-llm2vec-reranker-191M-16384                      & 166160640     & 0.5283        & 0.4751        & 0.3912        & 0.2942         \\
-        DiTy/cross-encoder-russian-msmarco                                     & 177854209     & 0.5117        & 0.4963        & 0.4650        & 0.4132         \\
-        mixedbread-ai/mxbai-rerank-base-v1                                     & 184422913     & 0.4983        & 0.4807        & 0.4532        & 0.4042         \\
-        jinaai/jina-reranker-v2-base-multilingual                              & 278437633     & 0.4965        & 0.4818        & 0.4623        & 0.4310         \\
-        Alibaba-NLP/gte-multilingual-reranker-base                             & 305959681     & 0.4998        & 0.4792        & 0.4588        & 0.4306         \\
-        ByteDance/ListConRanker                                                & 325522432     & 0.4957        & 0.4796        & 0.4556        & 0.3970         \\
-        cross-encoder/quora-roberta-large                                      & 355361283     & 0.4967        & 0.4826        & 0.4557        & 0.4122         \\
-        cross-encoder/stsb-roberta-large                                       & 355361283     & 0.4965        & 0.4841        & 0.4671        & 0.4370         \\
-        qilowoq/bge-reranker-v2-m3-en-ru                                       & 374930433     & 0.4920        & 0.4684        & 0.4387        & 0.4002         \\
-        sdadas/polish-reranker-large-ranknet                                   & 434962433     & 0.5006        & 0.4882        & 0.4650        & 0.4215         \\
-        radlab/polish-cross-encoder                                            & 434962433     & 0.4947        & 0.4767        & 0.4491        & 0.4040         \\
-        sdadas/polish-reranker-roberta-v2                                      & 434962433     & 0.5008        & 0.4908        & 0.4700        & 0.4332         \\
-        sdadas/polish-reranker-large-mse                                       & 434962433     & 0.5148        & 0.5021        & 0.4750        & 0.4314         \\
-        mixedbread-ai/mxbai-rerank-large-v1                                    & 435062785     & 0.5070        & 0.4848        & 0.4596        & 0.4209         \\
-        GbrlOl/finetune-mxbai-cross-encoder-geotechnical-test-v5               & 435062785     & 0.5043        & 0.4827        & 0.4530        & 0.4073         \\
-        vicky4s4s/embedding-v1                                                 & 435062785     & 0.5070        & 0.4848        & 0.4596        & 0.4209         \\
-        sdadas/polish-reranker-roberta-v3                                      & 442891265     & 0.5052        & 0.4948        & 0.4736        & 0.4366         \\
-        michaelfeil/mxbai-rerank-base-v2-seq                                   & 494034560     & 0.5220        & 0.4756        & 0.3943        & 0.2982         \\
-        upskyy/ko-reranker                                                     & 559891457     & 0.4943        & 0.4756        & 0.4479        & 0.4156         \\
-        netandreus/bge-reranker-v2-m3                                          & 567755777     & 0.4922        & 0.4676        & 0.4379        & 0.4003         \\
-        NAMAA-Space/Namaa-ARA-Reranker-V1                                      & 567755777     & 0.4871        & 0.4474        & 0.4004        & 0.3435         \\
-        sdadas/polish-reranker-bge-v2                                          & 567755777     & 0.4922        & 0.4683        & 0.4414        & 0.4059         \\
-        upskyy/ko-reranker-8k                                                  & 567755777     & 0.4915        & 0.4715        & 0.4437        & 0.4072         \\
-        Omartificial-Intelligence-Space/ARA-Reranker-V1                        & 567755777     & 0.4871        & 0.4474        & 0.4004        & 0.3435         \\
-        kamilkaczmarek97/polish-reranker-prod                                  & 567755777     & 0.4922        & 0.4683        & 0.4414        & 0.4059         \\
-        noooop9527/Qwen3-Reranker-0.6B-seq-cls-STv6                            & 595777536     & 0.5190        & 0.4543        & 0.3628        & 0.2667         \\
-        XingTuLab/BinSeek-Reranker                                             & 595777536     & 0.5083        & 0.4542        & 0.3854        & 0.2943         \\
-        tomaarsen/Qwen3-Reranker-0.6B-seq-cls                                  & 595777536     & 0.5190        & 0.4543        & 0.3628        & 0.2667         \\
-        openbmb/MiniCPM-Reranker-Light                                         & 1360247808    & 0.5008        & 0.4695        & 0.4198        & 0.3392         \\
-        AhmedMostafa/bge-reranker-v2-gemma-saudi-achi10                        & 2506176512    & 0.5198        & 0.4497        & 0.3583        & 0.2607         \\
-        tomaarsen/Qwen3-Reranker-4B-seq-cls                                    & 4021787136    & 0.5109        & 0.4453        & 0.4368        & 0.3607         \\
-        \hline
-        \caption{Resultados completos de los modelos de re-ranking evaluados sobre la métrica \gls{MAP} para distintos órdenes de reordenación.}
-    \end{longtable}
-    \label{tab:cross_encoder_results}
-\end{center}
+ {\small
+  \begin{xltabular}{\textwidth}{X rrrrr}
+      \hline
+      \textbf{Model Name}                                                    & \textbf{Size} & \textbf{k=10} & \textbf{k=25} & \textbf{k=50} & \textbf{k=100} \\
+      \hline
+      cross-encoder/ms-marco-TinyBERT-L2-v2                                  & 4386561       & 0.4935        & 0.4781        & 0.4506        & 0.4104         \\
+      cross-encoder/ms-marco-TinyBERT-L2                                     & 4386561       & 0.5064        & 0.4935        & 0.4687        & 0.4238         \\
+      cross-encoder/stsb-TinyBERT-L4                                         & 14351073      & 0.4964        & 0.4844        & 0.4628        & 0.4197         \\
+      cross-encoder/ms-marco-TinyBERT-L4                                     & 14351073      & 0.4962        & 0.4790        & 0.4495        & 0.4067         \\
+      cross-encoder/ms-marco-MiniLM-L2-v2                                    & 15616257      & 0.4930        & 0.4748        & 0.4479        & 0.4070         \\
+      cross-encoder/ms-marco-MiniLM-L4-v2                                    & 19165185      & 0.4962        & 0.4810        & 0.4582        & 0.4179         \\
+      hutuhehe/finretriever-cross-reranker                                   & 22713601      & 0.4916        & 0.4735        & 0.4435        & 0.3962         \\
+      Adarsh921/cross-encoder                                                & 22713601      & 0.5043        & 0.4906        & 0.4672        & 0.4279         \\
+      cross-encoder/ms-marco-MiniLM-L6-v2                                    & 22714113      & 0.5043        & 0.4906        & 0.4672        & 0.4279         \\
+      denis-gordeev/reranker\_dialog-items\_crossencoder\_rubert-tiny-turbo & 29194081      & 0.5033        & 0.4391        & 0.3652        & 0.2623         \\
+      jinaai/jina-reranker-v1-tiny-en                                        & 33046273      & 0.4961        & 0.4808        & 0.4513        & 0.4089         \\
+      Pongsasit/mod-th-cross-encoder-minilm                                  & 33360385      & 0.5031        & 0.4813        & 0.4486        & 0.4012         \\
+      cross-encoder/ms-marco-MiniLM-L12-v2                                   & 33360897      & 0.4950        & 0.4803        & 0.4588        & 0.4202         \\
+      jinaai/jina-reranker-v1-turbo-en                                       & 37771777      & 0.4924        & 0.4747        & 0.4448        & 0.4017         \\
+      cross-encoder/ms-marco-TinyBERT-L6                                     & 66956289      & 0.4940        & 0.4786        & 0.4495        & 0.4102         \\
+      inthedarkness/klue-roberta-small-cross-encoder                         & 68091649      & 0.5026        & 0.4379        & 0.3526        & 0.2471         \\
+      mixedbread-ai/mxbai-rerank-xsmall-v1                                   & 70830337      & 0.4929        & 0.4685        & 0.4327        & 0.3773         \\
+      PotatoOff/mxbai-rerank-xsmall-v1-safetensors                           & 70830337      & 0.4929        & 0.4685        & 0.4327        & 0.3773         \\
+      Pongsasit/mod-th-cross-encoder                                         & 82119169      & 0.4916        & 0.4657        & 0.4321        & 0.3833         \\
+      cross-encoder/stsb-distilroberta-base                                  & 82119683      & 0.4936        & 0.4791        & 0.4565        & 0.4191         \\
+      cross-encoder/qnli-distilroberta-base                                  & 82119683      & 0.5341        & 0.4848        & 0.4212        & 0.3472         \\
+      cross-encoder/quora-distilroberta-base                                 & 82119683      & 0.4959        & 0.4789        & 0.4455        & 0.3873         \\
+      Turbo-AI/jina-reranker-v0-base-multilingual\_\_trimm\_vocab            & 99074305      & 0.4955        & 0.4806        & 0.4573        & 0.4222         \\
+      Turbo-AI/jina-reranker-v2-base-multilingual\_\_trim\_vocab             & 99074305      & 0.5063        & 0.4949        & 0.4760        & 0.4447         \\
+      cross-encoder/msmarco-MiniLM-L6-en-de-v1                               & 107007873     & 0.5092        & 0.4880        & 0.4493        & 0.3909         \\
+      compnet-renard/bert-base-cased-NER-reranker                            & 108312322     & 0.5323        & 0.4648        & 0.3852        & 0.2760         \\
+      cross-encoder/qnli-electra-base                                        & 109483521     & 0.5051        & 0.4306        & 0.3483        & 0.2447         \\
+      cross-encoder/ms-marco-electra-base                                    & 109483521     & 0.4958        & 0.4800        & 0.4493        & 0.4048         \\
+      cross-encoder/mmarco-mMiniLMv2-L12-H384-v1                             & 117641603     & 0.5296        & 0.5149        & 0.4892        & 0.4480         \\
+      cross-encoder/msmarco-MiniLM-L12-en-de-v1                              & 117654657     & 0.5106        & 0.4945        & 0.4685        & 0.4261         \\
+      NFI/robbert-2023-dutch-base-cross-encoder     & 124442881     & 0.4974        & 0.4801        & 0.4528        & 0.4045         \\
+      sdadas/polish-reranker-base-ranknet                                    & 124443649     & 0.5042        & 0.4892        & 0.4676        & 0.4266         \\
+      sdadas/polish-reranker-base-mse                                        & 124443649     & 0.5150        & 0.4997        & 0.4737        & 0.4266         \\
+      cross-encoder/quora-roberta-base                                       & 124646915     & 0.4942        & 0.4755        & 0.4459        & 0.3971         \\
+      cross-encoder/stsb-roberta-base                                        & 124646915     & 0.4972        & 0.4842        & 0.4684        & 0.4351         \\
+      NAMAA-Space/GATE-Reranker-V1                                           & 135194113     & 0.4983        & 0.4691        & 0.4179        & 0.3517         \\
+      NAMAA-Space/Namaa-Reranker-v1                                          & 135194113     & 0.4974        & 0.4684        & 0.4138        & 0.3506         \\
+      sdiazlor/modernbert-embed-base-crossencoder-human-rights               & 149605633     & 0.4848        & 0.4044        & 0.3124        & 0.1992         \\
+      Alibaba-NLP/gte-reranker-modernbert-base                               & 149605633     & 0.5038        & 0.4856        & 0.4569        & 0.4116         \\
+      ibm-granite/granite-embedding-reranker-english-r2                      & 149605633     & 0.4941        & 0.4820        & 0.4603        & 0.4283         \\
+      Jsevisal/CrossEncoder-ModernBERT-base-qnli                             & 149606402     & 0.5340        & 0.4818        & 0.4025        & 0.3081         \\
+      malaysia-ai/malaysian-llm2vec-reranker-191M-16384                      & 166160640     & 0.5283        & 0.4751        & 0.3912        & 0.2942         \\
+      DiTy/cross-encoder-russian-msmarco                                     & 177854209     & 0.5117        & 0.4963        & 0.4650        & 0.4132         \\
+      mixedbread-ai/mxbai-rerank-base-v1                                     & 184422913     & 0.4983        & 0.4807        & 0.4532        & 0.4042         \\
+      jinaai/jina-reranker-v2-base-multilingual                              & 278437633     & 0.4965        & 0.4818        & 0.4623        & 0.4310         \\
+      Alibaba-NLP/gte-multilingual-reranker-base                             & 305959681     & 0.4998        & 0.4792        & 0.4588        & 0.4306         \\
+      ByteDance/ListConRanker                                                & 325522432     & 0.4957        & 0.4796        & 0.4556        & 0.3970         \\
+      cross-encoder/quora-roberta-large                                      & 355361283     & 0.4967        & 0.4826        & 0.4557        & 0.4122         \\
+      cross-encoder/stsb-roberta-large                                       & 355361283     & 0.4965        & 0.4841        & 0.4671        & 0.4370         \\
+      qilowoq/bge-reranker-v2-m3-en-ru                                       & 374930433     & 0.4920        & 0.4684        & 0.4387        & 0.4002         \\
+      sdadas/polish-reranker-large-ranknet                                   & 434962433     & 0.5006        & 0.4882        & 0.4650        & 0.4215         \\
+      radlab/polish-cross-encoder                                            & 434962433     & 0.4947        & 0.4767        & 0.4491        & 0.4040         \\
+      sdadas/polish-reranker-roberta-v2                                      & 434962433     & 0.5008        & 0.4908        & 0.4700        & 0.4332         \\
+      sdadas/polish-reranker-large-mse                                       & 434962433     & 0.5148        & 0.5021        & 0.4750        & 0.4314         \\
+      mixedbread-ai/mxbai-rerank-large-v1                                    & 435062785     & 0.5070        & 0.4848        & 0.4596        & 0.4209         \\
+      GbrlOl/finetune-mxbai-cross-encoder-geotechnical-test-v5               & 435062785     & 0.5043        & 0.4827        & 0.4530        & 0.4073         \\
+      vicky4s4s/embedding-v1                                                 & 435062785     & 0.5070        & 0.4848        & 0.4596        & 0.4209         \\
+      sdadas/polish-reranker-roberta-v3                                      & 442891265     & 0.5052        & 0.4948        & 0.4736        & 0.4366         \\
+      michaelfeil/mxbai-rerank-base-v2-seq                                   & 494034560     & 0.5220        & 0.4756        & 0.3943        & 0.2982         \\
+      upskyy/ko-reranker                                                     & 559891457     & 0.4943        & 0.4756        & 0.4479        & 0.4156         \\
+      netandreus/bge-reranker-v2-m3                                          & 567755777     & 0.4922        & 0.4676        & 0.4379        & 0.4003         \\
+      NAMAA-Space/Namaa-ARA-Reranker-V1                                      & 567755777     & 0.4871        & 0.4474        & 0.4004        & 0.3435         \\
+      sdadas/polish-reranker-bge-v2                                          & 567755777     & 0.4922        & 0.4683        & 0.4414        & 0.4059         \\
+      upskyy/ko-reranker-8k                                                  & 567755777     & 0.4915        & 0.4715        & 0.4437        & 0.4072         \\
+      Omartificial-Intelligence-Space/ARA-Reranker-V1                        & 567755777     & 0.4871        & 0.4474        & 0.4004        & 0.3435         \\
+      kamilkaczmarek97/polish-reranker-prod                                  & 567755777     & 0.4922        & 0.4683        & 0.4414        & 0.4059         \\
+      noooop9527/Qwen3-Reranker-0.6B-seq-cls-STv6                            & 595777536     & 0.5190        & 0.4543        & 0.3628        & 0.2667         \\
+      XingTuLab/BinSeek-Reranker                                             & 595777536     & 0.5083        & 0.4542        & 0.3854        & 0.2943         \\
+      tomaarsen/Qwen3-Reranker-0.6B-seq-cls                                  & 595777536     & 0.5190        & 0.4543        & 0.3628        & 0.2667         \\
+      openbmb/MiniCPM-Reranker-Light                                         & 1360247808    & 0.5008        & 0.4695        & 0.4198        & 0.3392         \\
+      AhmedMostafa/bge-reranker-v2-gemma-saudi-achi10                        & 2506176512    & 0.5198        & 0.4497        & 0.3583        & 0.2607         \\
+      tomaarsen/Qwen3-Reranker-4B-seq-cls                                    & 4021787136    & 0.5109        & 0.4453        & 0.4368        & 0.3607         \\
+      \hline
+      \label{tab:cross_encoder_results} \\
+      \caption{Resultados completos de los modelos de re-ranking evaluados sobre la métrica \gls{MAP} para distintos órdenes de reordenación.}
+  \end{xltabular}
+ }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -546,7 +541,7 @@
     49 & adambrikman        & 0.00              & 0.000      & 0.000      & 0.000      & 0.000      \\
     \hline
     \label{tab:final_results_test_mean}\\
-    \caption{Resultados \gls{MAP} por participante, incluyendo la propuesta aquí presentada, ordenados por la media de los resultados en los idiomas inglés, español y alemán.}
+    \caption{Resultados \gls{MAP} por participante, incluyendo la propuesta aquí presentada, ordenados por la media de los resultados en los idiomas inglés, español y alemán. Fecha de extracción de los resultados: 31 de enero de 2026.}
 \end{xltabular}
 
 
