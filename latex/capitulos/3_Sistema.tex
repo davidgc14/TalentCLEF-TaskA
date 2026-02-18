@@ -65,7 +65,7 @@ Los modelos finales son seleccionados basándose en la maximización de la métr
 
 \noindent La recuperación de información basada en un único modelo bi-encoder puede presentar limitaciones propias de la arquitectura o de los datos de entrenamiento específicos de dicho modelo. La hipótesis subyacente en la arquitectura propuesta es que diferentes modelos capturan matices semánticos distintos, y que la combinación de sus resultados puede conducir a una mejora significativa en la calidad del ranking final.
 
-Para mitigar estas limitaciones y mejorar la robustez del sistema, se implementa un módulo de fusión de rankings. Este módulo agrega las listas de documentos candidatos generadas por los 3 mejores modelos en la etapa anterior, para producir así un ranking unificado y reordenado. Se describen a continuación las tres estrategias de fusión consideradas.
+Para mitigar estas limitaciones y mejorar la robustez del sistema, se implementa un módulo de fusión de rankings. Este módulo agrega las listas de documentos candidatos generadas por los tres mejores modelos en la etapa anterior, para producir así un ranking unificado y reordenado. Se describen a continuación las tres estrategias de fusión consideradas.
 
 \subsubsection{Reciprocal Rank Fusion (RRF)}
 
@@ -188,7 +188,7 @@ Finalmente, el valor de \gls{MAP} se obtiene promediando la \gls{AP} sobre la to
 \subsubsection{Fase 2: Entrenamiento de Bi-encoders}
 \noindent Se procede al ajuste fino de los 10 mejores modelos de recuperación utilizando los datos de entrenamiento proporcionados por la organización de TalentCLEF, consistentes en pares extraídos de \gls{ESCO}. 
 
-En esta fase, se aplica un Early Stopping basado en la función de pérdida \gls{MNRL} y se monitoriza el rendimiento en el conjunto de validación utilizando la métrica \gls{MAP}. Se experimenta también con diferentes configuraciones de tasas de aprendizaje y de tamaños del lote, tratando de optimizar la convergencia y la generalización del modelo. 
+En esta fase, se aplica un \textit{early stopping} basado en la función de pérdida \gls{MNRL} y se monitoriza el rendimiento en el conjunto de validación utilizando la métrica \gls{MAP}. Se experimenta también con diferentes configuraciones de tasas de aprendizaje y de tamaños del lote, tratando de optimizar la convergencia y la generalización del modelo. 
 
 \subsubsection{Fase 3: Optimización de la fusión}
 \noindent Una vez entrenados los modelos individuales, se analiza la estrategia de fusión óptima. Se evalúa el impacto de diferentes combinaciones de modelos y se ajusta el parámetro $k$ del algoritmo \gls{RRF} para maximizar la métrica \gls{MAP} en el conjunto de validación, así como la búsqueda de pesos óptimos en la técnica de \gls{WSum}.

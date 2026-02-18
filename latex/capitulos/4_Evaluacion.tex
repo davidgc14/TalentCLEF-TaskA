@@ -6,7 +6,7 @@
 \fancyhead[RE]{\textsc{CAPÍTULO} \thechapter. Evaluación}
 \label{ch:Evaluacion}
 
-\noindent En el presente capítulo se detalla la metodología empleada para la validación de la propuesta, así como los resultados obtenidos en las distintas fases del experimento. El proceso de evaluación se ha estructurado en tres etapas consecutivas: una selección inicial de modelos mediante evaluación \textit{zero-shot}, un refinamiento mediante aprendizaje supervisado y, finalmente, la aplicación de técnicas de fusión de rankings y re-ranking para maximizar el rendimiento del sistema.
+\noindent En el presente capítulo se detalla la metodología empleada para la validación de la propuesta, así como los resultados obtenidos en las distintas fases de la experimentación. El proceso de evaluación se ha estructurado en tres etapas consecutivas: una selección inicial de modelos mediante evaluación \textit{zero-shot}, un refinamiento mediante aprendizaje supervisado y, finalmente, la aplicación de técnicas de fusión de rankings y re-ranking para maximizar el rendimiento del sistema.
 
 \section{Entorno de desarrollo y especificaciones}
 \label{sec:Entorno}
@@ -242,7 +242,7 @@ Con ello obtenemos un sistema que maximiza la métrica \gls{MAP} mediante la com
 
 \section{Fase 4: Re-Ranking}
 
-\noindent Procedemos a continuación con la fase final de re-ranking, cuyo objetivo es mejorar la precisión del ranking generado por la fusión mediante una evaluación más detallada de la relevancia semántica entre cada consulta y los candidatos seleccionados. Para lograr esto, se necesario seleccionar un modelo cross-encoder adecuado que pueda capturar las interacciones contextuales y dependencias no lineales de las consultas y los candidatos. De esta manera, obtendremos una nueva puntuación de similitud que nos permitirá reordenar los candidatos de forma óptima, priorizando aquellos con mayor alineación semántica.
+\noindent Procedemos a continuación con la fase final de re-ranking, cuyo objetivo es mejorar la precisión del ranking generado por la fusión mediante una evaluación más detallada de la relevancia semántica entre cada consulta y los candidatos seleccionados. Para lograr esto, es necesario seleccionar un modelo cross-encoder adecuado que pueda capturar las interacciones contextuales y dependencias no lineales de las consultas y los candidatos. De esta manera, obtendremos una nueva puntuación de similitud que nos permitirá reordenar los candidatos de forma óptima, priorizando aquellos con mayor alineación semántica.
 
 Para ello se obtuvo una lista de 90 modelos cross-encoder multilingües desde la plataforma Hugging Face, de los cuales se pudieron evaluar 72 dentro de las restricciones de compatibilidad y recursos del entorno. Se evaluó la capacidad de estos modelos mediante la reordenación de los 10, 25, 50 y 100 mejores candidatos generados por el sistema de fusión \gls{WSum} previamente descrito\footnote{Una tabla completa con los resultados de esta evaluación se puede consultar en la Tabla \ref{tab:cross_encoder_results} del Apéndice \ref{ch:Tablas}.}. Las Figuras \ref{fig:distribucion_reranking_global} y \ref{fig:boxplot_reranking_global} muestran la distribución de los resultados obtenidos en términos de \gls{MAP} para los distintos tamaños de listas reordenadas.
 
